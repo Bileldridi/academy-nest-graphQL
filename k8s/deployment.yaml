@@ -1,0 +1,67 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: academy-backend-__CI_ENVIRONMENT_SLUG__
+  namespace: academy-backend
+  labels:
+    app: academy-backend-__CI_ENVIRONMENT_SLUG__
+    ref: prod
+    track: stable
+  annotations:
+    prometheus.io/scrape: 'true'
+    prometheus.io/port: '9090'
+    app.gitlab.com/env: __CI_ENVIRONMENT_SLUG__
+    app.gitlab.com/app: academy-backend-__CI_ENVIRONMENT_SLUG__
+
+spec:
+  replicas:
+  selector:
+    matchLabels:
+      app: academy-backend-__CI_ENVIRONMENT_SLUG__
+      ref: prod
+  template:
+    metadata:
+      labels:
+        app: academy-backend-__CI_ENVIRONMENT_SLUG__
+        ref: prod
+        track: stable
+    spec:
+      containers:
+        - name: app
+          image: __CI_REGISTRY_IMAGE__:__VERSION__
+          env:
+          - name: dbhost
+            value: "mongodev"
+          imagePullPolicy: Always
+          ports:
+          - name: http-metrics
+            protocol: TCP
+            containerPort: 80
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 250m
+              memory: 128Mi
+          volumeMounts:
+          - mountPath: /app/uploads
+            name: my-uploads-mount
+      volumes:
+        - name: my-uploads-mount
+          persistentVolumeClaim:
+            claimName: my-uploads-data
+
+          # livenessProbe:
+          #   httpGet:
+          #     path: /health
+          #     port: 8000
+          #   initialDelaySeconds: 3
+          #   timeoutSeconds: 2
+          # readinessProbe:
+          #   httpGet:
+          #     path: /health
+          #     port: 8000
+          #   initialDelaySeconds: 3
+          #   timeoutSeconds: 2

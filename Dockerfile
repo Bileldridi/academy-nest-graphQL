@@ -9,4 +9,4 @@ ADD package.json .
 RUN mkdir uploads
 RUN mkdir uploads/cv
 RUN mkdir uploads/pictures
-CMD node /dist/server.js
+CMD node dist/main.js

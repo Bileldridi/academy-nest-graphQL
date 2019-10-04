@@ -47,7 +47,7 @@ spec:
       paths:
       - backend:
           serviceName: academy-backend-__CI_ENVIRONMENT_SLUG__
-          servicePort: 80
+          servicePort: 3000
         path: "/"
   tls:
   - hosts:

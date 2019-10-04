@@ -9,7 +9,7 @@ import { UsersModule } from './users/users.module';
 @Module({
   imports: [
     CatsModule,
-    MongooseModule.forRoot('mongodb://localhost:27017/academyDb'),
+    MongooseModule.forRoot('mongodb://192.168.84.179:27017/academyDb'),
     GraphQLModule.forRoot({
       typePaths: ['./**/*.graphql'],
       installSubscriptionHandlers: true,

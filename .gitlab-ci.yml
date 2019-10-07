@@ -16,7 +16,6 @@ quality-scan:
     stage: sonar-analysis
     script:
         - npm install
-        - npm install -g sonar-scanner
         - sonar-scanner
 
 build-app:

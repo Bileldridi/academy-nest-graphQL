@@ -16,6 +16,7 @@ quality-scan:
     stage: sonar-analysis
     script:
         - apk --no-cache add openjdk11 --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community
+        - java --version
         - npm install
         - npm run sonar
 

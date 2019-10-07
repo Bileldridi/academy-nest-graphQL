@@ -6,10 +6,18 @@
 #   DOCKER_DRIVER: overlay
 
 stages:
+    - sonar-analysis
     - build-app
     - build-image
     - deploy
 
+sonar-analysis:
+    image: node:lts-alpine
+    stage: sonar-scan
+    script:
+        - npm install
+        - npm install -g sonar-scanner
+        - sonar-scanner
 build-app:
     image: node:lts-alpine
     stage: build-app
@@ -135,3 +143,4 @@ stop-review:
   when: manual
   only:
   - master
+

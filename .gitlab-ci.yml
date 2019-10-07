@@ -12,11 +12,11 @@ stages:
     - deploy
 
 quality-scan:
-    image: node:lts-alpine
+    image: node:lts 
     stage: sonar-analysis
     script:
-        - apk --no-cache add openjdk11 --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community
-        - java --version
+        - apt-get update
+        - apt-get install -y default-jdk
         - npm install
         - npm run sonar
 

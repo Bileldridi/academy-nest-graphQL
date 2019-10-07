@@ -12,9 +12,13 @@ stages:
     - deploy
 
 quality-scan:
-    image: node:lts-alpine
+    image: ubuntu:latest
     stage: sonar-analysis
     script:
+        - apt-get install default-jdk
+        - apt-get install curl
+        - curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+        - apt-get install nodejs
         - npm install
         - npm run sonar
 

@@ -11,13 +11,14 @@ stages:
     - build-image
     - deploy
 
-sonar-analysis:
+quality-scan:
     image: node:lts-alpine
-    stage: sonar-scan
+    stage: sonar-analysis
     script:
         - npm install
         - npm install -g sonar-scanner
         - sonar-scanner
+
 build-app:
     image: node:lts-alpine
     stage: build-app
@@ -52,7 +53,6 @@ deploy-review:
     name: lachlanevenson/k8s-kubectl:latest
     entrypoint: ["/bin/sh", "-c"]
   stage: deploy
- 
   
   script:
     - echo $CI_ENVIRONMENT_NAME

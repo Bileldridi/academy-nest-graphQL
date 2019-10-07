@@ -16,10 +16,10 @@ quality-scan:
     stage: sonar-analysis
     script:
         - apt-get update
-        - apt-get install default-jdk
-        - apt-get install curl
+        - apt-get install -y default-jdk
+        - apt-get install -y curl
         - curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
-        - apt-get install nodejs
+        - apt-get install -y nodejs
         - npm install
         - npm run sonar
 

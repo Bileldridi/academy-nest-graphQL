@@ -16,7 +16,7 @@ quality-scan:
     stage: sonar-analysis
     script:
         - npm install
-        - sonar-scanner
+        - npm run sonar
 
 build-app:
     image: node:lts-alpine

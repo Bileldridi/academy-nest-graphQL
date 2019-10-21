@@ -19,7 +19,7 @@ quality-scan:
         - apt-get install -y default-jdk
         - npm install
         - npm run sonar
-
+    when: manual
 build-app:
     image: node:lts-alpine
     stage: build-app

@@ -1,0 +1,26 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata: 
+    annotations:
+        kubernetes.io/ingress.class: nginx
+        kubernetes.io/tls-acme: "true"
+    labels:
+        app: production
+        chart: auto-deploy-app-0.2.9
+        heritage: Tiller
+        release: production
+    name: academy-backend-__CI_ENVIRONMENT_SLUG__
+    namespace: academy-backend
+spec:
+    rules:
+    - host: back.academy.fivepoints.fr
+      http:
+        paths:
+        - backend:
+            serviceName: academy-backend-__CI_ENVIRONMENT_SLUG__
+            servicePort: 80
+          path: /
+    tls:
+    - hosts:
+      - back.academy.fivepoints.fr
+      secretName: __CI_ENVIRONMENT_SLUG__-auto-deploy-tls

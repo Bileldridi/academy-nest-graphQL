@@ -1,0 +1,48 @@
+type Query {
+  getSessions: [Session]
+  Session(id: String!): Session
+  removeSession(id: String!): Session
+  addCandidate(email: String!, id: String!): Session
+  removeCandidate(email: String!, id: String!): Session
+  addCoach(email: String!, id: String!): Session
+  removeCoach(email: String!, id: String!): Session
+}
+
+type Mutation {
+  createSession(createSessionInput: CreateSessionInput): Session
+}
+type Mutation {
+   updateSession(updateSessionInput: UpdateSessionInput): Session
+}
+
+type Subscription {
+  SessionCreated: Session
+}
+
+type Session {
+  id: String
+  period: Int
+  type: String
+  name: String
+  createDate: Float
+  startedDate: Float
+  finishDate: Float
+  candidates: [User]
+  coaches: [User]
+}
+
+input CreateSessionInput {
+  name: String
+  period: Int
+  type: String
+  startedDate: Float
+  finishDate: Float
+}
+input UpdateSessionInput {
+  id: String
+  name: String
+  period: Int
+  type: String
+  startedDate: Float
+  finishDate: Float
+}

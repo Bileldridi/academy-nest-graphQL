@@ -1,0 +1,57 @@
+type Query {
+  getCandidates: [MyCandidate]
+  Candidate(id: ID!): MyCandidate
+  deleteCandidate(id: String!): MyCandidate
+  deleteCandidates(id: [String!]): MyCandidate
+}
+
+type Mutation {
+  createCandidate(createCandidateInput: CreateCandidateInput): MyCandidate
+  updateCandidate(updateCandidateInput: UpdateCandidateInput): MyCandidate
+
+}
+
+type Subscription {
+  CandidateCreated: MyCandidate
+}
+
+
+type MyCandidate {
+  id: String
+  firstname: String
+  lastname: String
+  createDate: Float
+  password: String
+  email: String
+  candidate: Candidate
+  role: String
+ }
+
+type Candidate { 
+  tel: String
+  image: String
+}
+
+input CreateCandidateInput {
+  tel: String
+  image: String
+  firstname: String
+  lastname: String
+  createDate: Float
+  password: String
+  email: String
+  role: String
+}
+
+
+input UpdateCandidateInput {
+  id: String
+  tel: String
+  image: String
+  firstname: String
+  lastname: String
+  createDate: Float
+  password: String
+  email: String
+  role: String
+}

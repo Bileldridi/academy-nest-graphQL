@@ -1,0 +1,57 @@
+type Query {
+  getCoaches: [MyUser]
+  Coach(id: ID!): MyUser
+  deleteCoach(id: String!): MyUser
+  deleteCoaches(id: [String!]): MyUser
+}
+
+type Mutation {
+  createCoach(createCoachInput: CreateCoachInput): MyUser
+  updateCoach(updateCoachInput: UpdateCoachInput): MyUser
+
+}
+
+type Subscription {
+  CoachCreated: MyUser
+}
+
+
+type MyUser {
+  id: String
+  firstname: String
+  lastname: String
+  createDate: Float
+  password: String
+  email: String
+  coach: Coach
+  role: String
+ }
+
+type Coach { 
+  tel: String
+  image: String
+}
+
+input CreateCoachInput {
+  tel: String
+  image: String
+  firstname: String
+  lastname: String
+  createDate: Float
+  password: String
+  email: String
+  role: String
+}
+
+
+input UpdateCoachInput {
+  id: String
+  tel: String
+  image: String
+  firstname: String
+  lastname: String
+  createDate: Float
+  password: String
+  email: String
+  role: String
+}

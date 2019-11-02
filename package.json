@@ -17,7 +17,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "gen": "cd src | ts-node src/generate-typings"
+    "gen": "ts-node src/generate-typings && move /y graphql.schema.ts src/"
   },
   "dependencies": {
     "@nestjs/common": "^6.0.0",

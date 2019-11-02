@@ -1,15 +1,19 @@
 import { Schema, Types } from 'mongoose';
 
 export const schema: Schema = new Schema({
-    firstname: String,
-    lastname: String,
-    email: String,
-    password: String,
-    role: String,
-    lastLogin: String,
-    status: String,
-    onlineStatus: String,
+    firstname: { type: String, required: true },
+    lastname: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
     createDate: { type: Number, default: Date.now() },
+    role: { type: String, default: 'candidate', enum: ['admin', 'coach', 'candidate'] },
+    coach: { type: Types.ObjectId, ref: 'Coach' },
+    candidate: { type: Types.ObjectId, ref: 'Candidate' },
 });
-
+schema.virtual('id').get(function () {
+    return this._id.toHexString();
+});
+schema.set('toJSON', {
+    virtuals: true,
+});
 export const UserSchema = schema;

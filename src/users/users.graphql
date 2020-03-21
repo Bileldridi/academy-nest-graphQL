@@ -5,13 +5,17 @@ type Query {
 
 type Mutation {
   createUser(createUserInput: CreateUserInput): User
-  login(loginInput: LoginInput): User
+  updateUser(userInput:UserInput): Message
+  login(loginInput: LoginInput): Message
 }
 
 type Subscription {
   UserCreated: User
 }
-
+type Message {
+  message: String,
+  accessToken: String
+}
 type User {
   id: String
   firstname: String
@@ -37,4 +41,12 @@ input CreateUserInput {
 input LoginInput {
   email: String
   password: String
+}
+input UserInput {
+  id: String
+  firstname: String
+  lastname: String
+  email: String
+  role: String
+  coach: String
 }

@@ -45,7 +45,6 @@ export class UsersService {
         };
       }
       async updateUser(user, _id) {
-          console.log(user)
         const userResult = await this.userModel.findByIdAndUpdate({ _id }, user).catch(err => err);
         const coachResult = await this.coachModel.findByIdAndUpdate({ _id: userResult.coach }, user).catch(err => err);
         const result = await this.userModel.findOne({ _id }).exec();

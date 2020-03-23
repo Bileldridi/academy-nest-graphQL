@@ -4,7 +4,7 @@ import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
 import { PubSub } from 'graphql-subscriptions';
 import { Session } from '../graphql.schema';
 // import { SessionsGuard } from './Sessions.guard';
-import { SessionsService } from './Sessions.service';
+import { SessionsService } from './sessions.service';
 // import { CreateSessionDto } from './dto/create-Session.dto';
 
 const pubSub = new PubSub();

@@ -25,7 +25,7 @@ export class SessionsResolver {
     async findOneById(@Args('id') id: string): Promise<Session> {
         return await this.sessionsService.findOneById(id);
     }
-
+ 
     @Query('addCandidate')
     async addCandidate(@Args('email') email: string, @Args('id') id: string): Promise<Session> {
         return await this.sessionsService.addCandidate(email, id);

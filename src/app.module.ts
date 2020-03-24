@@ -6,10 +6,12 @@ import { UsersModule } from './users/users.module';
 import { SessionsModule } from './sessions/sessions.module';
 import { CoachesModule } from './coaches/coaches.module';
 import { CandidatesModule } from './candidate/candidates.module';
+import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [
     CatsModule,
+    CommonModule,
     MongooseModule.forRoot('mongodb://localhost:27017/academyDb', { useNewUrlParser: true }),
     GraphQLModule.forRoot({
       typePaths: ['./**/*.graphql'],

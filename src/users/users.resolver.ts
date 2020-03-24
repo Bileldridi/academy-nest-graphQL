@@ -16,7 +16,6 @@ export class UsersResolver {
         return await this.usersService.findOneById(id);
     }
 
-
     @Mutation('createUser')
     async create(@Args('createUserInput') args: any): Promise<any> {
         const createdUser = await this.usersService.create(args);
@@ -25,5 +24,9 @@ export class UsersResolver {
     @Mutation('login')
     async login(@Args('loginInput') args: any): Promise<any> {
         return await this.usersService.login(args);
+    }
+    @Mutation('updateUser')
+    async updateUser(@Args('userInput') args: any): Promise<any> {
+        return await this.usersService.updateUser(args, args.id);
     }
 }

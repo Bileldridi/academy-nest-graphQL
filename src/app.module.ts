@@ -17,9 +17,9 @@ import { CandidatesModule } from './candidate/candidates.module';
       playground: true,
     }),
     UsersModule,
-    SessionsModule,
-    CoachesModule,
-    CandidatesModule
+    //SessionsModule,
+    //CoachesModule,
+    //CandidatesModule
   ],
   providers: [],
 

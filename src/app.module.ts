@@ -19,9 +19,9 @@ import { CommonModule } from './common/common.module';
       playground: true,
     }),
     UsersModule,
-    SessionsModule,
-    CoachesModule,
-    CandidatesModule
+    //SessionsModule,
+    //CoachesModule,
+    //CandidatesModule
   ],
   providers: [],
 

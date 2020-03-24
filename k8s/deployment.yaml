@@ -45,13 +45,6 @@ spec:
             requests:
               cpu: 250m
               memory: 128Mi
-          volumeMounts:
-          - mountPath: /app/uploads
-            name: my-uploads-mount
-      volumes:
-        - name: my-uploads-mount
-          persistentVolumeClaim:
-            claimName: my-uploads-data
 
           # livenessProbe:
           #   httpGet:

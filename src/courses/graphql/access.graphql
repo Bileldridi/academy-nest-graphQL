@@ -1,0 +1,49 @@
+type Query {
+  getAccesss: [Access]
+  Access(id: String!): [Access]
+  LevelAccess(id: String!): [Access]
+  getCandidateAccess(id: String!): [Access]
+  removeAccess(id: String!): Access
+}
+
+type Mutation {
+  createAccess(createAccessInput: CreateAccessInput): Access
+}
+type Mutation {
+  updateAccess(updateAccessInput: UpdateAccessInput): Access
+}
+
+type Subscription {
+  AccessCreated: Access
+}
+
+type Access {
+  id: String
+  candidate: User
+  course: Course
+  type: String
+  level: Level
+  desc: String
+  status: String
+  createDate: Float
+  duration: Int
+  timeLeft: Float
+}
+
+input CreateAccessInput {
+  candidate: String
+  course: String
+  type: String
+  level: String
+  desc: String
+  duration: Int
+}
+input UpdateAccessInput {
+  id: String
+  candidate: String
+  course: String
+  type: String
+  level: String
+  desc: String
+  duration: Int
+}

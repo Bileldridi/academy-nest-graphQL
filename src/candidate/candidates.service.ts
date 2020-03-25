@@ -4,14 +4,14 @@ import { Model } from 'mongoose';
 
 @Injectable()
 export class CandidatesService {
-    constructor(@InjectModel('User') private readonly userModel: Model<any>,@InjectModel('Candidate') private readonly candidateModel: Model<any>) { }
+    constructor(@InjectModel('User') private readonly userModel: Model<any>, @InjectModel('Candidate') private readonly candidateModel: Model<any>) { }
 
     async create(candidate) {
         console.log(candidate);
         const candidateResult = await this.candidateModel.create(candidate).catch(err => err);
         candidate['candidate'] = candidateResult._id;
         const userResult = await this.userModel.create(candidate).catch(err => err);
-        return userResult;
+        return userResult; 
     }
 
     async update(candidate, _id) {
@@ -24,6 +24,8 @@ export class CandidatesService {
         console.log('heyy');
 
         const result = await this.userModel.find({ role: 'candidate' }).populate({ path: 'candidate' }).exec();
+        console.log(result);
+
         return result;
     }
     async findOneById(id: string): Promise<any> {

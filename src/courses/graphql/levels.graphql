@@ -1,0 +1,42 @@
+type Query {
+  getLevels: [Level]
+  Level(id: String!): Level
+  removeLevel(id: String!): Level
+}
+
+type Mutation {
+  createLevel(createLevelInput: CreateLevelInput): Level
+}
+type Mutation {
+  updateLevel(updateLevelInput: UpdateLevelInput): Level
+}
+
+type Subscription {
+  LevelCreated: Level
+}
+
+type Level {
+  id: String
+  title: String
+  createDate: Float
+  courses: [Course]
+  desc: String
+  status: String
+  duration: Int
+}
+
+input CreateLevelInput {
+  title: String
+  courses: [String]
+  desc: String
+  status: String
+  duration: Int
+}
+input UpdateLevelInput {
+  id: String
+  title: String
+  courses: [String]
+  desc: String
+  status: String
+  duration: Int
+}

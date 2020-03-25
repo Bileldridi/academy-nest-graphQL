@@ -1,0 +1,81 @@
+type Query {
+  getCourses: [Course]
+  Course(id: String!): Course
+  removeCourse(id: String!): Course
+  getComments: [Course]
+  Comment(id: String!): Comment
+  removeComment(id: String!): Comment
+}
+
+type Mutation {
+  createCourse(createCourseInput: CreateCourseInput): Course
+}
+type Mutation {
+  updateCourse(updateCourseInput: UpdateCourseInput): Course
+}
+type Mutation {
+  createComment(createCommentInput: CreateCommentInput): Comment
+}
+type Mutation {
+  updateComment(updateCommentInput: UpdateCommentInput): Comment
+}
+
+type Subscription {
+  CourseCreated: Course
+}
+
+type Course {
+  id: String
+  title: String
+  desc: String
+  difficulty: String
+  chapters: [Chapter]
+  comments: [Comment]
+  levels: [Level]
+  createDate: Float
+  status: String
+  duration: Int
+  files: [String]
+}
+
+type Comment {
+  author: User
+  content: String
+  createDate: Float
+  status: String
+}
+
+input CreateCourseInput {
+  title: String
+  desc: String
+  difficulty: String
+  levels: [String]
+  chapters: [String]
+  status: String
+  Files: [String]
+  duration: Int
+}
+input UpdateCourseInput {
+  id: String
+  title: String
+  difficulty: String
+  desc: String
+  levels: [String]
+  chapters: [String]
+  status: String
+  Files: [String]
+  duration: Int
+}
+
+input CreateCommentInput {
+  author: String
+  content: String
+  status: String
+}
+
+input UpdateCommentInput {
+  id: String
+  author: String
+  content: String
+  status: String
+}

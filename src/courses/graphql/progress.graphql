@@ -1,0 +1,44 @@
+type Query {
+  getProgresss: [Progress]
+  Progress(id: String!): Progress
+  removeProgress(id: String!): Progress
+}
+
+type Mutation {
+  createProgress(createProgressInput: CreateProgressInput): Progress
+}
+
+type Mutation {
+  updateProgress(updateProgressInput: UpdateProgressInput): Progress
+}
+
+type Subscription {
+  ProgressCreated: Progress
+}
+
+type Progress {
+  id: String
+  talent: User
+  chapter: Chapter
+  type: String
+  score: String
+  desc: String
+  createDate: Float
+}
+
+input CreateProgressInput {
+  talent: User
+  chapter: Chapter
+  type: String
+  score: String
+  desc: String
+}
+
+input UpdateProgressInput {
+  id: String
+  talent: User
+  chapter: Chapter
+  type: String
+  score: String
+  desc: String
+}

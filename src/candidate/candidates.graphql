@@ -30,6 +30,7 @@ type MyCandidate {
 type Candidate { 
   tel: String
   image: String
+  createDate: Float 
 }
 
 input CreateCandidateInput {

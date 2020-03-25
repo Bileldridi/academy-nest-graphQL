@@ -2,12 +2,15 @@ import { Schema, Types } from 'mongoose';
 
 export const schema: Schema = new Schema({
     title: String,
-    content: String,
-    comments: [{ type: Types.ObjectId, ref: 'comment' }],
-    level: { type: Types.ObjectId, ref: 'level' },
+    desc: String,
+    chapters: [{ type: Types.ObjectId, ref: 'Chapter' }],
+    comments: [{ type: Types.ObjectId, ref: 'Comment' }],
+    levels: [{ type: Types.ObjectId, ref: 'Level' }],
     createDate: { type: Number, default: Date.now() },
-    status: String,
-    Files: [String],
+    duration: { type: Number, default: 0 },
+    status: { type: String, default: 'published', enum: ['draft', 'published', 'deleted'] },
+    difficulty: { type: String, default: 'beginner', enum: ['beginner', 'intermediate', 'expert'] },
+    files: [String],
 });
 
 export const CourseSchema = schema;

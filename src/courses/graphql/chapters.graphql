@@ -1,0 +1,48 @@
+type Query {
+  getChapters: [Chapter]
+  Chapter(id: String!): Chapter
+  removeChapter(id: String!): Chapter
+}
+
+type Mutation {
+  createChapter(createChapterInput: CreateChapterInput): Chapter
+}
+type Mutation {
+  updateChapter(updateChapterInput: UpdateChapterInput): Chapter
+}
+
+type Subscription {
+  ChapterCreated: Chapter
+}
+
+type Chapter {
+  id: String
+  title: String
+  content: String
+  type: String
+  createDate: Float
+  course: Course
+  status: String
+  files: [String]
+  comments: [Comment]
+}
+
+input CreateChapterInput {
+  title: String
+  content: String
+  course: String
+  type: String
+  status: String
+  files: [String]
+}
+
+input UpdateChapterInput {
+  id: String
+  title: String
+  content: String
+  course: String
+  type: String
+  status: String
+  files: [String]
+  comments: [String]
+}

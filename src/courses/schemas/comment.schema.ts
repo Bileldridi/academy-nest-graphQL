@@ -1,9 +1,9 @@
 import { Schema, Types } from 'mongoose';
 
 export const schema: Schema = new Schema({
-    author: { type: Types.ObjectId, ref: 'user' },
+    author: { type: Types.ObjectId, ref: 'User' },
     content: String,
-    status: String,
+    status: { type: String, enum: ['draft', 'published', 'deleted'] },
     createDate: { type: Number, default: Date.now() },
 
 });

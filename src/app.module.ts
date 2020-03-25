@@ -6,6 +6,7 @@ import { UsersModule } from './users/users.module';
 import { SessionsModule } from './sessions/sessions.module';
 import { CoachesModule } from './coaches/coaches.module';
 import { CandidatesModule } from './candidate/candidates.module';
+import { CoursesModule } from './courses/courses.module';
 
 @Module({
   imports: [
@@ -19,7 +20,8 @@ import { CandidatesModule } from './candidate/candidates.module';
     UsersModule,
     SessionsModule,
     CoachesModule,
-    CandidatesModule
+    CandidatesModule,
+    CoursesModule
   ],
   providers: [],
 

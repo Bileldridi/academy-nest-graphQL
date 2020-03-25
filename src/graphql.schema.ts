@@ -5,6 +5,15 @@
  */
 
 /* tslint:disable */
+export class CreateAccessInput {
+    candidate?: string;
+    course?: string;
+    type?: string;
+    level?: string;
+    desc?: string;
+    duration?: number;
+}
+
 export class CreateCandidateInput {
     tel?: string;
     image?: string;
@@ -21,6 +30,15 @@ export class CreateCatInput {
     age?: number;
 }
 
+export class CreateChapterInput {
+    title?: string;
+    content?: string;
+    course?: string;
+    type?: string;
+    status?: string;
+    files?: string[];
+}
+
 export class CreateCoachInput {
     tel?: string;
     image?: string;
@@ -30,6 +48,31 @@ export class CreateCoachInput {
     password?: string;
     email?: string;
     role?: string;
+}
+
+export class CreateCommentInput {
+    author?: string;
+    content?: string;
+    status?: string;
+}
+
+export class CreateCourseInput {
+    title?: string;
+    desc?: string;
+    difficulty?: string;
+    levels?: string[];
+    chapters?: string[];
+    status?: string;
+    Files?: string[];
+    duration?: number;
+}
+
+export class CreateLevelInput {
+    title?: string;
+    courses?: string[];
+    desc?: string;
+    status?: string;
+    duration?: number;
 }
 
 export class CreateSessionInput {
@@ -55,6 +98,16 @@ export class LoginInput {
     password?: string;
 }
 
+export class UpdateAccessInput {
+    id?: string;
+    candidate?: string;
+    course?: string;
+    type?: string;
+    level?: string;
+    desc?: string;
+    duration?: number;
+}
+
 export class UpdateCandidateInput {
     id?: string;
     tel?: string;
@@ -65,6 +118,17 @@ export class UpdateCandidateInput {
     password?: string;
     email?: string;
     role?: string;
+}
+
+export class UpdateChapterInput {
+    id?: string;
+    title?: string;
+    content?: string;
+    course?: string;
+    type?: string;
+    status?: string;
+    files?: string[];
+    comments?: string[];
 }
 
 export class UpdateCoachInput {
@@ -79,6 +143,34 @@ export class UpdateCoachInput {
     role?: string;
 }
 
+export class UpdateCommentInput {
+    id?: string;
+    author?: string;
+    content?: string;
+    status?: string;
+}
+
+export class UpdateCourseInput {
+    id?: string;
+    title?: string;
+    difficulty?: string;
+    desc?: string;
+    levels?: string[];
+    chapters?: string[];
+    status?: string;
+    Files?: string[];
+    duration?: number;
+}
+
+export class UpdateLevelInput {
+    id?: string;
+    title?: string;
+    courses?: string[];
+    desc?: string;
+    status?: string;
+    duration?: number;
+}
+
 export class UpdateSessionInput {
     id?: string;
     name?: string;
@@ -88,9 +180,23 @@ export class UpdateSessionInput {
     finishDate?: number;
 }
 
+export class Access {
+    id?: string;
+    candidate?: User;
+    course?: Course;
+    type?: string;
+    level?: Level;
+    desc?: string;
+    status?: string;
+    createDate?: number;
+    duration?: number;
+    timeLeft?: number;
+}
+
 export class Candidate {
     tel?: string;
     image?: string;
+    createDate?: number;
 }
 
 export class Cat {
@@ -99,9 +205,52 @@ export class Cat {
     age?: number;
 }
 
+export class Chapter {
+    id?: string;
+    title?: string;
+    content?: string;
+    type?: string;
+    createDate?: number;
+    course?: Course;
+    status?: string;
+    files?: string[];
+    comments?: Comment[];
+}
+
 export class Coach {
     tel?: string;
     image?: string;
+}
+
+export class Comment {
+    author?: User;
+    content?: string;
+    createDate?: number;
+    status?: string;
+}
+
+export class Course {
+    id?: string;
+    title?: string;
+    desc?: string;
+    difficulty?: string;
+    chapters?: Chapter[];
+    comments?: Comment[];
+    levels?: Level[];
+    createDate?: number;
+    status?: string;
+    duration?: number;
+    files?: string[];
+}
+
+export class Level {
+    id?: string;
+    title?: string;
+    createDate?: number;
+    courses?: Course[];
+    desc?: string;
+    status?: string;
+    duration?: number;
 }
 
 export abstract class IMutation {
@@ -114,6 +263,26 @@ export abstract class IMutation {
     abstract createCoach(createCoachInput?: CreateCoachInput): MyUser | Promise<MyUser>;
 
     abstract updateCoach(updateCoachInput?: UpdateCoachInput): MyUser | Promise<MyUser>;
+
+    abstract createAccess(createAccessInput?: CreateAccessInput): Access | Promise<Access>;
+
+    abstract updateAccess(updateAccessInput?: UpdateAccessInput): Access | Promise<Access>;
+
+    abstract createChapter(createChapterInput?: CreateChapterInput): Chapter | Promise<Chapter>;
+
+    abstract updateChapter(updateChapterInput?: UpdateChapterInput): Chapter | Promise<Chapter>;
+
+    abstract createCourse(createCourseInput?: CreateCourseInput): Course | Promise<Course>;
+
+    abstract updateCourse(updateCourseInput?: UpdateCourseInput): Course | Promise<Course>;
+
+    abstract createComment(createCommentInput?: CreateCommentInput): Comment | Promise<Comment>;
+
+    abstract updateComment(updateCommentInput?: UpdateCommentInput): Comment | Promise<Comment>;
+
+    abstract createLevel(createLevelInput?: CreateLevelInput): Level | Promise<Level>;
+
+    abstract updateLevel(updateLevelInput?: UpdateLevelInput): Level | Promise<Level>;
 
     abstract createSession(createSessionInput?: CreateSessionInput): Session | Promise<Session>;
 
@@ -167,6 +336,40 @@ export abstract class IQuery {
 
     abstract deleteCoaches(id?: string[]): MyUser | Promise<MyUser>;
 
+    abstract getAccesss(): Access[] | Promise<Access[]>;
+
+    abstract Access(id: string): Access[] | Promise<Access[]>;
+
+    abstract LevelAccess(id: string): Access[] | Promise<Access[]>;
+
+    abstract getCandidateAccess(id: string): Access[] | Promise<Access[]>;
+
+    abstract removeAccess(id: string): Access | Promise<Access>;
+
+    abstract getChapters(): Chapter[] | Promise<Chapter[]>;
+
+    abstract Chapter(id: string): Chapter | Promise<Chapter>;
+
+    abstract removeChapter(id: string): Chapter | Promise<Chapter>;
+
+    abstract getCourses(): Course[] | Promise<Course[]>;
+
+    abstract Course(id: string): Course | Promise<Course>;
+
+    abstract removeCourse(id: string): Course | Promise<Course>;
+
+    abstract getComments(): Course[] | Promise<Course[]>;
+
+    abstract Comment(id: string): Comment | Promise<Comment>;
+
+    abstract removeComment(id: string): Comment | Promise<Comment>;
+
+    abstract getLevels(): Level[] | Promise<Level[]>;
+
+    abstract Level(id: string): Level | Promise<Level>;
+
+    abstract removeLevel(id: string): Level | Promise<Level>;
+
     abstract getSessions(): Session[] | Promise<Session[]>;
 
     abstract Session(id: string): Session | Promise<Session>;
@@ -204,6 +407,14 @@ export abstract class ISubscription {
     abstract catCreated(): Cat | Promise<Cat>;
 
     abstract CoachCreated(): MyUser | Promise<MyUser>;
+
+    abstract AccessCreated(): Access | Promise<Access>;
+
+    abstract ChapterCreated(): Chapter | Promise<Chapter>;
+
+    abstract CourseCreated(): Course | Promise<Course>;
+
+    abstract LevelCreated(): Level | Promise<Level>;
 
     abstract SessionCreated(): Session | Promise<Session>;
 

@@ -444,6 +444,10 @@ export abstract class IQuery {
     abstract getCurrentUser(): User | Promise<User>;
 
     abstract User(_id: string): User | Promise<User>;
+
+    abstract recover(email: string): Message | Promise<Message>;
+
+    abstract check(email: string, password: string, recoveryPass: string): Message | Promise<Message>;
 }
 
 export class Session {

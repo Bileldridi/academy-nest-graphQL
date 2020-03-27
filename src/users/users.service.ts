@@ -6,7 +6,8 @@ import * as crypto from 'crypto-js';
 
 @Injectable()
 export class UsersService {
-    constructor(@InjectModel('User') private readonly userModel: Model<any>,
+    constructor(
+        @InjectModel('User') private readonly userModel: Model<any>,
         @InjectModel('Coach') private readonly coachModel: Model<any>,
         @InjectModel('Candidate') private readonly candidateModel: Model<any>) { }
 
@@ -23,14 +24,14 @@ export class UsersService {
     async create(user) {
         return await this.userModel.create(user).catch(err => err)
     }
-    async login(user) {        
+    async login(user) {
         const res = await this.userModel.findOne({ email: user.email }).exec();
         if (!res) {
             return { message: 'User not found' };
         }
-        
+
         const isPasswordCorrect = res.password === crypto.SHA256(user.password).toString();
-        
+
         if (!isPasswordCorrect) {
             return { message: 'Wrong Password' };
         }
@@ -44,7 +45,7 @@ export class UsersService {
     }
     async validateUser(payload: any): Promise<any> {
         console.log('payload', payload);
-        
+
         return await this.userModel.findOne({ email: payload.data.email }).exec();
     }
     async createToken(user: any) {
@@ -67,5 +68,29 @@ export class UsersService {
             throw Error('Authenticate validation error');
         }
         return user;
+    }
+    async recoverAccountRequest(email) {
+        const user = await this.userModel.findOne({ email }).exec()
+        if (!user) {
+            return { message: 'Please check your info' }
+        }
+        const recoveryPass = Math.random().toString(36).slice(-30);
+        const recoveryToken = jwt.sign({}, recoveryPass, { expiresIn: '12h' })
+        console.log(recoveryPass);
+        
+        const result = await this.userModel.updateOne({ email }, { $set: { recoveryToken } }).exec()
+        return result;
+    }
+    async recoverAccountCheck(email, recoveryPass, password) {
+        console.log(email, recoveryPass, password);
+        
+        const user = await this.userModel.findOne({ email }).exec();
+        const check = jwt.verify(user.recoveryToken, recoveryPass);
+        if (!user || !check) {
+            return { message: 'Please check your info' }
+        }
+        password = crypto.SHA256(password).toString();
+        await this.userModel.updateOne({ email }, { $set: { password } }).exec();
+        return { message: 'OK' };
     }
 }

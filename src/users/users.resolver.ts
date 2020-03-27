@@ -30,6 +30,14 @@ export class UsersResolver {
     async findOneById(@Args('_id') id: string): Promise<any> {
         return await this.usersService.findOneById(id);
     }
+    @Query('check')
+    async recoverAccountCheck(@Args('email') email: string, @Args('password') password: string, @Args('recoveryPass') recoveryPass: string): Promise<any> {
+        return await this.usersService.recoverAccountCheck(email, recoveryPass, password);
+    }
+    @Query('recover')
+    async recoverAccountRequest(@Args('email') email: string): Promise<any> {
+        return await this.usersService.recoverAccountRequest(email);
+    }
 
     @Mutation('createUser')
     async create(@Args('createUserInput') args: any): Promise<any> {

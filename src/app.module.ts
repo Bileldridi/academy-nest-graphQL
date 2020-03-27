@@ -8,16 +8,26 @@ import { CoachesModule } from './coaches/coaches.module';
 import { CandidatesModule } from './candidate/candidates.module';
 import { CoursesModule } from './courses/courses.module';
 import { CommonModule } from './common/common.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
     CatsModule,
+    // ScheduleModule.forRoot(),
     CommonModule,
     MongooseModule.forRoot('mongodb://localhost:27017/academyDb', { useNewUrlParser: true }),
     GraphQLModule.forRoot({
       typePaths: ['./**/*.graphql'],
       installSubscriptionHandlers: true,
       playground: true,
+      cors: true,
+      context: ({ req, res }) => {
+        return {
+          request: req,
+          response: res
+        }
+      },
+      introspection: true,
     }),
     UsersModule,
     SessionsModule,

@@ -1,11 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import e = require('express');
+import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Injectable()
 export class CoursesService {
-
+    private readonly logger = new Logger(CoursesService.name);
     constructor(
         @InjectModel('Session') private readonly sessionModel: Model<any>,
         @InjectModel('User') private readonly userModel: Model<any>,
@@ -15,6 +15,22 @@ export class CoursesService {
         @InjectModel('Comment') private readonly commentModel: Model<any>,
         @InjectModel('Access') private readonly accessModel: Model<any>,
     ) { }
+    @Cron(CronExpression.EVERY_30_MINUTES)
+    async handleCron() {
+        this.logger.debug('Called every 6 hours');
+
+        const accesses = await this.accessModel.find({ status: 'active' });
+        for (let i = 0; i < accesses.length; i++) {
+            const e = accesses[i];
+            const timeLeft = Math.round((((e.duration * 86400000) + (e.createDate)) - Date.now()) / 86400000);
+            this.logger.debug('timeLeft '+ timeLeft);
+            if (timeLeft < 0) {
+                const result = await this.accessModel.updateOne({ _id: e._id }, { status: 'expired' }).exec();
+                this.logger.debug('updated : ' + JSON.stringify(result));
+            }
+        }
+    }
+
     // COURSE CRUDs
     async createCourse(session: any): Promise<any> {
         return await this.courseModel.create(session).catch(err => err);

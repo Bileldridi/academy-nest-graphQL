@@ -5,6 +5,7 @@
  */
 
 /* tslint:disable */
+/* eslint-disable */
 export class CreateAccessInput {
     candidate?: string;
     course?: string;
@@ -19,10 +20,10 @@ export class CreateCandidateInput {
     image?: string;
     firstname?: string;
     lastname?: string;
-    createDate?: number;
     password?: string;
     email?: string;
     role?: string;
+    sendEmail?: boolean;
 }
 
 export class CreateCatInput {
@@ -75,6 +76,14 @@ export class CreateLevelInput {
     duration?: number;
 }
 
+export class CreateProgressInput {
+    talent?: string;
+    chapter?: string;
+    type?: string;
+    score?: string;
+    desc?: string;
+}
+
 export class CreateSessionInput {
     name?: string;
     period?: number;
@@ -88,6 +97,7 @@ export class CreateUserInput {
     lastname?: string;
     password?: string;
     email?: string;
+    image?: string;
     candidate?: string;
     coach?: string;
     role?: string;
@@ -114,7 +124,6 @@ export class UpdateCandidateInput {
     image?: string;
     firstname?: string;
     lastname?: string;
-    createDate?: number;
     password?: string;
     email?: string;
     role?: string;
@@ -171,6 +180,15 @@ export class UpdateLevelInput {
     duration?: number;
 }
 
+export class UpdateProgressInput {
+    id?: string;
+    talent?: string;
+    chapter?: string;
+    type?: string;
+    score?: string;
+    desc?: string;
+}
+
 export class UpdateSessionInput {
     id?: string;
     name?: string;
@@ -178,6 +196,16 @@ export class UpdateSessionInput {
     type?: string;
     startedDate?: number;
     finishDate?: number;
+}
+
+export class UserInput {
+    id?: string;
+    image?: string;
+    firstname?: string;
+    lastname?: string;
+    email?: string;
+    role?: string;
+    coach?: string;
 }
 
 export class Access {
@@ -195,7 +223,6 @@ export class Access {
 
 export class Candidate {
     tel?: string;
-    image?: string;
     createDate?: number;
 }
 
@@ -253,6 +280,11 @@ export class Level {
     duration?: number;
 }
 
+export class Message {
+    message?: string;
+    accessToken?: string;
+}
+
 export abstract class IMutation {
     abstract createCandidate(createCandidateInput?: CreateCandidateInput): MyCandidate | Promise<MyCandidate>;
 
@@ -284,13 +316,19 @@ export abstract class IMutation {
 
     abstract updateLevel(updateLevelInput?: UpdateLevelInput): Level | Promise<Level>;
 
+    abstract createProgress(createProgressInput?: CreateProgressInput): Progress | Promise<Progress>;
+
+    abstract updateProgress(updateProgressInput?: UpdateProgressInput): Progress | Promise<Progress>;
+
     abstract createSession(createSessionInput?: CreateSessionInput): Session | Promise<Session>;
 
     abstract updateSession(updateSessionInput?: UpdateSessionInput): Session | Promise<Session>;
 
     abstract createUser(createUserInput?: CreateUserInput): User | Promise<User>;
 
-    abstract login(loginInput?: LoginInput): User | Promise<User>;
+    abstract updateUser(userInput?: UserInput): Message | Promise<Message>;
+
+    abstract login(loginInput?: LoginInput): UserLogin | Promise<UserLogin>;
 }
 
 export class MyCandidate {
@@ -301,6 +339,7 @@ export class MyCandidate {
     password?: string;
     email?: string;
     candidate?: Candidate;
+    image?: string;
     role?: string;
 }
 
@@ -313,6 +352,16 @@ export class MyUser {
     email?: string;
     coach?: Coach;
     role?: string;
+}
+
+export class Progress {
+    id?: string;
+    talent?: User;
+    chapter?: Chapter;
+    type?: string;
+    score?: string;
+    desc?: string;
+    createDate?: number;
 }
 
 export abstract class IQuery {
@@ -370,6 +419,12 @@ export abstract class IQuery {
 
     abstract removeLevel(id: string): Level | Promise<Level>;
 
+    abstract getProgresss(): Progress[] | Promise<Progress[]>;
+
+    abstract Progress(id: string): Progress | Promise<Progress>;
+
+    abstract removeProgress(id: string): Progress | Promise<Progress>;
+
     abstract getSessions(): Session[] | Promise<Session[]>;
 
     abstract Session(id: string): Session | Promise<Session>;
@@ -385,6 +440,8 @@ export abstract class IQuery {
     abstract removeCoach(email: string, id: string): Session | Promise<Session>;
 
     abstract getUsers(): User[] | Promise<User[]>;
+
+    abstract getCurrentUser(): User | Promise<User>;
 
     abstract User(_id: string): User | Promise<User>;
 }
@@ -416,6 +473,8 @@ export abstract class ISubscription {
 
     abstract LevelCreated(): Level | Promise<Level>;
 
+    abstract ProgressCreated(): Progress | Promise<Progress>;
+
     abstract SessionCreated(): Session | Promise<Session>;
 
     abstract UserCreated(): User | Promise<User>;
@@ -428,7 +487,13 @@ export class User {
     createDate?: number;
     password?: string;
     email?: string;
+    image?: string;
     candidate?: Candidate;
     coach?: Coach;
     role?: string;
+}
+
+export class UserLogin {
+    message?: string;
+    token?: string;
 }

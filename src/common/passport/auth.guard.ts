@@ -28,19 +28,21 @@ export function AuthGuard(type, role: string[] = [''], options: any = defaultOpt
         ] = await new Promise((resolve, reject) =>
           passport.authenticate(type, options, (err, user, info) => {
 
-            if (role[0] !== '') {
-              if (role.filter((elem) => user.userType !== elem).length !== 0 ) {
-                return reject(err || new UnauthorizedException());
-              }
-            }
-            if (err || !user) {
-              return reject(err || new UnauthorizedException());
-            }
+            console.log('AuthGuard', err, user, info);
+
+            // if (role[0] !== '') {
+            //   if (role.filter((elem) => user.userType !== elem).length !== 0) {
+            //     return reject(err || new UnauthorizedException());
+            //   }
+            // }
+            // if (err || !user) {
+            //   return reject(err || new UnauthorizedException());
+            // }
             request.user = user;
             resolve(user);
           })(request, response, resolve),
         );
-        return true;
+        return request;
       }
     },
   );

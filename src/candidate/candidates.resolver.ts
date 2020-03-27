@@ -24,14 +24,11 @@ export class CandidatesResolver {
 
     @Mutation('createCandidate')
     async create(@Args('createCandidateInput') args: any): Promise<any> {
-        console.log('hello', args);
         const result = await this.candidatesService.create(args);
         return result;
     }
     @Mutation('updateCandidate')
     async update(@Args('updateCandidateInput') args: any): Promise<any> {
-        console.log('hello');
-
         return await this.candidatesService.update(args, args.id);
     }
 }

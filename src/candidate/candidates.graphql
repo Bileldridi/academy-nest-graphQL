@@ -8,13 +8,11 @@ type Query {
 type Mutation {
   createCandidate(createCandidateInput: CreateCandidateInput): MyCandidate
   updateCandidate(updateCandidateInput: UpdateCandidateInput): MyCandidate
-
 }
 
 type Subscription {
   CandidateCreated: MyCandidate
 }
-
 
 type MyCandidate {
   id: String
@@ -24,13 +22,13 @@ type MyCandidate {
   password: String
   email: String
   candidate: Candidate
-  role: String
- }
-
-type Candidate { 
-  tel: String
   image: String
-  createDate: Float 
+  role: String
+}
+
+type Candidate {
+  tel: String
+  createDate: Float
 }
 
 input CreateCandidateInput {
@@ -38,12 +36,11 @@ input CreateCandidateInput {
   image: String
   firstname: String
   lastname: String
-  createDate: Float
   password: String
   email: String
   role: String
+  sendEmail: Boolean
 }
-
 
 input UpdateCandidateInput {
   id: String
@@ -51,7 +48,6 @@ input UpdateCandidateInput {
   image: String
   firstname: String
   lastname: String
-  createDate: Float
   password: String
   email: String
   role: String

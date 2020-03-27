@@ -1,19 +1,20 @@
 type Query {
   getUsers: [User]
+  getCurrentUser: User
   User(_id: ID!): User
 }
 
 type Mutation {
   createUser(createUserInput: CreateUserInput): User
-  updateUser(userInput:UserInput): Message
-  login(loginInput: LoginInput): Message
+  updateUser(userInput: UserInput): Message
+  login(loginInput: LoginInput): UserLogin
 }
 
 type Subscription {
   UserCreated: User
 }
 type Message {
-  message: String,
+  message: String
   accessToken: String
 }
 type User {
@@ -23,16 +24,23 @@ type User {
   createDate: Float
   password: String
   email: String
+  image: String
   candidate: Candidate
   coach: Coach
   role: String
- }
+}
+
+type UserLogin {
+  message: String
+  token: String
+}
 
 input CreateUserInput {
   firstname: String
   lastname: String
   password: String
   email: String
+  image: String
   candidate: String
   coach: String
   role: String
@@ -44,6 +52,7 @@ input LoginInput {
 }
 input UserInput {
   id: String
+  image: String
   firstname: String
   lastname: String
   email: String

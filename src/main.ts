@@ -4,6 +4,7 @@ import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify
 import * as csurf from 'csurf';
 import * as helmet from 'helmet';
 import * as rateLimit from 'fastify-rate-limit';
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
 
@@ -12,11 +13,12 @@ async function bootstrap() {
     new FastifyAdapter()
   );
 
-  app.register(rateLimit, {
-    max: 100,
-    timeWindow: '1 minute',
-  })
-  app.use(helmet());
+  // app.register(rateLimit, {
+  //   max: 100,
+  //   timeWindow: '1 minute',
+  // })
+  // app.use(helmet());
+  app.use(cookieParser());
 
   // app.use(csurf({ cookie: false }));
 

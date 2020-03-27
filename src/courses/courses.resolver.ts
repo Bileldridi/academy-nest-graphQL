@@ -1,5 +1,7 @@
 import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
 import { CoursesService } from './courses.service';
+import { UseGuards } from '@nestjs/common';
+import { GraphqlAuthGuard } from '../users/gql.auth.guard';
 
 @Resolver('Courses')
 export class CoursesResolver {
@@ -49,6 +51,7 @@ export class CoursesResolver {
         return await this.coursesService.updateLevel(args, args.id);
     }
     // CHAPTERS CRUDs
+    @UseGuards(GraphqlAuthGuard)
     @Query()
     async getChapters() {
         return await this.coursesService.findAllChapters();

@@ -1,14 +1,29 @@
-import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
+import { Resolver, Query, Args, Mutation, GqlExecutionContext } from '@nestjs/graphql';
 import { UsersService } from './users.service';
+import { Controller, Request, Post, UseGuards, createParamDecorator, ExecutionContext } from '@nestjs/common';
+import { AuthGuard } from '../common/passport/auth.guard';
+import { GraphqlAuthGuard } from './gql.auth.guard';
+import { User } from './current-user.decorator';
+
 
 @Resolver('Users')
 export class UsersResolver {
 
     constructor(private readonly usersService: UsersService) { }
 
-    // @Query()
-    async getUsers() {
+    // @UseGuards(AuthGuard('jwt'))
+    @UseGuards(GraphqlAuthGuard)
+    @Query('getUsers')
+    async getUsers(@User() user) {
+        console.log('user', user);
+
         return await this.usersService.findAll();
+    }
+
+    @UseGuards(GraphqlAuthGuard)
+    @Query('getCurrentUser')
+    async getCurrentUser(@User() user) {
+        return user;
     }
 
     @Query('User')
@@ -23,6 +38,7 @@ export class UsersResolver {
     }
     @Mutation('login')
     async login(@Args('loginInput') args: any): Promise<any> {
+        // console.log(args);
         return await this.usersService.login(args);
     }
     @Mutation('updateUser')

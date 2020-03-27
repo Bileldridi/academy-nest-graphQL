@@ -9,6 +9,7 @@ import { LevelSchema } from './schemas/level.schema';
 import { CommentSchema } from './schemas/comment.schema';
 import { ChapterSchema } from './schemas/chapter.schema';
 import { AccessSchema } from './schemas/access.schema';
+import { GraphqlAuthGuard } from '../users/gql.auth.guard';
 
 @Module({
   imports: [
@@ -19,8 +20,9 @@ import { AccessSchema } from './schemas/access.schema';
     MongooseModule.forFeature([{ name: 'Comment', schema: CommentSchema }]),
     MongooseModule.forFeature([{ name: 'Course', schema: CourseSchema }]),
     MongooseModule.forFeature([{ name: 'Access', schema: AccessSchema }]),
+    
   ],
-  providers: [CoursesService, CoursesResolver],
+  providers: [CoursesService, CoursesResolver, GraphqlAuthGuard],
 
 })
 export class CoursesModule { }

@@ -27,8 +27,8 @@ type Progress {
 }
 
 input CreateProgressInput {
-  talent: User
-  chapter: Chapter
+  talent: String
+  chapter: String
   type: String
   score: String
   desc: String
@@ -36,8 +36,8 @@ input CreateProgressInput {
 
 input UpdateProgressInput {
   id: String
-  talent: User
-  chapter: Chapter
+  talent: String
+  chapter: String
   type: String
   score: String
   desc: String

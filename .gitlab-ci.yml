@@ -25,6 +25,7 @@ build-app:
     stage: build-app
     script:
         - npm install
+        - npm run gen
         - npm run build
     artifacts:
         paths:

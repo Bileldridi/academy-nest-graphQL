@@ -9,6 +9,7 @@ import { CandidatesModule } from './candidate/candidates.module';
 import { CoursesModule } from './courses/courses.module';
 import { CommonModule } from './common/common.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { AppResolver } from './app.resolver';
 
 const dbhost = process.env.dbhost || 'localhost';
 
@@ -37,7 +38,7 @@ const dbhost = process.env.dbhost || 'localhost';
     CandidatesModule,
     CoursesModule
   ],
-  providers: [],
+  providers: [AppResolver],
 
 })
 export class AppModule { }

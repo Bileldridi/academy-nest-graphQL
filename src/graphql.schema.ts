@@ -365,6 +365,8 @@ export class Progress {
 }
 
 export abstract class IQuery {
+    abstract hello(): Message | Promise<Message>;
+
     abstract getCandidates(): MyCandidate[] | Promise<MyCandidate[]>;
 
     abstract Candidate(id: string): MyCandidate | Promise<MyCandidate>;

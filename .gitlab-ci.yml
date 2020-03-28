@@ -114,7 +114,7 @@ deploy-prod:
     - kubectl rollout status -f deployment.prod.yaml
   environment:
     name: Production
-    url: https://back.academy.fivepoints.fr
+    url: https://backend.academy.fivepoints.fr
   when: manual
   only:
     - master

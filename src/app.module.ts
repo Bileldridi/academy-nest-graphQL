@@ -10,12 +10,14 @@ import { CoursesModule } from './courses/courses.module';
 import { CommonModule } from './common/common.module';
 import { ScheduleModule } from '@nestjs/schedule';
 
+const dbhost = process.env.dbhost || 'localhost';
+
 @Module({
   imports: [
     CatsModule,
     // ScheduleModule.forRoot(),
     CommonModule,
-    MongooseModule.forRoot('mongodb://localhost:27017/academyDb', { useNewUrlParser: true }),
+    MongooseModule.forRoot('mongodb://' + dbhost + ':27017/academyDb', { useNewUrlParser: true }),
     GraphQLModule.forRoot({
       typePaths: ['./**/*.graphql'],
       installSubscriptionHandlers: true,

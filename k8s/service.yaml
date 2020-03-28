@@ -16,11 +16,11 @@ spec:
   ports:
     - name: http
       port: 80
-      targetPort: 5400
+      targetPort: 3000
       protocol: TCP
     - name: https
       port: 443
-      targetPort: 5400
+      targetPort: 3000
   selector:
     app: academy-backend-__CI_ENVIRONMENT_SLUG__
     ref: prod

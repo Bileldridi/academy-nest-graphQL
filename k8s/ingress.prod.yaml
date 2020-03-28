@@ -23,4 +23,4 @@ spec:
     tls:
     - hosts:
       - backend.academy.fivepoints.fr
-      secretName: __CI_ENVIRONMENT_SLUG__-backend-auto-deploy-tls
+      secretName: backend-auto-deploy-tls

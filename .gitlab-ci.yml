@@ -99,7 +99,7 @@ deploy-prod:
     - kubectl version
     - cd k8s/
     - sed -i "s~__CI_REGISTRY_IMAGE__~${CI_REGISTRY_IMAGE}~" deployment.prod.yaml
-    - sed -i "s~__CI_ENVIRONMENT_SLUG__~$(echo ${CI_ENVIRONMENT_NAME} | tr "/" "-" | tr '[:upper:]' '[:lower:]')~" deployment.prod.yaml ingress.prod.yaml service.yaml
+    - sed -i "s~__CI_ENVIRONMENT_SLUG__~$(echo ${CI_ENVIRONMENT_NAME} | tr "/" "-" | tr '[:upper:]' '[:lower:]')~" deployment.prod.yaml ingress.prod.yaml service.prod.yaml
     - sed -i "s~__VERSION__~v${CI_PIPELINE_ID}~" deployment.prod.yaml
     - sed -i "s/__HOST__/${CI_ENVIRONMENT_SLUG}/" ingress.prod.yaml
     - |

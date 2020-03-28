@@ -2,15 +2,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: academy-backend-__CI_ENVIRONMENT_SLUG__
+  name: academy-backend-prod-__CI_ENVIRONMENT_SLUG__
   namespace: academy-backend
   labels:
-    app: academy-backend-__CI_ENVIRONMENT_SLUG__
+    app: academy-backend-prod-__CI_ENVIRONMENT_SLUG__
     ref: prod
   annotations:
     service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "https"
     service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
-    # service.beta.kubernetes.io/aws-load-balancer-ssl-cert: arn:aws:acm:eu-central-1:398011218896:certificate/37515993-95d9-4f2f-ae2c-8a17029e6237
 spec:
   type: LoadBalancer
   ports:
@@ -22,5 +21,5 @@ spec:
       port: 443
       targetPort: 3000
   selector:
-    app: academy-backend-__CI_ENVIRONMENT_SLUG__
+    app: academy-backend-prod-__CI_ENVIRONMENT_SLUG__
     ref: prod

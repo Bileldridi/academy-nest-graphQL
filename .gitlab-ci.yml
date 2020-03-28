@@ -109,7 +109,7 @@ deploy-prod:
       else
           echo "=> deployment.prod apply has changed the object, no need to force image update."
       fi
-    - kubectl apply -f service.yaml || true
+    - kubectl apply -f service.prod.yaml || true
     - kubectl apply -f ingress.prod.yaml
     - kubectl rollout status -f deployment.prod.yaml
   environment:

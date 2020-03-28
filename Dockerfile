@@ -5,5 +5,5 @@ WORKDIR /app/node_modules
 # ADD node_modules .
 WORKDIR /app
 ADD package.json .
-RUN npm install --no-audit --silent
+RUN npm install 
 CMD node dist/main.js

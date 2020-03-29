@@ -22,6 +22,7 @@ export class UsersService {
     }
 
     async create(user) {
+        user.password = crypto.SHA256(user.password).toString();
         return await this.userModel.create(user).catch(err => err)
     }
     async login(user) {
@@ -77,13 +78,13 @@ export class UsersService {
         const recoveryPass = Math.random().toString(36).slice(-30);
         const recoveryToken = jwt.sign({}, recoveryPass, { expiresIn: '12h' })
         console.log(recoveryPass);
-        
+
         const result = await this.userModel.updateOne({ email }, { $set: { recoveryToken } }).exec()
         return result;
     }
     async recoverAccountCheck(email, recoveryPass, password) {
         console.log(email, recoveryPass, password);
-        
+
         const user = await this.userModel.findOne({ email }).exec();
         const check = jwt.verify(user.recoveryToken, recoveryPass);
         if (!user || !check) {

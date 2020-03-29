@@ -45,7 +45,7 @@ export class UsersService {
         return result;
     }
     async validateUser(payload: any): Promise<any> {
-        console.log('payload', payload);
+        // console.log('payload', payload);
 
         return await this.userModel.findOne({ email: payload.data.email }).exec();
     }

@@ -1,7 +1,7 @@
 import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
 import { CoursesService } from './courses.service';
 import { UseGuards } from '@nestjs/common';
-import { GraphqlAuthGuard } from '../users/gql.auth.guard';
+import { GraphqlAuthGuard } from '../common/guards/gql.auth.guard';
 
 @Resolver('Courses')
 export class CoursesResolver {

@@ -1,9 +1,11 @@
 import { Resolver, Query, Args, Mutation, GqlExecutionContext } from '@nestjs/graphql';
 import { UsersService } from './users.service';
-import { Controller, Request, Post, UseGuards, createParamDecorator, ExecutionContext } from '@nestjs/common';
+import { Controller, Request, Post, UseGuards, createParamDecorator, ExecutionContext, SetMetadata } from '@nestjs/common';
 import { AuthGuard } from '../common/passport/auth.guard';
-import { GraphqlAuthGuard } from './gql.auth.guard';
-import { User } from './current-user.decorator';
+import { GraphqlAuthGuard } from '../common/guards/gql.auth.guard';
+import { User } from '../common/decorators/current-user.decorator';
+import { Roles } from '../common/decorators/roles.decorator';
+import { RolesGuard } from '../common/guards/roles.guard';
 
 
 @Resolver('Users')
@@ -12,7 +14,9 @@ export class UsersResolver {
     constructor(private readonly usersService: UsersService) { }
 
     // @UseGuards(AuthGuard('jwt'))
-    @UseGuards(GraphqlAuthGuard)
+    @SetMetadata('roles', ['admin'])
+    @UseGuards(GraphqlAuthGuard, RolesGuard)
+    @Roles('admin')
     @Query('getUsers')
     async getUsers(@User() user) {
         console.log('user', user);
@@ -20,7 +24,8 @@ export class UsersResolver {
         return await this.usersService.findAll();
     }
 
-    @UseGuards(GraphqlAuthGuard)
+    @UseGuards(GraphqlAuthGuard, RolesGuard)
+    @Roles('admin')
     @Query('getCurrentUser')
     async getCurrentUser(@User() user) {
         return user;

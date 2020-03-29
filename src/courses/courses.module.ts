@@ -9,7 +9,7 @@ import { LevelSchema } from './schemas/level.schema';
 import { CommentSchema } from './schemas/comment.schema';
 import { ChapterSchema } from './schemas/chapter.schema';
 import { AccessSchema } from './schemas/access.schema';
-import { GraphqlAuthGuard } from '../users/gql.auth.guard';
+import { GraphqlAuthGuard } from '../common/guards/gql.auth.guard';
 
 @Module({
   imports: [

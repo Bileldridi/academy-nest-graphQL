@@ -7,23 +7,34 @@ import { JwtStrategy } from '../common/strategy/jwt.strategy';
 import { CoachSchema } from '../coaches/schemas/coaches.schema';
 import { CandidateSchema } from '../candidate/schemas/candidates.schema';
 import { JwtService, JwtModule } from '@nestjs/jwt';
-import { GraphqlAuthGuard } from './gql.auth.guard';
+import { GraphqlAuthGuard } from '../common/guards/gql.auth.guard';
 import { PassportModule } from '@nestjs/passport';
+import { RolesGuard } from '../common/guards/roles.guard';
 
 @Module({
-  imports: [MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
-  MongooseModule.forFeature([{ name: 'Coach', schema: CoachSchema }]),
-  MongooseModule.forFeature([{ name: 'Candidate', schema: CandidateSchema }]),
-  // JwtModule.register({ secret: 'asd' }),
-  PassportModule.register({
-    defaultStrategy: 'jwt',
-  }),
-  JwtModule.register({
-    secret: 'asd',
-    signOptions: {
-      expiresIn: 3600, // 1 hour
-    },
-  }),
+  imports: [
+    MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
+    MongooseModule.forFeature([{ name: 'Coach', schema: CoachSchema }]),
+    MongooseModule.forFeature([{ name: 'Candidate', schema: CandidateSchema }]),
+    // JwtModule.register({ secret: 'asd' }),
+    // PassportModule.register({
+    //   defaultStrategy: 'jwt',
+    // }),
+    // JwtModule.register({
+    //   secret: 'asd',
+    //   signOptions: {
+    //     expiresIn: 3600, // 1 hour
+    //   },
+    // }),
+    PassportModule.register({
+      defaultStrategy: 'jwt',
+    }),
+    JwtModule.register({
+      secret: 'asd',
+      signOptions: {
+        expiresIn: 3600, // 1 hour
+      }
+    }),
   ],
 
   providers: [UsersResolver, UsersService, JwtStrategy, GraphqlAuthGuard],

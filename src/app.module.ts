@@ -16,9 +16,9 @@ const dbhost = process.env.dbhost || 'localhost';
 @Module({
   imports: [
     CatsModule,
-    // ScheduleModule.forRoot(),
+    ScheduleModule.forRoot(),
     CommonModule,
-    MongooseModule.forRoot('mongodb://' + dbhost + ':27017/academyDb', { useNewUrlParser: true }),
+    MongooseModule.forRoot('mongodb://' + dbhost + ':27017/academyDb', { useNewUrlParser: true, useUnifiedTopology: true }),
     GraphQLModule.forRoot({
       typePaths: ['./**/*.graphql'],
       installSubscriptionHandlers: true,

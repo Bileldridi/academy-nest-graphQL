@@ -9,11 +9,11 @@ metadata:
         chart: auto-deploy-app-0.2.9
         heritage: Tiller
         release: production
-    name: academy-backend-prod-__CI_ENVIRONMENT_SLUG__
+    name: backendacademy-ingress-prod-__CI_ENVIRONMENT_SLUG__
     namespace: academy-backend
 spec:
     rules:
-    - host: back.academy.fivepoints.fr
+    - host: backendacademy.fivepoints.fr
       http:
         paths:
         - backend:
@@ -22,5 +22,5 @@ spec:
           path: /
     tls:
     - hosts:
-      - back.academy.fivepoints.fr
-      secretName: __CI_ENVIRONMENT_SLUG__-prod-auto-deploy-tls
+      - backendacademy.fivepoints.fr
+      secretName: backendacademy-auto-deploy-tls

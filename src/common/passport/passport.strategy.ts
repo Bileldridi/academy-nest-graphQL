@@ -6,9 +6,7 @@ export abstract class AbstractStrategy {
     abstract validate(...args: any[]): any;
 }
 
-export function PassportStrategy<T extends Type<any> = any>(
-    // tslint:disable-next-line:no-shadowed-variable
-    Strategy: T): Type<AbstractStrategy> {
+export function PassportStrategy<T extends Type<any> = any>(Strategy: T): Type<AbstractStrategy> {
     abstract class MixinStrategy extends Strategy {
         abstract validate(...args: any[]): any;
         constructor(...args: any[]) {

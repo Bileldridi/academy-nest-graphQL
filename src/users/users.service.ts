@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import * as jwt from 'jsonwebtoken';
 import * as crypto from 'crypto-js';
+import { sendEmailRecover } from 'src/common/mailer/mailer';
 
 @Injectable()
 export class UsersService {
@@ -54,7 +55,7 @@ export class UsersService {
         user.password = null;
         return {
             message: 'OK',
-            token: jwt.sign({ data: user, exp: Math.floor(Date.now() / 1000) + (3600 * 24) }, 'asd'),
+            token: jwt.sign({ data: user, exp: Math.floor(Date.now() / 1000) + (3600 * 24) }, '9e14a20fd9e14a20fdcd049bba10340aa0de93ddc118c89e14a20'),
         };
     }
     async updateUser(user, _id) {
@@ -80,18 +81,17 @@ export class UsersService {
         console.log(recoveryPass);
 
         const result = await this.userModel.updateOne({ email }, { $set: { recoveryToken } }).exec()
+        sendEmailRecover(user.email, recoveryPass)
         return result;
     }
     async recoverAccountCheck(email, recoveryPass, password) {
-        console.log(email, recoveryPass, password);
-
         const user = await this.userModel.findOne({ email }).exec();
         const check = jwt.verify(user.recoveryToken, recoveryPass);
         if (!user || !check) {
             return { message: 'Please check your info' }
         }
         password = crypto.SHA256(password).toString();
-        await this.userModel.updateOne({ email }, { $set: { password } }).exec();
+        await this.userModel.updateOne({ email }, { $set: { password, recoveryToken: null } }).exec();
         return { message: 'OK' };
     }
 }

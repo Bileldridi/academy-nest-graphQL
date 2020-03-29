@@ -19,22 +19,11 @@ export function AuthGuard(type, role: string[] = [''], options: any = defaultOpt
       constructor(private reflector: Reflector) { }
       async canActivate(context: ExecutionContext): Promise<boolean> {
         const httpContext = context.switchToHttp();
-        const [request, response] = [
-          httpContext.getRequest(),
-          httpContext.getResponse(),
-        ];
-        request[
-          options.property || defaultOptions.property
-        ] = await new Promise((resolve, reject) =>
+        const [request, response] = [httpContext.getRequest(), httpContext.getResponse(),];
+        request[options.property || defaultOptions.property] = await new Promise((resolve, reject) =>
           passport.authenticate(type, options, (err, user, info) => {
-
-            // console.log('AuthGuard', err, user, info);
-
-            // if (role[0] !== '') {
-            //   if (role.filter((elem) => user.userType !== elem).length !== 0) {
-            //     return reject(err || new UnauthorizedException());
-            //   }
-            // }
+            console.log(user);
+            
             if (err || !user) {
               return reject(err || new UnauthorizedException());
             }

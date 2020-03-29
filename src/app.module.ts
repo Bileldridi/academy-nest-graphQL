@@ -36,7 +36,7 @@ const dbhost = process.env.dbhost || 'localhost';
     SessionsModule,
     CoachesModule,
     CandidatesModule,
-    CoursesModule
+    CoursesModule,
   ],
   providers: [AppResolver],
 

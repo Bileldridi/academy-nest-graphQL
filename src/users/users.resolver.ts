@@ -35,6 +35,10 @@ export class UsersResolver {
     async findOneById(@Args('_id') id: string): Promise<any> {
         return await this.usersService.findOneById(id);
     }
+    @Query('deleteUser')
+    async deleteUser(@Args('_id') id: string): Promise<any> {
+        return await this.usersService.findOneById(id);
+    }
     @Query('check')
     async recoverAccountCheck(@Args('email') email: string, @Args('password') password: string, @Args('recoveryPass') recoveryPass: string): Promise<any> {
         return await this.usersService.recoverAccountCheck(email, recoveryPass, password);

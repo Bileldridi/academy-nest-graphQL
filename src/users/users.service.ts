@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import * as jwt from 'jsonwebtoken';
 import * as crypto from 'crypto-js';
-import { sendEmailRecover } from 'src/common/mailer/mailer';
+import { sendEmailRecover, sendEmailAccess } from '../common/mailer/mailer';
 
 @Injectable()
 export class UsersService {
@@ -13,7 +13,7 @@ export class UsersService {
         @InjectModel('Candidate') private readonly candidateModel: Model<any>) { }
 
     findAll() {
-        return this.userModel.find();
+        return this.userModel.find().populate('candidate');
     }
     async findOneById(id: string): Promise<any> {
         return await this.userModel.findById(id).exec();
@@ -23,7 +23,17 @@ export class UsersService {
     }
 
     async create(user) {
-        user.password = crypto.SHA256(user.password).toString();
+        let randomPass = '';
+        if (!user.password) {
+            randomPass = Math.random().toString(36).slice(-8);
+            user['password'] = crypto.SHA256(randomPass).toString();
+        } else {
+            user.password = crypto.SHA256(user.password).toString();
+            randomPass = '[YOUR OWN PASSWORD]';
+        }
+        if (user.sendEmail) {
+            await sendEmailAccess(user.email, randomPass)
+        }
         return await this.userModel.create(user).catch(err => err)
     }
     async login(user) {
@@ -40,6 +50,8 @@ export class UsersService {
         // if (res.status === 'Not Approved') {
         //     return { message: 'Not Approved' };
         // }
+
+        await this.userModel.updateOne({ email: user.email }, { $set: { lastLogin: Date.now() } }).exec()
 
         const result = this.createToken(res);
         console.log(result);
@@ -59,10 +71,21 @@ export class UsersService {
         };
     }
     async updateUser(user, _id) {
+        const oldUser = await this.userModel.findOne({ _id }).exec();
+        let pass = '';
+        if (user.password === '') {
+            user.password = oldUser.password;
+        } else {
+            user.password = crypto.SHA256(user.password).toString();
+            pass = user.password;
+        }
         const userResult = await this.userModel.findByIdAndUpdate({ _id }, user).catch(err => err);
         const coachResult = await this.coachModel.findByIdAndUpdate({ _id: userResult.coach }, user).catch(err => err);
         const result = await this.userModel.findOne({ _id }).exec();
-        return this.createToken(result);
+        if (user.sendEmail) {
+            await sendEmailAccess(user.email, pass)
+        }
+        return result;
     }
     async validate({ _id }): Promise<any> {
         const user = await this.userModel.findOne({ _id });
@@ -77,15 +100,19 @@ export class UsersService {
             return { message: 'Please check your info' }
         }
         const recoveryPass = Math.random().toString(36).slice(-30);
-        const recoveryToken = jwt.sign({}, recoveryPass, { expiresIn: '12h' })
-        console.log(recoveryPass);
-
+        const recoveryToken = jwt.sign({}, recoveryPass, { expiresIn: '12h' });
         const result = await this.userModel.updateOne({ email }, { $set: { recoveryToken } }).exec()
         sendEmailRecover(user.email, recoveryPass)
-        return result;
+        return { message: 'OK' };
     }
     async recoverAccountCheck(email, recoveryPass, password) {
         const user = await this.userModel.findOne({ email }).exec();
+        if (!user) {
+            return { message: 'Please check your info' }
+        }
+        if (user.recoveryToken === null) {
+            return { message: 'wrong url' }
+        }
         const check = jwt.verify(user.recoveryToken, recoveryPass);
         if (!user || !check) {
             return { message: 'Please check your info' }

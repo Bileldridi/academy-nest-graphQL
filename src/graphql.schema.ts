@@ -100,7 +100,10 @@ export class CreateUserInput {
     image?: string;
     candidate?: string;
     coach?: string;
+    note?: string;
     role?: string;
+    tel?: string;
+    sendEmail?: boolean;
 }
 
 export class LoginInput {
@@ -204,8 +207,12 @@ export class UserInput {
     firstname?: string;
     lastname?: string;
     email?: string;
+    password?: string;
     role?: string;
+    tel?: string;
+    note?: string;
     coach?: string;
+    sendEmail?: boolean;
 }
 
 export class Access {
@@ -326,7 +333,7 @@ export abstract class IMutation {
 
     abstract createUser(createUserInput?: CreateUserInput): User | Promise<User>;
 
-    abstract updateUser(userInput?: UserInput): Message | Promise<Message>;
+    abstract updateUser(userInput?: UserInput): User | Promise<User>;
 
     abstract login(loginInput?: LoginInput): UserLogin | Promise<UserLogin>;
 }
@@ -447,6 +454,8 @@ export abstract class IQuery {
 
     abstract User(_id: string): User | Promise<User>;
 
+    abstract deleteUser(_id: string): User | Promise<User>;
+
     abstract recover(email: string): Message | Promise<Message>;
 
     abstract check(email: string, password: string, recoveryPass: string): Message | Promise<Message>;
@@ -491,12 +500,16 @@ export class User {
     firstname?: string;
     lastname?: string;
     createDate?: number;
+    lastLogin?: number;
     password?: string;
     email?: string;
     image?: string;
+    tel?: string;
+    note?: string;
     candidate?: Candidate;
     coach?: Coach;
     role?: string;
+    status?: string;
 }
 
 export class UserLogin {

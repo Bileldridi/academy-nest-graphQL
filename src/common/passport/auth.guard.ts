@@ -22,7 +22,7 @@ export function AuthGuard(type, role: string[] = [''], options: any = defaultOpt
         const [request, response] = [httpContext.getRequest(), httpContext.getResponse(),];
         request[options.property || defaultOptions.property] = await new Promise((resolve, reject) =>
           passport.authenticate(type, options, (err, user, info) => {
-            console.log(user);
+            
             
             if (err || !user) {
               return reject(err || new UnauthorizedException());

@@ -1,7 +1,7 @@
 type Query {
   getUsers: [User]
   getCurrentUser: User
-  User(_id: ID!): User
+  User(id: String!): User
   deleteUser(_id: ID!): User
   recover(email: String!): Message
   check(email: String!, password: String!, recoveryPass: String!): Message

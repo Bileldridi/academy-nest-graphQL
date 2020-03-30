@@ -56,10 +56,10 @@ export class SessionsService {
     return {}
   }
   async update(session) {
-    console.log(session);
+    
 
     const result = await this.sessionModel.updateOne({ _id: session.id }, { $set: session }).exec()
-    console.log(result);
+    
 
     return await this.sessionModel.findById(session.id).exec();;
   }

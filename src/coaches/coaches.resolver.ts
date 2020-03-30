@@ -27,13 +27,13 @@ export class CoachesResolver {
 
     @Mutation('createCoach')
     async create(@Args('createCoachInput') args: any): Promise<any> {
-        // console.log('hello', args);
+        // 
         const result = await this.coachesService.create(args);
         return result;
     }
     @Mutation('updateCoach')
     async update(@Args('updateCoachInput') args: any): Promise<any> {
-        console.log('hello');
+        
 
         return await this.coachesService.update(args, args.id);
     }

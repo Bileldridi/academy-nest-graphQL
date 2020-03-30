@@ -19,7 +19,7 @@ export class UsersResolver {
     @Roles('admin')
     @Query('getUsers')
     async getUsers(@User() user) {
-        console.log('user', user);
+        
 
         return await this.usersService.findAll();
     }
@@ -32,7 +32,7 @@ export class UsersResolver {
     }
 
     @Query('User')
-    async findOneById(@Args('_id') id: string): Promise<any> {
+    async findOneById(@Args('id') id: string): Promise<any> {
         return await this.usersService.findOneById(id);
     }
     @Query('deleteUser')
@@ -55,7 +55,7 @@ export class UsersResolver {
     }
     @Mutation('login')
     async login(@Args('loginInput') args: any): Promise<any> {
-        // console.log(args);
+        // 
         return await this.usersService.login(args);
     }
     @Mutation('updateUser')

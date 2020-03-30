@@ -10,13 +10,15 @@ export class UsersService {
     constructor(
         @InjectModel('User') private readonly userModel: Model<any>,
         @InjectModel('Coach') private readonly coachModel: Model<any>,
-        @InjectModel('Candidate') private readonly candidateModel: Model<any>) { }
+        @InjectModel('Candidate') private readonly candidateModel: Model<any>,
+        ) { }
 
     findAll() {
         return this.userModel.find().populate('candidate');
     }
     async findOneById(id: string): Promise<any> {
-        return await this.userModel.findById(id).exec();
+        const user = await this.userModel.findById(id).exec();
+        return user;
     }
     async findUserByEmail(email: string): Promise<any> {
         return await this.userModel.findOne({ email }).exec();
@@ -54,11 +56,11 @@ export class UsersService {
         await this.userModel.updateOne({ email: user.email }, { $set: { lastLogin: Date.now() } }).exec()
 
         const result = this.createToken(res);
-        console.log(result);
+
         return result;
     }
     async validateUser(payload: any): Promise<any> {
-        // console.log('payload', payload);
+        // 
 
         return await this.userModel.findOne({ email: payload.data.email }).exec();
     }

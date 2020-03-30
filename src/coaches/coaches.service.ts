@@ -8,7 +8,7 @@ export class CoachesService {
     constructor(@InjectModel('User') private readonly userModel: Model<any>, @InjectModel('Coach') private readonly coachModel: Model<any>) { }
 
     async create(coach) {
-        console.log(coach);
+        
         const coachResult = await this.coachModel.create(coach).catch(err => err);
         coach['coach'] = coachResult._id;
         const userResult = await this.userModel.create(coach).catch(err => err);
@@ -22,7 +22,7 @@ export class CoachesService {
         return result;
     }
     async findAll() {
-        console.log('heyy');
+        
 
         const result = await this.userModel.find({ role: 'coach' }).populate({ path: 'coach' }).exec();
         return result;
@@ -31,17 +31,17 @@ export class CoachesService {
         return await this.coachModel.findById(id).exec();
     }
     async deleteOne(id: string): Promise<any> {
-        console.log('deleted ', id);
+        
 
         const result = await this.userModel.findByIdAndDelete(id).exec();
-        console.log(result);
+        
 
         return { id };
     }
     async deleteOnes(ids: string[]): Promise<any> {
 
         ids = ids[0].split(',').map(e => e.replace('\'', ''));
-        console.log('deleted many', ids);
+        
         for (const id of ids) {
             const result = await this.userModel.findByIdAndDelete(id).exec();
         }

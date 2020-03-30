@@ -452,7 +452,7 @@ export abstract class IQuery {
 
     abstract getCurrentUser(): User | Promise<User>;
 
-    abstract User(_id: string): User | Promise<User>;
+    abstract User(id: string): User | Promise<User>;
 
     abstract deleteUser(_id: string): User | Promise<User>;
 

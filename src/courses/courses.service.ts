@@ -60,7 +60,7 @@ export class CoursesService {
         return await this.levelModel.find().populate('courses').exec();
     }
     async updateLevel(level, _id) {
-        console.log(level);
+        
         return await this.levelModel.findByIdAndUpdate({ _id }, level).catch(err => err);
     }
     async deleteOneLevel(id: string): Promise<any> {
@@ -84,9 +84,9 @@ export class CoursesService {
     async updateChapter(chapter, _id) {
         if (chapter.course) {
             const oldCourse = await this.courseModel.updateOne({ chapters: _id }, { $pull: { chapters: _id } }).exec();
-            console.log('oldCourse', oldCourse);
+            
             const update = await this.courseModel.updateOne({ _id: chapter.course }, { $push: { chapters: chapter.id } }).exec();
-            console.log('update', update);
+            
         }
         return await this.chapterModel.findByIdAndUpdate({ _id }, chapter).populate('course').exec()
     }

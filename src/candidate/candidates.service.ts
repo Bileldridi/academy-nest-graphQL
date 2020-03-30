@@ -12,9 +12,9 @@ export class CandidatesService {
 	constructor(@InjectModel('User') private readonly userModel: Model<any>, @InjectModel('Candidate') private readonly candidateModel: Model<any>) { }
 
 	async create(candidate) {
-		console.log(candidate);
+		
 		const randomPass = Math.random().toString(36).slice(-8);
-		console.log('randomPass', randomPass);
+		
 		const candidateResult = await this.candidateModel.create(candidate).catch(err => err);
 		candidate['candidate'] = candidateResult._id;
 		candidate['candidate'] = candidateResult._id;
@@ -27,11 +27,11 @@ export class CandidatesService {
 	}
 
 	async update(candidate, _id) {
-		console.log(candidate);
+		
 
 		const userResult = await this.userModel.findOneAndUpdate({ _id }, candidate).catch(err => err);
 		const candidateResult = await this.candidateModel.updateOne({ _id: userResult.candidate }, candidate).catch(err => err);
-		console.log(candidateResult);
+		
 		const result = await this.userModel.findOne({ _id }).populate({ path: 'candidate' }).exec();
 		return result;
 	}
@@ -43,17 +43,17 @@ export class CandidatesService {
 		return await this.candidateModel.findById(id).exec();
 	}
 	async deleteOne(id: string): Promise<any> {
-		console.log('deleted ', id);
+		
 
 		const result = await this.userModel.findByIdAndDelete(id).exec();
-		console.log(result);
+		
 
 		return { id };
 	}
 	async deleteOnes(ids: string[]): Promise<any> {
 
 		ids = ids[0].split(',').map(e => e.replace('\'', ''));
-		console.log('deleted many', ids);
+		
 		for (const id of ids) {
 			const result = await this.userModel.findByIdAndDelete(id).exec();
 		}

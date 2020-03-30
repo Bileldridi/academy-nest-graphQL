@@ -33,11 +33,11 @@ export function AuthGuardCheck(type, role: string[] = [''], options: any = defau
             }
             if (request.params.idUser.toString() !== user._id.toString()) {
             // tslint:disable-next-line:no-console
-            console.log(request.params.idUser, user._id);
+            
             return reject(err || new UnauthorizedException());
             }
             // tslint:disable-next-line:no-console
-            console.log(request.params.idUser, user._id, 'hey');
+            
             resolve(user);
           })(request, response, resolve),
         );

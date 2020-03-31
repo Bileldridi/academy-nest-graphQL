@@ -77,10 +77,10 @@ export class CreateLevelInput {
 }
 
 export class CreateProgressInput {
-    talent?: string;
+    candidate?: string;
     chapter?: string;
     type?: string;
-    score?: string;
+    score?: number;
     desc?: string;
 }
 
@@ -185,10 +185,10 @@ export class UpdateLevelInput {
 
 export class UpdateProgressInput {
     id?: string;
-    talent?: string;
+    candidate?: string;
     chapter?: string;
     type?: string;
-    score?: string;
+    score?: number;
     desc?: string;
 }
 
@@ -363,10 +363,10 @@ export class MyUser {
 
 export class Progress {
     id?: string;
-    talent?: User;
+    candidate?: User;
     chapter?: Chapter;
     type?: string;
-    score?: string;
+    score?: number;
     desc?: string;
     createDate?: number;
 }

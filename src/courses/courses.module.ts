@@ -10,6 +10,7 @@ import { CommentSchema } from './schemas/comment.schema';
 import { ChapterSchema } from './schemas/chapter.schema';
 import { AccessSchema } from './schemas/access.schema';
 import { GraphqlAuthGuard } from '../common/guards/gql.auth.guard';
+import { ProgressSchema } from './schemas/progress.schema';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { GraphqlAuthGuard } from '../common/guards/gql.auth.guard';
     MongooseModule.forFeature([{ name: 'Comment', schema: CommentSchema }]),
     MongooseModule.forFeature([{ name: 'Course', schema: CourseSchema }]),
     MongooseModule.forFeature([{ name: 'Access', schema: AccessSchema }]),
+    MongooseModule.forFeature([{ name: 'Progress', schema: ProgressSchema }]),
     
   ],
   providers: [CoursesService, CoursesResolver, GraphqlAuthGuard],

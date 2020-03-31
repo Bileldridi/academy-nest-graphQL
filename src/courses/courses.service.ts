@@ -14,6 +14,7 @@ export class CoursesService {
         @InjectModel('Chapter') private readonly chapterModel: Model<any>,
         @InjectModel('Comment') private readonly commentModel: Model<any>,
         @InjectModel('Access') private readonly accessModel: Model<any>,
+        @InjectModel('Progress') private readonly progressModel: Model<any>,
     ) { }
     @Cron(CronExpression.EVERY_30_MINUTES)
     async handleCron() {
@@ -23,7 +24,7 @@ export class CoursesService {
         for (let i = 0; i < accesses.length; i++) {
             const e = accesses[i];
             const timeLeft = Math.round((((e.duration * 86400000) + (e.createDate)) - Date.now()) / 86400000);
-            this.logger.debug('timeLeft '+ timeLeft);
+            this.logger.debug('timeLeft ' + timeLeft);
             if (timeLeft < 0) {
                 const result = await this.accessModel.updateOne({ _id: e._id }, { status: 'expired' }).exec();
                 this.logger.debug('updated : ' + JSON.stringify(result));
@@ -60,7 +61,7 @@ export class CoursesService {
         return await this.levelModel.find().populate('courses').exec();
     }
     async updateLevel(level, _id) {
-        
+
         return await this.levelModel.findByIdAndUpdate({ _id }, level).catch(err => err);
     }
     async deleteOneLevel(id: string): Promise<any> {
@@ -84,9 +85,9 @@ export class CoursesService {
     async updateChapter(chapter, _id) {
         if (chapter.course) {
             const oldCourse = await this.courseModel.updateOne({ chapters: _id }, { $pull: { chapters: _id } }).exec();
-            
+
             const update = await this.courseModel.updateOne({ _id: chapter.course }, { $push: { chapters: chapter.id } }).exec();
-            
+
         }
         return await this.chapterModel.findByIdAndUpdate({ _id }, chapter).populate('course').exec()
     }
@@ -146,4 +147,19 @@ export class CoursesService {
         await this.accessModel.findByIdAndDelete(id).exec();
         return { id };
     }
+    async updateProgress(progress, user) {
+        progress.candidate = user.id;
+        console.log(progress);
+                
+        const progressResult = await this.progressModel.findOne({ chapter: progress.chapter }).exec();
+        if (progressResult) { 
+            progress.score += progressResult.score;
+            return await this.progressModel.updateOne({ chapter: progress.chapter }, { $set: progress }).catch(err => err);
+        }
+        else {
+            return await this.progressModel.create(progress).catch(err => err);
+        }
+    }
+
+ 
 }

@@ -18,27 +18,27 @@ type Subscription {
 
 type Progress {
   id: String
-  talent: User
+  candidate: User
   chapter: Chapter
   type: String
-  score: String
+  score: Int
   desc: String
   createDate: Float
 }
 
 input CreateProgressInput {
-  talent: String
+  candidate: String
   chapter: String
   type: String
-  score: String
+  score: Int
   desc: String
 }
 
 input UpdateProgressInput {
   id: String
-  talent: String
+  candidate: String
   chapter: String
   type: String
-  score: String
+  score: Int
   desc: String
 }

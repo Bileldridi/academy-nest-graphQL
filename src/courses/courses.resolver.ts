@@ -2,6 +2,7 @@ import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
 import { CoursesService } from './courses.service';
 import { UseGuards } from '@nestjs/common';
 import { GraphqlAuthGuard } from '../common/guards/gql.auth.guard';
+import { User } from '../common/decorators/current-user.decorator';
 
 @Resolver('Courses')
 export class CoursesResolver {
@@ -106,9 +107,10 @@ export class CoursesResolver {
     async findAccessByLevelId(@Args('id') id: string): Promise<any[]> {
         return await this.coursesService.findAccessByLevelId(id);
     }
+    @UseGuards(GraphqlAuthGuard)
     @Query('getCandidateAccess')
-    async findAccessByCandidateId(@Args('id') id: string): Promise<any[]> {
-        return await this.coursesService.findAccessByCandidateId(id);
+    async findAccessByCandidateId(@Args('id') id: string, @User() user): Promise<any[]> {
+        return await this.coursesService.findAccessByCandidateId(user.id);
     }
     @Query('removeAccess')
     async deleteOneAccess(@Args('id') id: string): Promise<any> {
@@ -122,4 +124,11 @@ export class CoursesResolver {
     async updateAccess(@Args('updateAccessInput') args: any): Promise<any> {
         return await this.coursesService.updateAccess(args, args.id);
     }
+    // PROGRESS
+    @UseGuards(GraphqlAuthGuard)
+    @Mutation('updateProgress')
+    async updateProgress(@Args('updateProgressInput') args: any, @User() user): Promise<any> {
+        return await this.coursesService.updateProgress(args, user);
+    }
+
 }

@@ -1,0 +1,54 @@
+type Query {
+  getOrders: [Order]
+  Order(id: ID!): Order
+}
+
+type Mutation {
+  createOrder(createOrderInput: CreateOrderInput): Message
+  updateOrder(updateOrderInput: UpdateOrderInput): Message
+
+}
+
+type Order {
+  id: String
+  course: Course
+  level: Level
+  createDate: Float
+  orderId: String
+  assistance: Boolean
+  firstname: String
+  lastname: String
+  email: String
+  tel: String
+  zip: String
+  city: String
+  country: String
+  status: String
+ }
+
+input CreateOrderInput {
+  course: String
+  level: String
+  assistance: Boolean
+  firstname: String
+  lastname: String
+  email: String
+  tel: String
+  zip: String
+  city: String
+  country: String
+}
+
+
+input UpdateOrderInput {
+  id: String
+  assistance: Boolean
+  firstname: String
+  lastname: String
+  email: String
+  tel: String
+  zip: String
+  city: String
+  country: String
+  status: String
+}

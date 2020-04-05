@@ -14,6 +14,15 @@ export class CoursesResolver {
     async getCourses() {
         return await this.coursesService.findAllCourses();
     }
+    @Query('getFeaturedCourses')
+    async getFeaturedCourses() {
+        return await this.coursesService.getFeaturedCourses();
+    }
+    @Query('getHomeCourses')
+    async getHomeCourses() {
+        return await this.coursesService.getHomeCourses();
+    }
+
     @Query('Course')
     async findOneCourseById(@Args('id') id: string): Promise<any> {
         return await this.coursesService.findOneCourseById(id);

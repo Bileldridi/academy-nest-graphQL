@@ -60,6 +60,10 @@ export class CreateCommentInput {
 export class CreateCourseInput {
     title?: string;
     desc?: string;
+    longDesc?: string;
+    pic?: string;
+    price?: number;
+    assistancePrice?: number;
     difficulty?: string;
     levels?: string[];
     chapters?: string[];
@@ -74,6 +78,19 @@ export class CreateLevelInput {
     desc?: string;
     status?: string;
     duration?: number;
+}
+
+export class CreateOrderInput {
+    course?: string;
+    level?: string;
+    assistance?: boolean;
+    firstname?: string;
+    lastname?: string;
+    email?: string;
+    tel?: string;
+    zip?: string;
+    city?: string;
+    country?: string;
 }
 
 export class CreateProgressInput {
@@ -167,6 +184,10 @@ export class UpdateCourseInput {
     title?: string;
     difficulty?: string;
     desc?: string;
+    price?: number;
+    assistancePrice?: number;
+    longDesc?: string;
+    pic?: string;
     levels?: string[];
     chapters?: string[];
     status?: string;
@@ -181,6 +202,19 @@ export class UpdateLevelInput {
     desc?: string;
     status?: string;
     duration?: number;
+}
+
+export class UpdateOrderInput {
+    id?: string;
+    assistance?: boolean;
+    firstname?: string;
+    lastname?: string;
+    email?: string;
+    tel?: string;
+    zip?: string;
+    city?: string;
+    country?: string;
+    status?: string;
 }
 
 export class UpdateProgressInput {
@@ -267,13 +301,17 @@ export class Course {
     id?: string;
     title?: string;
     desc?: string;
+    longDesc?: string;
+    pic?: string;
     difficulty?: string;
     chapters?: Chapter[];
     comments?: Comment[];
     levels?: Level[];
     createDate?: number;
+    assistancePrice?: number;
     status?: string;
     duration?: number;
+    price?: number;
     files?: string[];
 }
 
@@ -327,6 +365,10 @@ export abstract class IMutation {
 
     abstract updateProgress(updateProgressInput?: UpdateProgressInput): Progress | Promise<Progress>;
 
+    abstract createOrder(createOrderInput?: CreateOrderInput): Message | Promise<Message>;
+
+    abstract updateOrder(updateOrderInput?: UpdateOrderInput): Message | Promise<Message>;
+
     abstract createSession(createSessionInput?: CreateSessionInput): Session | Promise<Session>;
 
     abstract updateSession(updateSessionInput?: UpdateSessionInput): Session | Promise<Session>;
@@ -361,6 +403,23 @@ export class MyUser {
     role?: string;
 }
 
+export class Order {
+    id?: string;
+    course?: Course;
+    level?: Level;
+    createDate?: number;
+    orderId?: string;
+    assistance?: boolean;
+    firstname?: string;
+    lastname?: string;
+    email?: string;
+    tel?: string;
+    zip?: string;
+    city?: string;
+    country?: string;
+    status?: string;
+}
+
 export class Progress {
     id?: string;
     candidate?: User;
@@ -369,6 +428,24 @@ export class Progress {
     score?: number;
     desc?: string;
     createDate?: number;
+}
+
+export class PublicChapter {
+    id?: string;
+    title?: string;
+}
+
+export class PublicCourse {
+    id?: string;
+    title?: string;
+    desc?: string;
+    longDesc?: string;
+    pic?: string;
+    price?: number;
+    assistancePrice?: number;
+    difficulty?: string;
+    chapters?: PublicChapter[];
+    duration?: number;
 }
 
 export abstract class IQuery {
@@ -412,6 +489,10 @@ export abstract class IQuery {
 
     abstract getCourses(): Course[] | Promise<Course[]>;
 
+    abstract getFeaturedCourses(): PublicCourse[] | Promise<PublicCourse[]>;
+
+    abstract getHomeCourses(): PublicCourse[] | Promise<PublicCourse[]>;
+
     abstract Course(id: string): Course | Promise<Course>;
 
     abstract removeCourse(id: string): Course | Promise<Course>;
@@ -433,6 +514,10 @@ export abstract class IQuery {
     abstract Progress(id: string): Progress | Promise<Progress>;
 
     abstract removeProgress(id: string): Progress | Promise<Progress>;
+
+    abstract getOrders(): Order[] | Promise<Order[]>;
+
+    abstract Order(id: string): Order | Promise<Order>;
 
     abstract getSessions(): Session[] | Promise<Session[]>;
 

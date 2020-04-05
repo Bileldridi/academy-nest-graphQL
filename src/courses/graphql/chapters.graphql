@@ -27,6 +27,11 @@ type Chapter {
   comments: [Comment]
 }
 
+type PublicChapter{
+  id: String
+  title: String
+}
+
 input CreateChapterInput {
   title: String
   content: String

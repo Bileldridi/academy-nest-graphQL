@@ -10,6 +10,7 @@ import { CoursesModule } from './courses/courses.module';
 import { CommonModule } from './common/common.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { AppResolver } from './app.resolver';
+import { PurchaseModule } from './purchase/purchase.module';
 
 const dbhost = process.env.dbhost || 'localhost';
 
@@ -37,6 +38,7 @@ const dbhost = process.env.dbhost || 'localhost';
     CoachesModule,
     CandidatesModule,
     CoursesModule,
+    PurchaseModule,
   ],
   providers: [AppResolver],
 

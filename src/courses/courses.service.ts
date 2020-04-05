@@ -40,6 +40,14 @@ export class CoursesService {
         const result = await this.courseModel.find().populate('levels').populate('chapters').exec();
         return result;
     }
+    async getFeaturedCourses(): Promise<any[]> {
+        const result = await this.courseModel.find({ status: 'published' }).populate('chapters').exec();
+        return result.filter((e, i) => i < 6);
+    }
+    async getHomeCourses(): Promise<any[]> {
+        const result = await this.courseModel.find({ status: 'published' }).populate('chapters').exec();
+        return result;
+    }
     async findOneCourseById(id: string): Promise<any> {
         return await this.courseModel.findById(id).populate('levels').populate('chapters').exec();
     }
@@ -150,9 +158,9 @@ export class CoursesService {
     async updateProgress(progress, user) {
         progress.candidate = user.id;
         console.log(progress);
-                
+
         const progressResult = await this.progressModel.findOne({ chapter: progress.chapter }).exec();
-        if (progressResult) { 
+        if (progressResult) {
             progress.score += progressResult.score;
             return await this.progressModel.updateOne({ chapter: progress.chapter }, { $set: progress }).catch(err => err);
         }
@@ -161,5 +169,5 @@ export class CoursesService {
         }
     }
 
- 
+
 }

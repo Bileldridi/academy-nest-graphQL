@@ -1,5 +1,7 @@
 type Query {
   getCourses: [Course]
+  getFeaturedCourses: [PublicCourse]
+  getHomeCourses: [PublicCourse]
   Course(id: String!): Course
   removeCourse(id: String!): Course
   getComments: [Course]
@@ -28,14 +30,31 @@ type Course {
   id: String
   title: String
   desc: String
+  longDesc: String
+  pic: String
   difficulty: String
   chapters: [Chapter]
   comments: [Comment]
   levels: [Level]
   createDate: Float
+  assistancePrice: Int
   status: String
   duration: Int
+  price: Int
   files: [String]
+}
+
+type PublicCourse {
+  id: String
+  title: String
+  desc: String
+  longDesc: String
+  pic: String
+  price: Int
+  assistancePrice: Int
+  difficulty: String
+  chapters: [PublicChapter]
+  duration: Int
 }
 
 type Comment {
@@ -48,6 +67,10 @@ type Comment {
 input CreateCourseInput {
   title: String
   desc: String
+  longDesc: String
+  pic: String
+  price: Int
+  assistancePrice: Int
   difficulty: String
   levels: [String]
   chapters: [String]
@@ -60,6 +83,10 @@ input UpdateCourseInput {
   title: String
   difficulty: String
   desc: String
+  price: Int
+  assistancePrice: Int
+  longDesc: String
+  pic: String
   levels: [String]
   chapters: [String]
   status: String

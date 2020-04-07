@@ -13,7 +13,21 @@ export const schema: Schema = new Schema({
     zip: String,
     city: String,
     country: String,
-    status: { type: String, default: 'waitingPayment', enum: ['waitingPayment', 'Payed', 'canceled', 'refunded', 'paymentError'] },
+    status: [
+        {
+            createDate: { type: Number, default: Date.now() },
+            status: { type: String, default: 'waitingPayment', enum: ['waitingPayment', 'payed', 'canceled', 'refunded', 'paymentError'] }
+        }
+    ],
+    payment: {
+        amount: Number,
+        createDate: { type: Number, default: Date.now() },
+        transfereId: String,
+        method: String,
+        mode: {
+            type: String, enum: ['transfere', 'online']
+        }
+    }
 });
 schema.virtual('id').get(function () {
     return this._id.toHexString();

@@ -11,6 +11,7 @@ import { ChapterSchema } from './schemas/chapter.schema';
 import { AccessSchema } from './schemas/access.schema';
 import { GraphqlAuthGuard } from '../common/guards/gql.auth.guard';
 import { ProgressSchema } from './schemas/progress.schema';
+import { CemeterySchema } from '../common/schemas/cemetery.schema';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { ProgressSchema } from './schemas/progress.schema';
     MongooseModule.forFeature([{ name: 'Course', schema: CourseSchema }]),
     MongooseModule.forFeature([{ name: 'Access', schema: AccessSchema }]),
     MongooseModule.forFeature([{ name: 'Progress', schema: ProgressSchema }]),
+    MongooseModule.forFeature([{ name: 'Cemetery', schema: CemeterySchema }]),
     
   ],
   providers: [CoursesService, CoursesResolver, GraphqlAuthGuard],

@@ -1,7 +1,7 @@
 type Query {
   getLevels: [Level]
   Level(id: String!): Level
-  removeLevel(id: String!): Level
+  removeLevel(id: String!): Message
 }
 
 type Mutation {

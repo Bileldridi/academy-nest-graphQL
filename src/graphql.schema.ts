@@ -83,14 +83,16 @@ export class CreateLevelInput {
 export class CreateOrderInput {
     course?: string;
     level?: string;
-    assistance?: boolean;
-    firstname?: string;
-    lastname?: string;
-    email?: string;
-    tel?: string;
-    zip?: string;
-    city?: string;
-    country?: string;
+    assistance: boolean;
+    firstname: string;
+    lastname: string;
+    email: string;
+    tel: string;
+    zip: string;
+    city: string;
+    country: string;
+    mode: string;
+    method: string;
 }
 
 export class CreateProgressInput {
@@ -417,7 +419,16 @@ export class Order {
     zip?: string;
     city?: string;
     country?: string;
-    status?: string;
+    status?: Status[];
+    payment?: Payment;
+}
+
+export class Payment {
+    createDate?: number;
+    mode?: string;
+    transfereId?: string;
+    method?: string;
+    amount?: number;
 }
 
 export class Progress {
@@ -479,13 +490,13 @@ export abstract class IQuery {
 
     abstract getCandidateAccess(id: string): Access[] | Promise<Access[]>;
 
-    abstract removeAccess(id: string): Access | Promise<Access>;
+    abstract removeAccess(id: string): Message | Promise<Message>;
 
     abstract getChapters(): Chapter[] | Promise<Chapter[]>;
 
     abstract Chapter(id: string): Chapter | Promise<Chapter>;
 
-    abstract removeChapter(id: string): Chapter | Promise<Chapter>;
+    abstract removeChapter(id: string): Message | Promise<Message>;
 
     abstract getCourses(): Course[] | Promise<Course[]>;
 
@@ -495,7 +506,7 @@ export abstract class IQuery {
 
     abstract Course(id: string): Course | Promise<Course>;
 
-    abstract removeCourse(id: string): Course | Promise<Course>;
+    abstract removeCourse(id: string): Message | Promise<Message>;
 
     abstract getComments(): Course[] | Promise<Course[]>;
 
@@ -507,17 +518,19 @@ export abstract class IQuery {
 
     abstract Level(id: string): Level | Promise<Level>;
 
-    abstract removeLevel(id: string): Level | Promise<Level>;
+    abstract removeLevel(id: string): Message | Promise<Message>;
 
     abstract getProgresss(): Progress[] | Promise<Progress[]>;
 
     abstract Progress(id: string): Progress | Promise<Progress>;
 
-    abstract removeProgress(id: string): Progress | Promise<Progress>;
+    abstract removeProgress(id: string): Message | Promise<Message>;
 
     abstract getOrders(): Order[] | Promise<Order[]>;
 
     abstract Order(id: string): Order | Promise<Order>;
+
+    abstract deleteOrder(id: string): Message | Promise<Message>;
 
     abstract getSessions(): Session[] | Promise<Session[]>;
 
@@ -556,6 +569,11 @@ export class Session {
     finishDate?: number;
     candidates?: User[];
     coaches?: User[];
+}
+
+export class Status {
+    createDate?: number;
+    status?: string;
 }
 
 export abstract class ISubscription {

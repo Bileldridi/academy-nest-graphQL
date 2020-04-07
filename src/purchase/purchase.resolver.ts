@@ -13,6 +13,10 @@ export class PurchaseResolver {
     async findOneOrderById(@Args('id') id: string): Promise<any> {
         return await this.purchaseService.findOneOrderById(id);
     }
+    @Query('deleteOrder')
+    async deleteOrder(@Args('id') id: string): Promise<any> {
+        return await this.purchaseService.deleteOrder(id);
+    }
     @Mutation('createOrder')
     async createOrder(@Args('createOrderInput') args: any): Promise<any> {
         return await this.purchaseService.createOrder(args);

@@ -15,6 +15,7 @@ export class CoursesService {
         @InjectModel('Comment') private readonly commentModel: Model<any>,
         @InjectModel('Access') private readonly accessModel: Model<any>,
         @InjectModel('Progress') private readonly progressModel: Model<any>,
+        @InjectModel('Cemetery') private readonly cemeteryModel: Model<any>,
     ) { }
     @Cron(CronExpression.EVERY_30_MINUTES)
     async handleCron() {
@@ -51,9 +52,11 @@ export class CoursesService {
     async findOneCourseById(id: string): Promise<any> {
         return await this.courseModel.findById(id).populate('levels').populate('chapters').exec();
     }
-    async deleteOneCourse(id: string): Promise<any> {
-        await this.courseModel.findByIdAndDelete(id).exec();
-        return { id };
+    async deleteCourse(_id) {
+        const result = await this.courseModel.findOne({ _id }).exec();
+        this.cemeteryModel.create({ object: result, type: 'Course' }).catch(err => err);
+        await this.courseModel.findByIdAndDelete(_id).exec();
+        return result.id ? { message: 'OK' } : { message: 'NOT OK' }
     }
     async updateCourse(course, _id) {
         return await this.courseModel.findByIdAndUpdate({ _id }, course).catch(err => err);
@@ -72,9 +75,11 @@ export class CoursesService {
 
         return await this.levelModel.findByIdAndUpdate({ _id }, level).catch(err => err);
     }
-    async deleteOneLevel(id: string): Promise<any> {
-        await this.levelModel.findByIdAndDelete(id).exec();
-        return { id };
+    async deleteLevel(_id) {
+        const result = await this.levelModel.findOne({ _id }).exec();
+        this.cemeteryModel.create({ object: result, type: 'Level' }).catch(err => err);
+        await this.levelModel.findByIdAndDelete(_id).exec();
+        return result.id ? { message: 'OK' } : { message: 'NOT OK' }
     }
     // CHAPTER CRUDs
     async createChapter(chapter: any): Promise<any> {
@@ -99,9 +104,11 @@ export class CoursesService {
         }
         return await this.chapterModel.findByIdAndUpdate({ _id }, chapter).populate('course').exec()
     }
-    async deleteOneChapter(id: string): Promise<any> {
-        await this.chapterModel.findByIdAndDelete(id).exec();
-        return { id };
+    async deleteChapter(_id) {
+        const result = await this.chapterModel.findOne({ _id }).exec();
+        this.cemeteryModel.create({ object: result, type: 'Chapter' }).catch(err => err);
+        await this.chapterModel.findByIdAndDelete(_id).exec();
+        return result.id ? { message: 'OK' } : { message: 'NOT OK' }
     }
     // COMMENTS CRUDs
     async createComment(comment: any): Promise<any> {
@@ -151,9 +158,11 @@ export class CoursesService {
     async updateAccess(access, _id) {
         return await this.accessModel.findByIdAndUpdate({ _id }, access).catch(err => err);
     }
-    async deleteOneAccess(id: string): Promise<any> {
-        await this.accessModel.findByIdAndDelete(id).exec();
-        return { id };
+    async deleteAccess(_id) {
+        const result = await this.accessModel.findOne({ _id }).exec();
+        this.cemeteryModel.create({ object: result, type: 'Access' }).catch(err => err);
+        await this.accessModel.findByIdAndDelete(_id).exec();
+        return result.id ? { message: 'OK' } : { message: 'NOT OK' };
     }
     async updateProgress(progress, user) {
         progress.candidate = user.id;

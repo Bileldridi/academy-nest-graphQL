@@ -3,7 +3,7 @@ type Query {
   getFeaturedCourses: [PublicCourse]
   getHomeCourses: [PublicCourse]
   Course(id: String!): Course
-  removeCourse(id: String!): Course
+  removeCourse(id: String!): Message
   getComments: [Course]
   Comment(id: String!): Comment
   removeComment(id: String!): Comment

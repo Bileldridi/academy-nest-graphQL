@@ -22,14 +22,13 @@ export class CoursesResolver {
     async getHomeCourses() {
         return await this.coursesService.getHomeCourses();
     }
-
     @Query('Course')
     async findOneCourseById(@Args('id') id: string): Promise<any> {
         return await this.coursesService.findOneCourseById(id);
     }
     @Query('removeCourse')
     async deleteOneCourse(@Args('id') id: string): Promise<any> {
-        return await this.coursesService.deleteOneCourse(id);
+        return await this.coursesService.deleteCourse(id);
     }
     @Mutation('createCourse')
     async createCourse(@Args('createCourseInput') args: any): Promise<any> {
@@ -50,7 +49,7 @@ export class CoursesResolver {
     }
     @Query('removeLevel')
     async deleteOneLevel(@Args('id') id: string): Promise<any> {
-        return await this.coursesService.deleteOneLevel(id);
+        return await this.coursesService.deleteLevel(id);
     }
     @Mutation('createLevel')
     async createLevel(@Args('createLevelInput') args: any): Promise<any> {
@@ -72,7 +71,7 @@ export class CoursesResolver {
     }
     @Query('removeChapter')
     async deleteOneChapter(@Args('id') id: string): Promise<any> {
-        return await this.coursesService.deleteOneChapter(id);
+        return await this.coursesService.deleteChapter(id);
     }
     @Mutation('createChapter')
     async createChapter(@Args('createChapterInput') args: any): Promise<any> {
@@ -123,7 +122,7 @@ export class CoursesResolver {
     }
     @Query('removeAccess')
     async deleteOneAccess(@Args('id') id: string): Promise<any> {
-        return await this.coursesService.deleteOneAccess(id);
+        return await this.coursesService.deleteAccess(id);
     }
     @Mutation('createAccess')
     async createAccess(@Args('createAccessInput') args: any): Promise<any> {

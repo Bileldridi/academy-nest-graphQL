@@ -1,12 +1,12 @@
 type Query {
   getOrders: [Order]
   Order(id: ID!): Order
+  deleteOrder(id: String!): Message
 }
 
 type Mutation {
   createOrder(createOrderInput: CreateOrderInput): Message
   updateOrder(updateOrderInput: UpdateOrderInput): Message
-
 }
 
 type Order {
@@ -23,22 +23,36 @@ type Order {
   zip: String
   city: String
   country: String
+  status: [Status]
+  payment: Payment
+}
+
+type Status {
+  createDate: Float
   status: String
- }
+}
+type Payment {
+  createDate: Float
+  mode: String
+  transfereId: String
+  method: String
+  amount: Float
+}
 
 input CreateOrderInput {
   course: String
   level: String
-  assistance: Boolean
-  firstname: String
-  lastname: String
-  email: String
-  tel: String
-  zip: String
-  city: String
-  country: String
+  assistance: Boolean!
+  firstname: String!
+  lastname: String!
+  email: String!
+  tel: String!
+  zip: String!
+  city: String!
+  country: String!
+  mode: String!
+  method: String!
 }
-
 
 input UpdateOrderInput {
   id: String

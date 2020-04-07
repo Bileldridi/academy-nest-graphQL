@@ -1,7 +1,7 @@
 type Query {
   getChapters: [Chapter]
   Chapter(id: String!): Chapter
-  removeChapter(id: String!): Chapter
+  removeChapter(id: String!): Message
 }
 
 type Mutation {

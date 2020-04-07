@@ -22,6 +22,7 @@ export class PurchaseService {
     async deleteOrder(_id) {
         const result = await this.orderModel.findOne({ _id }).exec();
         this.cemeteryModel.create({ object: result, type: 'Order' }).catch(err => err);
+        await this.orderModel.findByIdAndDelete(_id).exec();
         return result.id ? { message: 'OK' } : { message: 'NOT OK' }
     }
     async createOrder(order) {

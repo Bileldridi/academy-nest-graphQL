@@ -36,9 +36,9 @@ export class PurchaseService {
         const result = await this.orderModel.findByIdAndUpdate({ _id }, { $push: { status: { status: order.status } } })
             .populate('course').populate('level').catch(err => err);
         let user = await this.userModel.findOne({ email: result.email }).exec();
-        console.log(user);
+        // console.log(user);
         if (order.status === 'payed' && !user) {
-            const newUser = await this.userModel.create(result).exec();
+            const newUser = await this.create(result).catch(err => err)//.exec();
             console.log(newUser);
             user = newUser;
         }
@@ -59,17 +59,12 @@ export class PurchaseService {
         return result;
     }
     async create(user) {
+        let newUser = { firstname: user.firstname, lastname: user.lastname, email: user.email, tel: user.tel, password: '' }
         let randomPass = '';
-        if (!user.password) {
-            randomPass = Math.random().toString(36).slice(-8);
-            user['password'] = crypto.SHA256(randomPass).toString();
-        } else {
-            user.password = crypto.SHA256(user.password).toString();
-            randomPass = '[YOUR OWN PASSWORD]';
-        }
-        if (user.sendEmail) {
-            await sendEmailAccess(user.email, randomPass)
-        }
-        return await this.userModel.create(user).catch(err => err)
+        randomPass = Math.random().toString(36).slice(-8);
+        newUser.password = crypto.SHA256(randomPass).toString();
+        await sendEmailAccess(user.email, randomPass)
+        console.log('NEW UESER', newUser);
+        return await this.userModel.create(newUser).catch(err => err)
     }
 }

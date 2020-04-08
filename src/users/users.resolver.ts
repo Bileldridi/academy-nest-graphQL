@@ -24,8 +24,8 @@ export class UsersResolver {
         return await this.usersService.findAll();
     }
 
-    @UseGuards(GraphqlAuthGuard, RolesGuard)
-    @Roles('admin')
+    // @Roles('admin')
+    @UseGuards(GraphqlAuthGuard)
     @Query('getCurrentUser')
     async getCurrentUser(@User() user) {
         return user;

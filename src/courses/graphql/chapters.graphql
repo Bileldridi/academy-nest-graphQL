@@ -25,9 +25,20 @@ type Chapter {
   status: String
   files: [String]
   comments: [Comment]
+  quiz: [Quiz]
 }
 
-type PublicChapter{
+type Quiz {
+  question: String
+  correctAnswer: String
+  options: [Option]
+}
+
+type Option {
+  option: String
+}
+
+type PublicChapter {
   id: String
   title: String
 }
@@ -38,7 +49,19 @@ input CreateChapterInput {
   course: String
   type: String
   status: String
+  quiz: [QuizInput]
   files: [String]
+}
+
+
+input QuizInput {
+  question: String
+  correctAnswer: Int
+  options: [OptionInput]
+}
+
+input OptionInput {
+  option: String
 }
 
 input UpdateChapterInput {
@@ -50,4 +73,5 @@ input UpdateChapterInput {
   status: String
   files: [String]
   comments: [String]
+  quiz: [QuizInput]
 }

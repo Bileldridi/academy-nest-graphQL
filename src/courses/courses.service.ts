@@ -34,8 +34,8 @@ export class CoursesService {
     }
 
     // COURSE CRUDs
-    async createCourse(session: any): Promise<any> {
-        return await this.courseModel.create(session).catch(err => err);
+    async createCourse(course: any): Promise<any> {
+        return await this.courseModel.create(course).catch(err => err);
     }
     async findAllCourses(): Promise<any[]> {
         const result = await this.courseModel.find().populate('levels').populate('chapters').exec();
@@ -83,6 +83,8 @@ export class CoursesService {
     }
     // CHAPTER CRUDs
     async createChapter(chapter: any): Promise<any> {
+        console.log(chapter);
+
         const result = await this.chapterModel.create(chapter).catch(err => err);
         if (result.course) {
             await this.courseModel.findByIdAndUpdate(result.course, { $push: { chapters: result._id } }).exec();

@@ -3,6 +3,7 @@ type Query {
   Access(id: String!): [Access]
   LevelAccess(id: String!): [Access]
   getCandidateAccess(id: String!): [Access]
+  getCurrentCandidateAccess: [Access]
   removeAccess(id: String!): Message
 }
 

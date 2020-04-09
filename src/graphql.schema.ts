@@ -37,6 +37,7 @@ export class CreateChapterInput {
     course?: string;
     type?: string;
     status?: string;
+    quiz?: QuizInput[];
     files?: string[];
 }
 
@@ -130,6 +131,16 @@ export class LoginInput {
     password?: string;
 }
 
+export class OptionInput {
+    option?: string;
+}
+
+export class QuizInput {
+    question?: string;
+    correctAnswer?: number;
+    options?: OptionInput[];
+}
+
 export class UpdateAccessInput {
     id?: string;
     candidate?: string;
@@ -160,6 +171,7 @@ export class UpdateChapterInput {
     status?: string;
     files?: string[];
     comments?: string[];
+    quiz?: QuizInput[];
 }
 
 export class UpdateCoachInput {
@@ -285,6 +297,7 @@ export class Chapter {
     status?: string;
     files?: string[];
     comments?: Comment[];
+    quiz?: Quiz[];
 }
 
 export class Coach {
@@ -405,6 +418,10 @@ export class MyUser {
     role?: string;
 }
 
+export class Option {
+    option?: string;
+}
+
 export class Order {
     id?: string;
     course?: Course;
@@ -490,6 +507,8 @@ export abstract class IQuery {
 
     abstract getCandidateAccess(id: string): Access[] | Promise<Access[]>;
 
+    abstract getCurrentCandidateAccess(): Access[] | Promise<Access[]>;
+
     abstract removeAccess(id: string): Message | Promise<Message>;
 
     abstract getChapters(): Chapter[] | Promise<Chapter[]>;
@@ -557,6 +576,12 @@ export abstract class IQuery {
     abstract recover(email: string): Message | Promise<Message>;
 
     abstract check(email: string, password: string, recoveryPass: string): Message | Promise<Message>;
+}
+
+export class Quiz {
+    question?: string;
+    correctAnswer?: string;
+    options?: Option[];
 }
 
 export class Session {

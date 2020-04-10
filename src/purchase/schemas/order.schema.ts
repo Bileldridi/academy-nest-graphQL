@@ -3,7 +3,7 @@ import { Schema, Types } from 'mongoose';
 export const schema: Schema = new Schema({
     course: { type: Types.ObjectId, ref: 'Course' },
     level: { type: Types.ObjectId, ref: 'Level' },
-    createDate: { type: Number, default: Date.now() },
+    createDate: { type: Number, default: Date.now },
     orderId: { type: String, unique: true },
     assistance: Boolean,
     firstname: String,
@@ -15,13 +15,13 @@ export const schema: Schema = new Schema({
     country: String,
     status: [
         {
-            createDate: { type: Number, default: Date.now() },
+            createDate: { type: Number, default: Date.now },
             status: { type: String, default: 'waitingPayment', enum: ['waitingPayment', 'payed', 'canceled', 'refunded', 'paymentError'] }
         }
     ],
     payment: {
         amount: Number,
-        createDate: { type: Number, default: Date.now() },
+        createDate: { type: Number, default: Date.now },
         transfereId: String,
         method: String,
         mode: {

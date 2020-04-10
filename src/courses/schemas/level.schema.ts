@@ -6,7 +6,7 @@ export const schema: Schema = new Schema({
     desc: String,
     status: { type: String, default: 'published', enum: ['draft', 'published', 'deleted'] },
     duration: { type: Number, default: 0 },
-    createDate: { type: Number, default: Date.now() },
+    createDate: { type: Number, default: Date.now },
 });
 
 export const LevelSchema = schema;

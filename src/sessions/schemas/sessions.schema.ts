@@ -4,7 +4,7 @@ export const schema: Schema = new Schema({
     period: Number,
     name: { type: String },
     type: { type: String },
-    createDate: { type: Number, default: Date.now() },
+    createDate: { type: Number, default: Date.now },
     startedDate: { type: Number },
     finishDate: { type: Number },
     candidates: [{ type: Types.ObjectId, ref: 'User' }],

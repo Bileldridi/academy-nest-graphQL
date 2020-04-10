@@ -6,7 +6,7 @@ export const schema: Schema = new Schema({
     type: { type: String, enum: ['challenge', 'course', 'quiz'] },
     score: { type: Number, default: 0, min: 0 },
     desc: String,
-    createDate: { type: Number, default: Date.now() },
+    createDate: { type: Number, default: Date.now },
 });
 
 export const ProgressSchema = schema;

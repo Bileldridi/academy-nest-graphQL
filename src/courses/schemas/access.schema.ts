@@ -7,7 +7,7 @@ export const schema: Schema = new Schema({
     type: { type: String, default: 'purchase', enum: ['purchase', 'extension', 'free', 'test'] },
     level: { type: Types.ObjectId, ref: 'Level' },
     desc: String,
-    createDate: { type: Number, default: Date.now() },
+    createDate: { type: Number, default: Date.now },
     duration: Number,
     status: { type: String, default: 'active', enum: ['expired', 'active', 'deleted'] },
 

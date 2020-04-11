@@ -6,6 +6,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { CemeterySchema } from '../common/schemas/cemetery.schema';
 import { UserSchema } from '../users/schemas/user.schema';
 import { AccessSchema } from '../courses/schemas/access.schema';
+import { CourseSchema } from '../courses/schemas/course.schema';
+import { LevelSchema } from '../courses/schemas/level.schema';
 
 @Module({
   imports: [
@@ -13,6 +15,8 @@ import { AccessSchema } from '../courses/schemas/access.schema';
     MongooseModule.forFeature([{ name: 'Cemetery', schema: CemeterySchema }]),
     MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
     MongooseModule.forFeature([{ name: 'Access', schema: AccessSchema }]),
+    MongooseModule.forFeature([{ name: 'Course', schema: CourseSchema }]),
+    MongooseModule.forFeature([{ name: 'Level', schema: LevelSchema }]),
   ],
   providers: [PurchaseResolver, PurchaseService]
 })

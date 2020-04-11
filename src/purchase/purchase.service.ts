@@ -11,6 +11,8 @@ export class PurchaseService {
         @InjectModel('Cemetery') private readonly cemeteryModel: Model<any>,
         @InjectModel('User') private readonly userModel: Model<any>,
         @InjectModel('Access') private readonly accessModel: Model<any>,
+        @InjectModel('Course') private readonly courseModel: Model<any>,
+        @InjectModel('Level') private readonly levelModel: Model<any>,
     ) { }
 
     async findAllOrders() {
@@ -28,7 +30,8 @@ export class PurchaseService {
     async createOrder(order) {
         order.orderId = this.makeid(7);
         order.status = { status: order.status };
-        order.payment = { mode: order.mode, transfereId: '-', method: order.method };
+        const product = order.course ? await this.courseModel.findOne({ _id: order.course }).exec() : await this.levelModel.findOne({ _id: order.level }).exec()
+        order.payment = { mode: order.mode, transfereId: '-', method: order.method, amount: order.assistance ? product.price + product.assistancePrice : product.price };
         const result = await this.orderModel.create(order).catch(err => err);
         return result.id ? { message: 'OK' } : { message: 'NOT OK' }
     }
@@ -46,7 +49,7 @@ export class PurchaseService {
             await this.accessModel.create({
                 candidate: user.id, course: result.course.id, duration: result.course.duration
             }).catch(err => err);
-            await sendEmailInvoice(user.email, result.orderId, result.createDate, user.firstname + user.lastname,
+            await sendEmailInvoice(user.email, result.orderId, new Date(result.createDate).toLocaleDateString(), user.firstname + ' ' + user.lastname,
                 result.course ? result.course.title : result.level.title, result.payment.amount, 'TND')
         }
         return result.id ? { message: 'OK' } : { message: 'NOT OK' }

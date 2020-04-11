@@ -24,6 +24,7 @@ export const schema: Schema = new Schema({
         createDate: { type: Number, default: Date.now },
         transfereId: String,
         method: String,
+        currency: String,
         mode: {
             type: String, enum: ['transfere', 'online']
         }

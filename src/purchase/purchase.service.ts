@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import * as crypto from 'crypto-js';
-import { sendEmailAccess } from '../common/mailer/mailer';
+import { sendEmailAccess, sendEmailInvoice } from '../common/mailer/mailer';
 
 @Injectable()
 export class PurchaseService {
@@ -46,6 +46,8 @@ export class PurchaseService {
             await this.accessModel.create({
                 candidate: user.id, course: result.course.id, duration: result.course.duration
             }).catch(err => err);
+            await sendEmailInvoice(user.email, result.orderId, result.createDate, user.firstname + user.lastname,
+                result.course ? result.course.title : result.level.title, result.payment.amount, 'TND')
         }
         return result.id ? { message: 'OK' } : { message: 'NOT OK' }
     }

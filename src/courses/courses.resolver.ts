@@ -45,6 +45,10 @@ export class CoursesResolver {
     async getLevels() {
         return await this.coursesService.findAllLevels();
     }
+    @Query('getHomeLevels')
+    async getHomeLevels() {
+        return await this.coursesService.getHomeLevels();
+    }
     @Query('Level')
     async findOneLevelById(@Args('id') id: string): Promise<any> {
         return await this.coursesService.findOneLevelById(id);

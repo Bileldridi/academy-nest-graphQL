@@ -49,8 +49,13 @@ export class PurchaseService {
             await this.accessModel.create({
                 candidate: user.id, course: result.course.id, duration: result.course.duration
             }).catch(err => err);
-            await sendEmailInvoice(user.email, result.orderId, new Date(result.createDate).toLocaleDateString(), user.firstname + ' ' + user.lastname,
-                result.course ? result.course.title : result.level.title, result.payment.amount, 'TND')
+            await sendEmailInvoice(user.email,
+                result.orderId,
+                new Date(result.createDate).toLocaleDateString(),
+                user.firstname + ' ' + user.lastname,
+                result.course ? result.course.title : result.level.title,
+                result.payment.amount, 'TND'
+            )
         }
         return result.id ? { message: 'OK' } : { message: 'NOT OK' }
     }

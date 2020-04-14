@@ -71,6 +71,9 @@ export class CoursesService {
     async findAllLevels(): Promise<any[]> {
         return await this.levelModel.find().populate('courses').exec();
     }
+    async getHomeLevels(): Promise<any[]> {        
+        return await this.levelModel.find({ status: 'published' }).populate('courses').exec();
+    }
     async updateLevel(level, _id) {
 
         return await this.levelModel.findByIdAndUpdate({ _id }, level).catch(err => err);

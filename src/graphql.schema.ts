@@ -76,9 +76,13 @@ export class CreateCourseInput {
 export class CreateLevelInput {
     title?: string;
     courses?: string[];
+    subTitle?: string;
     desc?: string;
+    pic?: string;
+    shortDesc?: string;
     status?: string;
     duration?: number;
+    price?: number;
 }
 
 export class CreateOrderInput {
@@ -213,9 +217,13 @@ export class UpdateLevelInput {
     id?: string;
     title?: string;
     courses?: string[];
+    subTitle?: string;
     desc?: string;
+    pic?: string;
+    shortDesc?: string;
     status?: string;
     duration?: number;
+    price?: number;
 }
 
 export class UpdateOrderInput {
@@ -335,9 +343,13 @@ export class Level {
     title?: string;
     createDate?: number;
     courses?: Course[];
+    subTitle?: string;
     desc?: string;
+    pic?: string;
+    shortDesc?: string;
     status?: string;
     duration?: number;
+    price?: number;
 }
 
 export class Message {
@@ -476,6 +488,17 @@ export class PublicCourse {
     duration?: number;
 }
 
+export class PublicLevel {
+    id?: string;
+    title?: string;
+    courses?: PublicCourse[];
+    subTitle?: string;
+    desc?: string;
+    shortDesc?: string;
+    pic?: string;
+    price?: number;
+}
+
 export abstract class IQuery {
     abstract hello(): Message | Promise<Message>;
 
@@ -536,6 +559,8 @@ export abstract class IQuery {
     abstract getLevels(): Level[] | Promise<Level[]>;
 
     abstract Level(id: string): Level | Promise<Level>;
+
+    abstract getHomeLevels(): PublicLevel[] | Promise<PublicLevel[]>;
 
     abstract removeLevel(id: string): Message | Promise<Message>;
 

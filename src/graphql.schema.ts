@@ -139,6 +139,11 @@ export class OptionInput {
     option?: string;
 }
 
+export class QuizAnswerInput {
+    id?: string;
+    answers?: number[];
+}
+
 export class QuizInput {
     question?: string;
     correctAnswer?: number;
@@ -373,6 +378,8 @@ export abstract class IMutation {
     abstract updateAccess(updateAccessInput?: UpdateAccessInput): Access | Promise<Access>;
 
     abstract createChapter(createChapterInput?: CreateChapterInput): Chapter | Promise<Chapter>;
+
+    abstract submitQuiz(quizAnswerInput?: QuizAnswerInput): Message | Promise<Message>;
 
     abstract updateChapter(updateChapterInput?: UpdateChapterInput): Chapter | Promise<Chapter>;
 

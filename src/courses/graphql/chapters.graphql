@@ -1,11 +1,15 @@
 type Query {
   getChapters: [Chapter]
   Chapter(id: String!): Chapter
+  checkQuiz(id: String!): Message
   removeChapter(id: String!): Message
 }
 
 type Mutation {
   createChapter(createChapterInput: CreateChapterInput): Chapter
+}
+type Mutation {
+  submitQuiz(quizAnswerInput: QuizAnswerInput): Message
 }
 type Mutation {
   updateChapter(updateChapterInput: UpdateChapterInput): Chapter
@@ -53,7 +57,6 @@ input CreateChapterInput {
   files: [String]
 }
 
-
 input QuizInput {
   question: String
   correctAnswer: Int
@@ -74,4 +77,9 @@ input UpdateChapterInput {
   files: [String]
   comments: [String]
   quiz: [QuizInput]
+}
+
+input QuizAnswerInput {
+  id: String
+  answers: [Int]
 }

@@ -11,6 +11,7 @@ import { CommonModule } from './common/common.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { AppResolver } from './app.resolver';
 import { PurchaseModule } from './purchase/purchase.module';
+import { ChatModule } from './chat/chat.module';
 
 const dbhost = process.env.dbhost || 'localhost';
 
@@ -39,6 +40,7 @@ const dbhost = process.env.dbhost || 'localhost';
     CandidatesModule,
     CoursesModule,
     PurchaseModule,
+    ChatModule,
   ],
   providers: [AppResolver],
 

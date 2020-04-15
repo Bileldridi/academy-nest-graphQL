@@ -1,0 +1,55 @@
+type Query {
+  getChats: [Chat]
+  Chat(id: ID!): Chat
+  readMessage(id: String): Message
+  getContacts: [Contact]
+}
+
+type Mutation {
+  sendMessage(sendMessageInput: SendMessageInput): Message
+}
+type Mutation {
+  createChat(createChatInput: CreateChatInput): Message
+}
+
+type Subscription {
+  messageSent(id: String!): Message
+}
+
+type Chat {
+  id: String
+  creator: User
+  users: [User]
+  messages: [ChatMessage]
+  lastMessage: ChatMessage
+  title: String
+  createDate: Float
+  seen: Boolean
+}
+
+type ChatMessage {
+  id: String
+  sender: User
+  isRead: Boolean
+  content: String
+  type: String
+  createDate: Float
+}
+
+type Contact{
+  id: String
+  firstname: String
+  lastname: String
+  image: String
+}
+
+input SendMessageInput {
+  content: String
+  type: String
+  chatId: String
+}
+input CreateChatInput {
+  title: String
+  users: [String]
+  content: String!
+}

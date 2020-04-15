@@ -2,7 +2,7 @@ type Query {
   getUsers: [User]
   getCurrentUser: User
   User(id: String!): User
-  deleteUser(_id: ID!): User
+  deleteUser(id: ID!): Message
   recover(email: String!): Message
   check(email: String!, password: String!, recoveryPass: String!): Message
 }
@@ -72,4 +72,5 @@ input UserInput {
   note: String
   coach: String
   sendEmail: Boolean
+  generate: Boolean
 }

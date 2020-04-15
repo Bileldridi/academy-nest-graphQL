@@ -44,7 +44,7 @@ export class CreateChapterInput {
 export class CreateChatInput {
     title?: string;
     users?: string[];
-    content?: string;
+    content: string;
 }
 
 export class CreateCoachInput {
@@ -286,6 +286,7 @@ export class UserInput {
     note?: string;
     coach?: string;
     sendEmail?: boolean;
+    generate?: boolean;
 }
 
 export class Access {
@@ -656,7 +657,7 @@ export abstract class IQuery {
 
     abstract User(id: string): User | Promise<User>;
 
-    abstract deleteUser(_id: string): User | Promise<User>;
+    abstract deleteUser(id: string): Message | Promise<Message>;
 
     abstract recover(email: string): Message | Promise<Message>;
 

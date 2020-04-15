@@ -36,7 +36,7 @@ export class UsersResolver {
         return await this.usersService.findOneById(id);
     }
     @Query('deleteUser')
-    async deleteUser(@Args('_id') id: string): Promise<any> {
+    async deleteUser(@Args('id') id: string): Promise<any> {
         return await this.usersService.findOneById(id);
     }
     @Query('check')

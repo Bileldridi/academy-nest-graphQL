@@ -335,6 +335,7 @@ export class Chat {
     title?: string;
     createDate?: number;
     seen?: boolean;
+    conference?: Conference;
 }
 
 export class ChatMessage {
@@ -356,6 +357,15 @@ export class Comment {
     content?: string;
     createDate?: number;
     status?: string;
+}
+
+export class Conference {
+    id?: string;
+    creator?: string;
+    join_url?: string;
+    start_url?: string;
+    createDate?: string;
+    chat?: Chat;
 }
 
 export class Contact {
@@ -568,6 +578,8 @@ export abstract class IQuery {
     abstract getChats(): Chat[] | Promise<Chat[]>;
 
     abstract Chat(id: string): Chat | Promise<Chat>;
+
+    abstract startZoom(id: string): Message | Promise<Message>;
 
     abstract readMessage(id?: string): Message | Promise<Message>;
 

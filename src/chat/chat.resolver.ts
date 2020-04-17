@@ -22,6 +22,11 @@ export class ChatResolver {
     async getChat(@Args('id') id: string, ) {
         return await this.chatService.getChat(id)
     }
+    @UseGuards(GraphqlAuthGuard)
+    @Query('startZoom')
+    async startZoom(@Args('id') id: string, @User() user) {
+        return await this.chatService.createMeeting(id, user.id);
+    }
 
     @UseGuards(GraphqlAuthGuard)
     @Query('readMessage')

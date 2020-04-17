@@ -1,6 +1,7 @@
 type Query {
   getChats: [Chat]
   Chat(id: ID!): Chat
+  startZoom(id: ID!): Message
   readMessage(id: String): Message
   getContacts: [Contact]
 }
@@ -25,6 +26,17 @@ type Chat {
   title: String
   createDate: Float
   seen: Boolean
+  conference: Conference
+}
+
+type Conference{
+  id: String
+  creator: String
+  join_url: String
+  start_url: String
+  createDate: String
+  chat: Chat
+
 }
 
 type ChatMessage {

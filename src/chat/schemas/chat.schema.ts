@@ -5,6 +5,7 @@ export const schema: Schema = new Schema({
     users: [{ type: Types.ObjectId, ref: 'User' }],
     messages: [{ type: Types.ObjectId, ref: 'Message' }],
     lastMessage: { type: Types.ObjectId, ref: 'Message' },
+    conference: { type: Types.ObjectId, ref: 'Conference' },
     readBy: [{ type: Types.ObjectId, ref: 'User' }],
     title: String,
     createDate: { type: Number, default: Date.now },

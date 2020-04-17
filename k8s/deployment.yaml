@@ -33,6 +33,8 @@ spec:
           env:
           - name: dbhost
             value: "mongo"
+          - name: redishost
+            value: "redis"
           imagePullPolicy: Always
           ports:
           - name: http-metrics

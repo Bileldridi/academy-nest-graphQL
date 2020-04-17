@@ -1,15 +1,18 @@
 import { Resolver, Query, Args, Mutation, Subscription } from '@nestjs/graphql';
 import { ChatService } from './chat.service';
-import { UseGuards } from '@nestjs/common';
+import { UseGuards, Inject } from '@nestjs/common';
 import { GraphqlAuthGuard } from '../common/guards/gql.auth.guard';
 import { User } from '../common/decorators/current-user.decorator';
 import { PubSub } from 'graphql-subscriptions';
+import { PubSubEngine } from 'graphql-subscriptions';
 
-const pubSub = new PubSub();
+// const pubSub = new PubSub();
 @Resolver('Chat')
 export class ChatResolver {
 
-    constructor(private readonly chatService: ChatService) { }
+    constructor(
+        private readonly chatService: ChatService,
+        @Inject('PUB_SUB') private pubSub: PubSubEngine) { }
 
     @UseGuards(GraphqlAuthGuard)
     @Query('getChats')
@@ -32,7 +35,7 @@ export class ChatResolver {
     @Query('readMessage')
     async readMessage(@Args('id') id: String, @User() user) {
         const result = await this.chatService.readMessage(user.id, id);
-        pubSub.publish('messageSent', { messageSent: [user.id] });
+        this.pubSub.publish('messageSent', { messageSent: [user.id] });
         return result;
     }
     @UseGuards(GraphqlAuthGuard)
@@ -45,7 +48,7 @@ export class ChatResolver {
     @Mutation('sendMessage')
     async sendMessage(@Args('sendMessageInput') args: any, @User() user) {
         const result = await this.chatService.sendMessage(user.id, args, args.chatId)
-        pubSub.publish('messageSent', { messageSent: result.ids });
+        this.pubSub.publish('messageSent', { messageSent: result.ids });
         return { message: result.message };
     }
     @UseGuards(GraphqlAuthGuard)
@@ -58,6 +61,6 @@ export class ChatResolver {
         filter: (payload, variables) => payload.messageSent.includes(variables.id)
     })
     messageSent(@Args('id') id: string) {
-        return pubSub.asyncIterator('messageSent');
+        return this.pubSub.asyncIterator('messageSent');
     }
 }

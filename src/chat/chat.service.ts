@@ -51,11 +51,12 @@ export class ChatService {
     }
 
     async createMeeting(_id, userId) {
-        const chat = await this.chatModel.findOne({ _id }).exec();
+        const chat = await this.chatModel.findOne({ _id }).populate('users').exec();
         const meeting = {
             host_id: 'ehgKvfRvR4WWRCPWc4W7qg',
             type: 2,
-            topic: chat.title,
+            topic: chat.title || chat.users[0].firstname + ' ' + chat.users[0].lastname + ', ' +
+                chat.users[1].firstname + ' ' + chat.users[1].lastname,
             duration: 120,
             start_time: new Date().toISOString()
         }

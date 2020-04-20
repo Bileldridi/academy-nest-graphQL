@@ -7,7 +7,7 @@ export const schema: Schema = new Schema({
     comments: [{ type: Types.ObjectId, ref: 'Comment' }],
     levels: [{ type: Types.ObjectId, ref: 'Level' }],
     createDate: { type: Number, default: Date.now() },
-    duration: { type: Number, default: 0 },
+    duration: { type: Number, default: -1 },
     status: { type: String, default: 'published', enum: ['draft', 'published', 'deleted'] },
     difficulty: { type: String, default: 'beginner', enum: ['beginner', 'intermediate', 'expert'] },
     longDesc: String,

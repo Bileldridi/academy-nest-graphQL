@@ -5,7 +5,7 @@ export const schema: Schema = new Schema({
     courses: [{ type: Types.ObjectId, ref: 'Course' }],
     desc: String,
     status: { type: String, default: 'published', enum: ['draft', 'published', 'deleted'] },
-    duration: { type: Number, default: 0 },
+    duration: { type: Number, default: -1 },
     createDate: { type: Number, default: Date.now() },
 });
 

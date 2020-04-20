@@ -1673,7 +1673,7 @@ Commande ACMTEBENO&nbsp;-&nbsp;En attente du paiement</p>
 Pour rappel, vous avez sélectionné le mode de paiement par ${order.payment.mode}.</p>
 <span style="color:#777777;">Voici les informations dont vous avez besoin pour effectuer votre virement :<br>
 
-<span style="color:#333333;"><strong>Montant :</strong></span> ${order.payment.amout} DT<br>
+<span style="color:#333333;"><strong>Montant :</strong></span> ${order.payment.amount} DT<br>
 
 <span style="color:#333333;"><strong>Titulaire du compte :</strong></span> FivePoints SARL<br>
 

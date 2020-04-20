@@ -47,7 +47,7 @@ export class PurchaseService {
         }
         if (order.status === 'payed') {
             await this.accessModel.create({
-                candidate: user.id, course: result.course.id, duration: result.course.duration
+                candidate: user.id, course: result.course.id, duration: -1 //result.course.duration
             }).catch(err => err);
             await sendEmailInvoice(user.email,
                 result.orderId,

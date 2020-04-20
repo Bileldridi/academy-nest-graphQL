@@ -24,11 +24,13 @@ export class CoursesService {
         const accesses = await this.accessModel.find({ status: 'active' });
         for (let i = 0; i < accesses.length; i++) {
             const e = accesses[i];
+            if(e.duration !== -1) {
             const timeLeft = Math.round((((e.duration * 86400000) + (e.createDate)) - Date.now()) / 86400000);
             this.logger.debug('timeLeft ' + timeLeft);
-            if (timeLeft < 0) {
-                const result = await this.accessModel.updateOne({ _id: e._id }, { status: 'expired' }).exec();
-                this.logger.debug('updated : ' + JSON.stringify(result));
+                if (timeLeft < 0) {
+                    const result = await this.accessModel.updateOne({ _id: e._id }, { status: 'expired' }).exec();
+                    this.logger.debug('updated : ' + JSON.stringify(result));
+                }
             }
         }
     }

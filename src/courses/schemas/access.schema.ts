@@ -8,7 +8,7 @@ export const schema: Schema = new Schema({
     level: { type: Types.ObjectId, ref: 'Level' },
     desc: String,
     createDate: { type: Number, default: Date.now },
-    duration: Number,
+    duration: {type: Number, default: -1},
     status: { type: String, default: 'active', enum: ['expired', 'active', 'deleted'] },
 
 });

@@ -1654,7 +1654,7 @@ export const sendOrderCreation = async (order, orderId): Promise<any> => {
 <td style="padding:7px 0;"><span style="color: rgb(85, 84, 84); font-size: small; font-family: Open-sans, sans-serif, serif, EmojiFont;"></span>
 <p style="font-size:18px;font-weight:500;text-transform:uppercase;margin:3px 0 7px 0;padding-bottom:10px;border-bottom:1px solid #D6D4D4;">
 Commande ACMTEBENO&nbsp;-&nbsp;En attente du paiement</p>
-<span style="color:#777777;">Nous avons bien enregistré votre commande ayant pour référence <span style="color:#333333;"><strong>${orderId}</strong></span>. Celle-ci vous sera <strong>envoyée 72 heures après votre paiement </strong>. </span></td>
+<span style="color:#777777;">Nous avons bien enregistré votre commande ayant pour référence <span style="color:#333333;"><strong>${order.orderId}</strong></span>. Celle-ci vous sera <strong>envoyée 72 heures après votre paiement </strong>. </span></td>
 <td width="10" style="padding:7px 0;">&nbsp;</td>
 </tr>
 </tbody></table>

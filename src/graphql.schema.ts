@@ -41,6 +41,12 @@ export class CreateChapterInput {
     files?: string[];
 }
 
+export class CreateChatInput {
+    title?: string;
+    users?: string[];
+    content: string;
+}
+
 export class CreateCoachInput {
     tel?: string;
     image?: string;
@@ -76,9 +82,13 @@ export class CreateCourseInput {
 export class CreateLevelInput {
     title?: string;
     courses?: string[];
+    subTitle?: string;
     desc?: string;
+    pic?: string;
+    shortDesc?: string;
     status?: string;
     duration?: number;
+    price?: number;
 }
 
 export class CreateOrderInput {
@@ -135,10 +145,21 @@ export class OptionInput {
     option?: string;
 }
 
+export class QuizAnswerInput {
+    id?: string;
+    answers?: number[];
+}
+
 export class QuizInput {
     question?: string;
     correctAnswer?: number;
     options?: OptionInput[];
+}
+
+export class SendMessageInput {
+    content?: string;
+    type?: string;
+    chatId?: string;
 }
 
 export class UpdateAccessInput {
@@ -213,9 +234,13 @@ export class UpdateLevelInput {
     id?: string;
     title?: string;
     courses?: string[];
+    subTitle?: string;
     desc?: string;
+    pic?: string;
+    shortDesc?: string;
     status?: string;
     duration?: number;
+    price?: number;
 }
 
 export class UpdateOrderInput {
@@ -261,6 +286,7 @@ export class UserInput {
     note?: string;
     coach?: string;
     sendEmail?: boolean;
+    generate?: boolean;
 }
 
 export class Access {
@@ -300,6 +326,27 @@ export class Chapter {
     quiz?: Quiz[];
 }
 
+export class Chat {
+    id?: string;
+    creator?: User;
+    users?: User[];
+    messages?: ChatMessage[];
+    lastMessage?: ChatMessage;
+    title?: string;
+    createDate?: number;
+    seen?: boolean;
+    conference?: Conference;
+}
+
+export class ChatMessage {
+    id?: string;
+    sender?: User;
+    isRead?: boolean;
+    content?: string;
+    type?: string;
+    createDate?: number;
+}
+
 export class Coach {
     tel?: string;
     image?: string;
@@ -310,6 +357,22 @@ export class Comment {
     content?: string;
     createDate?: number;
     status?: string;
+}
+
+export class Conference {
+    id?: string;
+    creator?: string;
+    join_url?: string;
+    start_url?: string;
+    createDate?: string;
+    chat?: Chat;
+}
+
+export class Contact {
+    id?: string;
+    firstname?: string;
+    lastname?: string;
+    image?: string;
 }
 
 export class Course {
@@ -335,9 +398,13 @@ export class Level {
     title?: string;
     createDate?: number;
     courses?: Course[];
+    subTitle?: string;
     desc?: string;
+    pic?: string;
+    shortDesc?: string;
     status?: string;
     duration?: number;
+    price?: number;
 }
 
 export class Message {
@@ -352,6 +419,10 @@ export abstract class IMutation {
 
     abstract createCat(createCatInput?: CreateCatInput): Cat | Promise<Cat>;
 
+    abstract sendMessage(sendMessageInput?: SendMessageInput): Message | Promise<Message>;
+
+    abstract createChat(createChatInput?: CreateChatInput): Message | Promise<Message>;
+
     abstract createCoach(createCoachInput?: CreateCoachInput): MyUser | Promise<MyUser>;
 
     abstract updateCoach(updateCoachInput?: UpdateCoachInput): MyUser | Promise<MyUser>;
@@ -361,6 +432,8 @@ export abstract class IMutation {
     abstract updateAccess(updateAccessInput?: UpdateAccessInput): Access | Promise<Access>;
 
     abstract createChapter(createChapterInput?: CreateChapterInput): Chapter | Promise<Chapter>;
+
+    abstract submitQuiz(quizAnswerInput?: QuizAnswerInput): Message | Promise<Message>;
 
     abstract updateChapter(updateChapterInput?: UpdateChapterInput): Chapter | Promise<Chapter>;
 
@@ -476,6 +549,17 @@ export class PublicCourse {
     duration?: number;
 }
 
+export class PublicLevel {
+    id?: string;
+    title?: string;
+    courses?: PublicCourse[];
+    subTitle?: string;
+    desc?: string;
+    shortDesc?: string;
+    pic?: string;
+    price?: number;
+}
+
 export abstract class IQuery {
     abstract hello(): Message | Promise<Message>;
 
@@ -490,6 +574,16 @@ export abstract class IQuery {
     abstract getCats(): Cat[] | Promise<Cat[]>;
 
     abstract cat(_id: string): Cat | Promise<Cat>;
+
+    abstract getChats(): Chat[] | Promise<Chat[]>;
+
+    abstract Chat(id: string): Chat | Promise<Chat>;
+
+    abstract startZoom(id: string): Message | Promise<Message>;
+
+    abstract readMessage(id?: string): Message | Promise<Message>;
+
+    abstract getContacts(): Contact[] | Promise<Contact[]>;
 
     abstract getCoaches(): MyUser[] | Promise<MyUser[]>;
 
@@ -515,6 +609,8 @@ export abstract class IQuery {
 
     abstract Chapter(id: string): Chapter | Promise<Chapter>;
 
+    abstract checkQuiz(id: string): Message | Promise<Message>;
+
     abstract removeChapter(id: string): Message | Promise<Message>;
 
     abstract getCourses(): Course[] | Promise<Course[]>;
@@ -536,6 +632,8 @@ export abstract class IQuery {
     abstract getLevels(): Level[] | Promise<Level[]>;
 
     abstract Level(id: string): Level | Promise<Level>;
+
+    abstract getHomeLevels(): PublicLevel[] | Promise<PublicLevel[]>;
 
     abstract removeLevel(id: string): Message | Promise<Message>;
 
@@ -571,7 +669,7 @@ export abstract class IQuery {
 
     abstract User(id: string): User | Promise<User>;
 
-    abstract deleteUser(_id: string): User | Promise<User>;
+    abstract deleteUser(id: string): Message | Promise<Message>;
 
     abstract recover(email: string): Message | Promise<Message>;
 
@@ -606,6 +704,8 @@ export abstract class ISubscription {
 
     abstract catCreated(): Cat | Promise<Cat>;
 
+    abstract messageSent(id: string): Message | Promise<Message>;
+
     abstract CoachCreated(): MyUser | Promise<MyUser>;
 
     abstract AccessCreated(): Access | Promise<Access>;
@@ -629,7 +729,6 @@ export class User {
     lastname?: string;
     createDate?: number;
     lastLogin?: number;
-    password?: string;
     email?: string;
     image?: string;
     tel?: string;

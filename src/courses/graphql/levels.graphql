@@ -1,6 +1,7 @@
 type Query {
   getLevels: [Level]
   Level(id: String!): Level
+  getHomeLevels: [PublicLevel]
   removeLevel(id: String!): Message
 }
 
@@ -20,23 +21,46 @@ type Level {
   title: String
   createDate: Float
   courses: [Course]
+  subTitle: String
   desc: String
+  pic: String
+  shortDesc: String
   status: String
   duration: Int
+  price: Int
+}
+
+type PublicLevel {
+  id: String
+  title: String
+  courses: [PublicCourse]
+  subTitle: String
+  desc: String
+  shortDesc: String
+  pic: String
+  price: Int
 }
 
 input CreateLevelInput {
   title: String
   courses: [String]
+  subTitle: String
   desc: String
+  pic: String
+  shortDesc: String
   status: String
   duration: Int
+  price: Int  
 }
 input UpdateLevelInput {
   id: String
   title: String
   courses: [String]
+  subTitle: String
   desc: String
+  pic: String
+  shortDesc: String
   status: String
   duration: Int
+  price: Int
 }

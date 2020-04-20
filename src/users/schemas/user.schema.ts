@@ -7,7 +7,7 @@ export const schema: Schema = new Schema({
     password: { type: String, required: true },
     image: { type: String, required: false, default: '' },
     recoveryToken: { type: String, required: false, default: '' },
-    createDate: { type: Number, default: Date.now() },
+    createDate: { type: Number, default: Date.now },
     lastLogin: { type: Number, default: 0 },
     tel: { type: String },
     note: { type: String },

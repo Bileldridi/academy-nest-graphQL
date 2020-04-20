@@ -73,6 +73,9 @@ export class CoursesService {
     async findAllLevels(): Promise<any[]> {
         return await this.levelModel.find().populate('courses').exec();
     }
+    async getHomeLevels(): Promise<any[]> {
+        return await this.levelModel.find({ status: 'published' }).populate('courses').exec();
+    }
     async updateLevel(level, _id) {
 
         return await this.levelModel.findByIdAndUpdate({ _id }, level).catch(err => err);
@@ -102,11 +105,24 @@ export class CoursesService {
     async updateChapter(chapter, _id) {
         if (chapter.course) {
             const oldCourse = await this.courseModel.updateOne({ chapters: _id }, { $pull: { chapters: _id } }).exec();
-
             const update = await this.courseModel.updateOne({ _id: chapter.course }, { $push: { chapters: chapter.id } }).exec();
-
         }
         return await this.chapterModel.findByIdAndUpdate({ _id }, chapter).populate('course').exec()
+    }
+    async submitQuiz(quiz, userId) {
+        console.log(quiz);
+        const chapter = await this.chapterModel.findOne({ _id: quiz.id });
+        console.log(chapter);
+        const correctAnswers = chapter.quiz.map(q => q.correctAnswer);
+        const score = (correctAnswers.filter((a, i) => quiz.answers[i] === a).length * 100) / correctAnswers.length;
+        const progress = await this.progressModel.create({ candidate: userId, chapter: quiz.id, type: 'quiz', score }).catch(err => err);
+        console.log(progress);
+        return { message: score.toString() };
+    }
+    async checkQuiz(idQuiz, userId) {
+        const chapter = await this.progressModel.findOne({ candidate: userId, chapter: idQuiz, type:'quiz' });
+        console.log(chapter)
+        return { message: chapter ? chapter.score : 'null' };
     }
     async deleteChapter(_id) {
         const result = await this.chapterModel.findOne({ _id }).exec();

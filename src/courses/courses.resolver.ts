@@ -45,6 +45,10 @@ export class CoursesResolver {
     async getLevels() {
         return await this.coursesService.findAllLevels();
     }
+    @Query('getHomeLevels')
+    async getHomeLevels() {
+        return await this.coursesService.getHomeLevels();
+    }
     @Query('Level')
     async findOneLevelById(@Args('id') id: string): Promise<any> {
         return await this.coursesService.findOneLevelById(id);
@@ -64,64 +68,69 @@ export class CoursesResolver {
     // CHAPTERS CRUDs
 
     @Roles('admin')
-    
+
     @UseGuards(GraphqlAuthGuard, RolesGuard)
     @Query()
     async getChapters() {
         return await this.coursesService.findAllChapters();
     }
     @Roles('admin')
-    
     @UseGuards(GraphqlAuthGuard, RolesGuard)
     @Query('Chapter')
     async findOneChapterById(@Args('id') id: string): Promise<any> {
         return await this.coursesService.findOneChapterById(id);
     }
     @Roles('admin')
-    
     @UseGuards(GraphqlAuthGuard, RolesGuard)
     @Query('removeChapter')
     async deleteOneChapter(@Args('id') id: string): Promise<any> {
         return await this.coursesService.deleteChapter(id);
     }
+    @UseGuards(GraphqlAuthGuard)
+    @Query('checkQuiz')
+    async checkQuiz(@Args('id') id: string, @User() user): Promise<any> {
+        return await this.coursesService.checkQuiz(id, user.id);
+    }
     @Roles('admin')
-    
     @UseGuards(GraphqlAuthGuard, RolesGuard)
     @Mutation('createChapter')
     async createChapter(@Args('createChapterInput') args: any): Promise<any> {
         return await this.coursesService.createChapter(args);
     }
     @Roles('admin')
-    
     @UseGuards(GraphqlAuthGuard, RolesGuard)
     @Mutation('updateChapter')
     async updateChapter(@Args('updateChapterInput') args: any): Promise<any> {
         return await this.coursesService.updateChapter(args, args.id);
     }
-    @Roles('admin')
-    
-    @UseGuards(GraphqlAuthGuard, RolesGuard)
+    @UseGuards(GraphqlAuthGuard)
+    @Mutation('submitQuiz')
+    async submitQuiz(@Args('quizAnswerInput') args: any, @User() user): Promise<any> {
+        return await this.coursesService.submitQuiz(args, user.id);
+    }
     // COMMENTS CRUDs
+    @Roles('admin')
+    @UseGuards(GraphqlAuthGuard, RolesGuard)
     @Query()
     async getComments() {
         return await this.coursesService.findAllComments();
     }
     @Roles('admin')
-    
+
     @UseGuards(GraphqlAuthGuard, RolesGuard)
     @Query('Comment')
     async findOneCommentById(@Args('id') id: string): Promise<any> {
         return await this.coursesService.findOneCommentById(id);
     }
     @Roles('admin')
-    
+
     @UseGuards(GraphqlAuthGuard, RolesGuard)
     @Query('removeComment')
     async deleteOneComment(@Args('id') id: string): Promise<any> {
         return await this.coursesService.deleteOneComment(id);
     }
     @Roles('admin')
-    
+
     @UseGuards(GraphqlAuthGuard, RolesGuard)
     @Mutation('createComment')
     async createComment(@Args('createCommentInput') args: any): Promise<any> {
@@ -135,14 +144,14 @@ export class CoursesResolver {
     }
     // ACCESS
     @Roles('admin')
-    
+
     @UseGuards(GraphqlAuthGuard, RolesGuard)
     @Query()
     async getAccesss() {
         return await this.coursesService.findAllAccesss();
     }
     @Roles('admin')
-    
+
     @UseGuards(GraphqlAuthGuard, RolesGuard)
     @Query('Access')
     async findAccessByCourseId(@Args('id') id: string): Promise<any[]> {

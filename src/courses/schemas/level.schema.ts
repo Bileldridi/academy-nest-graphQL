@@ -2,11 +2,15 @@ import { Schema, Types } from 'mongoose';
 
 export const schema: Schema = new Schema({
     title: String,
-    courses: [{ type: Types.ObjectId, ref: 'Course' }],
+    subTitle: String,
     desc: String,
-    status: { type: String, default: 'published', enum: ['draft', 'published', 'deleted'] },
-    duration: { type: Number, default: -1 },
-    createDate: { type: Number, default: Date.now() },
+    shortDesc: String,
+    pic: String,
+    price: { type: Number, default: 0 },
+    courses: [{ type: Types.ObjectId, ref: 'Course' }],
+    status: { type: String, default: 'private', enum: ['draft', 'private', 'published', 'deleted'] },
+    duration: { type: Number, default: 0 },
+    createDate: { type: Number, default: Date.now },
 });
 
 export const LevelSchema = schema;

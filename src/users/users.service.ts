@@ -11,14 +11,22 @@ export class UsersService {
         @InjectModel('User') private readonly userModel: Model<any>,
         @InjectModel('Coach') private readonly coachModel: Model<any>,
         @InjectModel('Candidate') private readonly candidateModel: Model<any>,
-        ) { }
+        @InjectModel('Cemetery') private readonly cemeteryModel: Model<any>,
+    ) { }
 
     findAll() {
         return this.userModel.find().populate('candidate');
     }
     async findOneById(id: string): Promise<any> {
         const user = await this.userModel.findById(id).exec();
+
         return user;
+    }
+    async deleteUser(_id) {
+        const result = await this.userModel.findOne({ _id }).exec();
+        this.cemeteryModel.create({ object: result, type: 'Chapter' }).catch(err => err);
+        await this.userModel.findByIdAndDelete(_id).exec();
+        return result.id ? { message: 'OK' } : { message: 'NOT OK' }
     }
     async findUserByEmail(email: string): Promise<any> {
         return await this.userModel.findOne({ email }).exec();
@@ -79,7 +87,12 @@ export class UsersService {
             user.password = oldUser.password;
         } else {
             user.password = crypto.SHA256(user.password).toString();
-            pass = user.password;
+        }
+        if (user.generate) {
+            const randomPass = Math.random().toString(36).slice(-8);
+            user.password = crypto.SHA256(randomPass).toString();
+            console.log(randomPass);
+            pass = randomPass
         }
         const userResult = await this.userModel.findByIdAndUpdate({ _id }, user).catch(err => err);
         const coachResult = await this.coachModel.findByIdAndUpdate({ _id: userResult.coach }, user).catch(err => err);

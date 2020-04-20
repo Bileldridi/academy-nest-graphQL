@@ -1636,10 +1636,10 @@ export const sendOrderCreation = async (order, orderId): Promise<any> => {
 <td align="center" style="padding:7px 0;">
 <table bgcolor="white" style="width:100%;">
 <tbody><tr>
-<td align="left" style="padding:7px 0;border-bottom:4px solid #333333;"><a href="https://academy.fivepoints.fr/home" target="_blank" rel="noopener noreferrer" data-auth="NotApplicable" title="FivePoints" style="color:#337FF1;"><img src="https://imgur.com/Bl0GoAD.jpg" alt="Sodexo Store" style="max-width: 20%; height: auto;"></a></td>
+<td align="left" style="padding:7px 0;border-bottom:4px solid #333333;"><a href="https://academy.fivepoints.fr/home" target="_blank" rel="noopener noreferrer" data-auth="NotApplicable" title="FivePoints" style="color:#337FF1;"><img src="https://imgur.com/Bl0GoAD.jpg" alt="FivePoints Academy" style="max-width: 20%; height: auto;"></a></td>
 </tr>
 <tr>
-<td align="center" style="padding:7px 0;"><span style="color: rgb(85, 84, 84); font-size: small; font-family: Open-sans, sans-serif, serif, EmojiFont;"><span style="font-size:28px;font-weight:500;text-transform:uppercase;line-height:33px;">Bienvenue Fares Weslaty,</span><br>
+<td align="center" style="padding:7px 0;"><span style="color: rgb(85, 84, 84); font-size: small; font-family: Open-sans, sans-serif, serif, EmojiFont;"><span style="font-size:28px;font-weight:500;text-transform:uppercase;line-height:33px;">Bienvenue ${order.firstname} ${order.lastname},</span><br>
 
 <span style="font-size:16px;font-weight:500;text-transform:uppercase;line-height:25px;">Merci d'avoir effectué vos achats sur Fivepoints Academy!</span> </span></td>
 </tr>

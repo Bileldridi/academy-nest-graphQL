@@ -9,7 +9,7 @@ export const schema: Schema = new Schema({
     price: { type: Number, default: 0 },
     courses: [{ type: Types.ObjectId, ref: 'Course' }],
     status: { type: String, default: 'private', enum: ['draft', 'private', 'published', 'deleted'] },
-    duration: { type: Number, default: 0 },
+    duration: { type: Number, default: -1 },
     createDate: { type: Number, default: Date.now },
 });
 

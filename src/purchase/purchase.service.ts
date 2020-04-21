@@ -32,7 +32,7 @@ export class PurchaseService {
         order.status = { status: order.status };
         const product = order.course ? await this.courseModel.findOne({ _id: order.course }).exec() : await this.levelModel.findOne({ _id: order.level }).exec()
         if(product.promotion && product.promotion !== 0) {
-            order.payment = { mode: order.mode, transfereId: '-', method: order.method, amount: order.assistance ? (product.price - ((product.price * product.promotion) / 100)) + product.assistancePrice : (product.price - ((product.price * product.promotion) / 100)) };
+            order.payment = { mode: order.mode, transfereId: '-', method: order.method, amount: order.assistance ? (product.price - ((product.price * order.promotion) / 100)) + product.assistancePrice : (product.price - ((product.price * order.promotion) / 100)) };
         } else {
             order.payment = { mode: order.mode, transfereId: '-', method: order.method, amount: order.assistance ? product.price + product.assistancePrice : product.price };
         }

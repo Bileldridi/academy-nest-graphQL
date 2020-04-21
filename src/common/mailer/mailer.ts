@@ -1675,7 +1675,7 @@ Pour rappel, vous avez sélectionné le mode de paiement par ${order.payment.mod
 
 <span style="color:#333333;"><strong>Montant :</strong></span> ${order.payment.amount} DT<br>
 <span style="color:#333333;"><strong>Détails du compte :</strong></span><br><br>
-<a href="javascript:void(0)" style="cursor:default;"><img width=""src="https://i.imgur.com/iP9tjnU.jpg" />
+<a href="https://academy.fivepoints.fr/home/aboutus" target="_blank" rel="noopener noreferrer" data-auth="NotApplicable" style="cursor:default;"><img src="https://imgur.com/iP9tjnU.jpg" /></a>
 
 <td width="10" style="padding:7px 0;">&nbsp;</td>
 </tr>

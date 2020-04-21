@@ -16,6 +16,7 @@ type Order {
   createDate: Float
   orderId: String
   assistance: Boolean
+  promotion: Int
   firstname: String
   lastname: String
   email: String
@@ -46,6 +47,7 @@ input CreateOrderInput {
   firstname: String!
   lastname: String!
   email: String!
+  promotion: Int!
   tel: String!
   zip: String!
   city: String!

@@ -9,6 +9,7 @@ export const schema: Schema = new Schema({
     firstname: String,
     lastname: String,
     email: String,
+    promotion: {type: Number, default: 0},
     tel: String,
     zip: String,
     city: String,

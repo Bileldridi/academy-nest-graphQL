@@ -10,6 +10,7 @@ export const schema: Schema = new Schema({
     createDate: { type: Number, default: Date.now },
     status: { type: String, default: 'published', enum: ['draft', 'published', 'deleted'] },
     difficulty: { type: String, default: 'beginner', enum: ['beginner', 'intermediate', 'expert'] },
+    promotion: {type: Number, default: 0},
     longDesc: String,
     pic: String,
     price: { type: Number, default: 0 },

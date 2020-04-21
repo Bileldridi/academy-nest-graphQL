@@ -1653,7 +1653,7 @@ export const sendOrderCreation = async (order, orderId): Promise<any> => {
 <td width="10" style="padding:7px 0;">&nbsp;</td>
 <td style="padding:7px 0;"><span style="color: rgb(85, 84, 84); font-size: small; font-family: Open-sans, sans-serif, serif, EmojiFont;"></span>
 <p style="font-size:18px;font-weight:500;text-transform:uppercase;margin:3px 0 7px 0;padding-bottom:10px;border-bottom:1px solid #D6D4D4;">
-Commande ACMTEBENO&nbsp;-&nbsp;En attente du paiement</p>
+Commande ${order.course.title}&nbsp;-&nbsp;En attente du paiement</p>
 <span style="color:#777777;">Nous avons bien enregistré votre commande ayant pour référence <span style="color:#333333;"><strong>${order.orderId}</strong></span>. Celle-ci vous sera <strong>envoyée 72 heures après votre paiement </strong>. </span></td>
 <td width="10" style="padding:7px 0;">&nbsp;</td>
 </tr>
@@ -1674,18 +1674,9 @@ Pour rappel, vous avez sélectionné le mode de paiement par ${order.payment.mod
 <span style="color:#777777;">Voici les informations dont vous avez besoin pour effectuer votre virement :<br>
 
 <span style="color:#333333;"><strong>Montant :</strong></span> ${order.payment.amount} DT<br>
+<span style="color:#333333;"><strong>Détails du compte :</strong></span><br><br>
+<img width=""src="https://i.imgur.com/iP9tjnU.jpg" />
 
-<span style="color:#333333;"><strong>Titulaire du compte :</strong></span> FivePoints SARL<br>
-
-<span style="color:#333333;"><strong>Détails du compte :</strong></span> Monnaie : TND<br>
-
-Banque : ATB<br>
-
-RIB Bancaire : 0109 0125 1100 0041 8491<br>
-
-BIC: ATBKTNTT<br>
-
-<span style="color:#333333;"><strong>Adresse de la banque :</strong></span> Agence ATB sise au 41 av. Alain Savary 1002 Belvedere </span></td>
 <td width="10" style="padding:7px 0;">&nbsp;</td>
 </tr>
 </tbody></table>

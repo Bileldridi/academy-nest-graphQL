@@ -24,6 +24,7 @@ type Level {
   subTitle: String
   desc: String
   pic: String
+  promotion: Int
   shortDesc: String
   status: String
   duration: Int
@@ -36,6 +37,7 @@ type PublicLevel {
   courses: [PublicCourse]
   subTitle: String
   desc: String
+  promotion: Int
   shortDesc: String
   pic: String
   price: Int
@@ -48,6 +50,7 @@ input CreateLevelInput {
   desc: String
   pic: String
   shortDesc: String
+  promotion: Int
   status: String
   duration: Int
   price: Int  
@@ -59,6 +62,7 @@ input UpdateLevelInput {
   subTitle: String
   desc: String
   pic: String
+  promotion: Int
   shortDesc: String
   status: String
   duration: Int

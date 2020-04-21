@@ -6,6 +6,7 @@ export const schema: Schema = new Schema({
     desc: String,
     shortDesc: String,
     pic: String,
+    promotion: {type: Number, default: 0},
     price: { type: Number, default: 0 },
     courses: [{ type: Types.ObjectId, ref: 'Course' }],
     status: { type: String, default: 'private', enum: ['draft', 'private', 'published', 'deleted'] },

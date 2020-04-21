@@ -53,9 +53,16 @@ export class PurchaseService {
             user = newUser;
         }
         if (order.status === 'payed') {
-            await this.accessModel.create({
-                candidate: user.id, course: result.course.id, duration: -1 //result.course.duration
-            }).catch(err => err);
+            if( result.course) {
+                await this.accessModel.create({
+                    candidate: user.id, course: result.course.id, duration: -1 //result.course.duration
+                }).catch(err => err);
+            } else {
+                await this.accessModel.create({
+                    candidate: user.id, level: result.level.id, duration: -1 //result.course.duration
+                }).catch(err => err);
+            }
+            
             await sendEmailInvoice(user.email,
                 result.orderId,
                 new Date(result.createDate).toLocaleDateString(),

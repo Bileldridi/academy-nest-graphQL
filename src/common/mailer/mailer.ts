@@ -1624,7 +1624,13 @@ export const sendEmailInvoice = async (email, orderId, orderDate, name, courseTi
 }
 
 export const sendOrderCreation = async (order, orderId): Promise<any> => {
-
+    let title = '';
+    if(order.course) {
+        title = order.course.title;
+    }
+    if(order.level) {
+        title = order.level.title;
+    }
     const htmlMsg = `
     <div class=""><div class="wide-content-host"><div class="_1_uypmLpuvFfZLEG0VSc1I"><div class="_2zX2caDms6Dyd9Ch--6tVn _3WlDZpUcpzvjQ13y53lZLc"><div class="_2UE8mawgPfA7HsY7A600GK"></div><div class="_1PykQrbOAi1vvEtfcvQEia"><div><div class="_21bgioiEBbnVoXvYXjL3tH JWNdg1hee9_Rz6bIGvG1c allowTextSelection"><div><div>
 <div dir="ltr">
@@ -1653,7 +1659,7 @@ export const sendOrderCreation = async (order, orderId): Promise<any> => {
 <td width="10" style="padding:7px 0;">&nbsp;</td>
 <td style="padding:7px 0;"><span style="color: rgb(85, 84, 84); font-size: small; font-family: Open-sans, sans-serif, serif, EmojiFont;"></span>
 <p style="font-size:18px;font-weight:500;text-transform:uppercase;margin:3px 0 7px 0;padding-bottom:10px;border-bottom:1px solid #D6D4D4;">
-Commande ${order.course.title}&nbsp;-&nbsp;En attente du paiement</p>
+Commande ${title}&nbsp;-&nbsp;En attente du paiement</p>
 <span style="color:#777777;">Nous avons bien enregistré votre commande ayant pour référence <span style="color:#333333;"><strong>${order.orderId}</strong></span>. Celle-ci vous sera <strong>envoyée 72 heures après votre paiement </strong>. </span></td>
 <td width="10" style="padding:7px 0;">&nbsp;</td>
 </tr>

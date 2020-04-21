@@ -32,6 +32,7 @@ type Course {
   desc: String
   longDesc: String
   pic: String
+  promotion: Int
   difficulty: String
   chapters: [Chapter]
   comments: [Comment]
@@ -51,6 +52,7 @@ type PublicCourse {
   longDesc: String
   pic: String
   price: Int
+  promotion: Int
   assistancePrice: Int
   difficulty: String
   chapters: [PublicChapter]
@@ -70,6 +72,7 @@ input CreateCourseInput {
   longDesc: String
   pic: String
   price: Int
+  promotion: Int
   assistancePrice: Int
   difficulty: String
   levels: [String]
@@ -86,6 +89,7 @@ input UpdateCourseInput {
   price: Int
   assistancePrice: Int
   longDesc: String
+  promotion: Int
   pic: String
   levels: [String]
   chapters: [String]

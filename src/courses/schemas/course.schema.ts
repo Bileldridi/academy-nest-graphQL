@@ -8,7 +8,7 @@ export const schema: Schema = new Schema({
     levels: [{ type: Types.ObjectId, ref: 'Level' }],
     duration: { type: Number, default: -1 },
     createDate: { type: Number, default: Date.now },
-    status: { type: String, default: 'published', enum: ['draft', 'published', 'deleted'] },
+    status: { type: String, default: 'published', enum: ['draft', 'published', 'deleted', 'coming soon'] },
     difficulty: { type: String, default: 'beginner', enum: ['beginner', 'intermediate', 'expert'] },
     promotion: {type: Number, default: 0},
     longDesc: String,

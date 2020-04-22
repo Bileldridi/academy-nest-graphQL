@@ -37,6 +37,7 @@ type PublicLevel {
   courses: [PublicCourse]
   subTitle: String
   desc: String
+  status: String
   promotion: Int
   shortDesc: String
   pic: String

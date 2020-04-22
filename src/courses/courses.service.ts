@@ -48,7 +48,7 @@ export class CoursesService {
         return result.filter((e, i) => i < 6);
     }
     async getHomeCourses(): Promise<any[]> {
-        const result = await this.courseModel.find({ status: 'published' }).populate('chapters').exec();
+        const result = await this.courseModel.find({$or:[{status: 'published'}, {status: 'coming soon' }]}).populate('chapters').exec();
         return result;
     }
     async findOneCourseById(id: string): Promise<any> {
@@ -74,7 +74,7 @@ export class CoursesService {
         return await this.levelModel.find().populate('courses').exec();
     }
     async getHomeLevels(): Promise<any[]> {
-        return await this.levelModel.find({ status: 'published' }).populate('courses').exec();
+        return await this.levelModel.find({$or:[{status: 'published'}, {status: 'coming soon' }]}).populate('courses').exec();
     }
     async updateLevel(level, _id) {
 

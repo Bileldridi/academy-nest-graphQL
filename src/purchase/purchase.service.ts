@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpService } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import * as crypto from 'crypto-js';
@@ -13,6 +13,7 @@ export class PurchaseService {
         @InjectModel('Access') private readonly accessModel: Model<any>,
         @InjectModel('Course') private readonly courseModel: Model<any>,
         @InjectModel('Level') private readonly levelModel: Model<any>,
+        private httpService: HttpService
     ) { }
 
     async findAllOrders() {
@@ -28,10 +29,11 @@ export class PurchaseService {
         return result.id ? { message: 'OK' } : { message: 'NOT OK' }
     }
     async createOrder(order) {
+        console.log('createOrder')
         order.orderId = this.makeid(7);
         order.status = { status: order.status };
         const product = order.course ? await this.courseModel.findOne({ _id: order.course }).exec() : await this.levelModel.findOne({ _id: order.level }).exec()
-        if(product.promotion && product.promotion !== 0) {
+        if (product.promotion && product.promotion !== 0) {
             order.payment = { mode: order.mode, transfereId: '-', method: order.method, amount: order.assistance ? (product.price - ((product.price * order.promotion) / 100)) + product.assistancePrice : (product.price - ((product.price * order.promotion) / 100)) };
         } else {
             order.payment = { mode: order.mode, transfereId: '-', method: order.method, amount: order.assistance ? product.price + product.assistancePrice : product.price };
@@ -54,7 +56,7 @@ export class PurchaseService {
             user = newUser;
         }
         if (order.status === 'payed') {
-            if( result.course) {
+            if (result.course) {
                 await this.accessModel.create({
                     candidate: user.id, course: result.course.id, duration: -1 //result.course.duration
                 }).catch(err => err);
@@ -63,7 +65,7 @@ export class PurchaseService {
                     candidate: user.id, level: result.level.id, duration: -1 //result.course.duration
                 }).catch(err => err);
             }
-            
+
             await sendEmailInvoice(user.email,
                 result.orderId,
                 new Date(result.createDate).toLocaleDateString(),

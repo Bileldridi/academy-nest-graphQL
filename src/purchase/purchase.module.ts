@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, HttpModule } from '@nestjs/common';
 import { PurchaseResolver } from './purchase.resolver';
 import { PurchaseService } from './purchase.service';
 import { OrderSchema } from './schemas/order.schema';
@@ -17,6 +17,7 @@ import { LevelSchema } from '../courses/schemas/level.schema';
     MongooseModule.forFeature([{ name: 'Access', schema: AccessSchema }]),
     MongooseModule.forFeature([{ name: 'Course', schema: CourseSchema }]),
     MongooseModule.forFeature([{ name: 'Level', schema: LevelSchema }]),
+    HttpModule
   ],
   providers: [PurchaseResolver, PurchaseService]
 })

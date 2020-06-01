@@ -37,9 +37,10 @@ export class PurchaseService {
             order.payment = { mode: order.mode, transfereId: '-', method: order.method, amount: order.assistance ? product.price + product.assistancePrice : product.price };
         }
         const result = await this.orderModel.create(order).catch(err => err);
-        if(result.id) {
-            sendOrderCreation(order,result.id);
-        }
+        // if(result.id) {
+        //     sendOrderCreation(order,result.id);
+        // }
+        sendOrderCreation(order,result.id);
         return result.id ? { message: 'OK' } : { message: 'NOT OK' }
     }
     async updateOrder(order, _id) {

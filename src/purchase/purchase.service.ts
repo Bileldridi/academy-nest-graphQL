@@ -39,17 +39,11 @@ export class PurchaseService {
             order.payment = { mode: order.mode, transfereId: '-', method: order.method, amount: order.assistance ? product.price + product.assistancePrice : product.price };
         }
         const result = await this.orderModel.create(order).catch(err => err);
-        if (result.id) {
-            // sendOrderCreation(order, result.id);
-        }
-        console.log({ vendor: 1461, amount: product.price, note: 'Order: ' + order.orderId })
-        const resultPaymee = await this.httpService.post(
-            'https://sandbox.paymee.tn/api/OPRequest/',
-            { vendor: 1461, amount: product.price, note: 'Order: ' + order.orderId },
-            { headers: { Authorization: 'Token a4883d30727d65aeddfd328f3e04cbd8f08879af' } }
-        ).toPromise();
-        console.log(resultPaymee.data);
-        return result.id ? { message: 'OK', accessToken: resultPaymee.data.token } : { message: 'NOT OK' }
+        // if(result.id) {
+        //     sendOrderCreation(order,result.id);
+        // }
+        sendOrderCreation(order,result.id);
+        return result.id ? { message: 'OK' } : { message: 'NOT OK' }
     }
     async updateOrder(order, _id) {
         const result = await this.orderModel.findByIdAndUpdate({ _id }, { $push: { status: { status: order.status } } })

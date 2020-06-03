@@ -1,5 +1,9 @@
 import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
 import { CandidatesService } from './candidates.service';
+import { SetMetadata, UseGuards } from '@nestjs/common';
+import { GraphqlAuthGuard } from '../common/guards/gql.auth.guard';
+import { RolesGuard } from '../common/guards/roles.guard';
+import { Roles } from '../common/decorators/roles.decorator';
 
 @Resolver('Candidates')
 export class CandidatesResolver {
@@ -17,6 +21,9 @@ export class CandidatesResolver {
     async deleteOne(@Args('id') id: string): Promise<any> {
         return await this.candidatesService.deleteOne(id);
     }
+    @SetMetadata('roles', ['admin'])
+    @UseGuards(GraphqlAuthGuard, RolesGuard)
+    @Roles('admin')
     @Query('deleteCandidates')
     async deleteOnes(@Args('id') id: [string]): Promise<any> {
         return await this.candidatesService.deleteOnes(id);

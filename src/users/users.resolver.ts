@@ -35,6 +35,9 @@ export class UsersResolver {
     async findOneById(@Args('id') id: string): Promise<any> {
         return await this.usersService.findOneById(id);
     }
+    @SetMetadata('roles', ['admin'])
+    @UseGuards(GraphqlAuthGuard, RolesGuard)
+    @Roles('admin')
     @Query('deleteUser')
     async deleteUser(@Args('id') id: string): Promise<any> {
         return await this.usersService.findOneById(id);
@@ -48,6 +51,9 @@ export class UsersResolver {
         return await this.usersService.recoverAccountRequest(email);
     }
 
+    @SetMetadata('roles', ['admin'])
+    @UseGuards(GraphqlAuthGuard, RolesGuard)
+    @Roles('admin')
     @Mutation('createUser')
     async create(@Args('createUserInput') args: any): Promise<any> {
         const createdUser = await this.usersService.create(args);

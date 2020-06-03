@@ -1,10 +1,10 @@
 import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
 import { CoursesService } from './courses.service';
-import { UseGuards } from '@nestjs/common';
+import { UseGuards, SetMetadata } from '@nestjs/common';
 import { GraphqlAuthGuard } from '../common/guards/gql.auth.guard';
 import { User } from '../common/decorators/current-user.decorator';
-import { RolesGuard } from 'src/common/guards/roles.guard';
-import { Roles } from 'src/common/decorators/roles.decorator';
+import { RolesGuard } from '../common/guards/roles.guard';
+import { Roles } from '../common/decorators/roles.decorator';
 
 @Resolver('Courses')
 export class CoursesResolver {
@@ -32,15 +32,24 @@ export class CoursesResolver {
     async deleteOneCourse(@Args('id') id: string): Promise<any> {
         return await this.coursesService.deleteCourse(id);
     }
+    @SetMetadata('roles', ['admin'])
+    @UseGuards(GraphqlAuthGuard, RolesGuard)
+    @Roles('admin')
     @Mutation('createCourse')
     async createCourse(@Args('createCourseInput') args: any): Promise<any> {
         return await this.coursesService.createCourse(args);
     }
+    @SetMetadata('roles', ['admin'])
+    @UseGuards(GraphqlAuthGuard, RolesGuard)
+    @Roles('admin')
     @Mutation('updateCourse')
     async updateCourse(@Args('updateCourseInput') args: any): Promise<any> {
         return await this.coursesService.updateCourse(args, args.id);
     }
     // LEVEL CRUDs
+    @SetMetadata('roles', ['admin'])
+    @UseGuards(GraphqlAuthGuard, RolesGuard)
+    @Roles('admin')
     @Query()
     async getLevels() {
         return await this.coursesService.findAllLevels();
@@ -53,14 +62,23 @@ export class CoursesResolver {
     async findOneLevelById(@Args('id') id: string): Promise<any> {
         return await this.coursesService.findOneLevelById(id);
     }
+    @SetMetadata('roles', ['admin'])
+    @UseGuards(GraphqlAuthGuard, RolesGuard)
+    @Roles('admin')
     @Query('removeLevel')
     async deleteOneLevel(@Args('id') id: string): Promise<any> {
         return await this.coursesService.deleteLevel(id);
     }
+    @SetMetadata('roles', ['admin'])
+    @UseGuards(GraphqlAuthGuard, RolesGuard)
+    @Roles('admin')
     @Mutation('createLevel')
     async createLevel(@Args('createLevelInput') args: any): Promise<any> {
         return await this.coursesService.createLevel(args);
     }
+    @SetMetadata('roles', ['admin'])
+    @UseGuards(GraphqlAuthGuard, RolesGuard)
+    @Roles('admin')
     @Mutation('updateLevel')
     async updateLevel(@Args('updateLevelInput') args: any): Promise<any> {
         return await this.coursesService.updateLevel(args, args.id);

@@ -14,9 +14,9 @@ export class UsersResolver {
     constructor(private readonly usersService: UsersService) { }
 
     // @UseGuards(AuthGuard('jwt'))
-    @SetMetadata('roles', ['admin'])
-    @UseGuards(GraphqlAuthGuard, RolesGuard)
-    @Roles('admin')
+    // @SetMetadata('roles', ['admin'])
+    // @UseGuards(GraphqlAuthGuard, RolesGuard)
+    // @Roles('admin')
     @Query('getUsers')
     async getUsers(@User() user) {
         
@@ -51,9 +51,9 @@ export class UsersResolver {
         return await this.usersService.recoverAccountRequest(email);
     }
 
-    @SetMetadata('roles', ['admin'])
-    @UseGuards(GraphqlAuthGuard, RolesGuard)
-    @Roles('admin')
+    // @SetMetadata('roles', ['admin'])
+    // @UseGuards(GraphqlAuthGuard, RolesGuard)
+    // @Roles('admin')
     @Mutation('createUser')
     async create(@Args('createUserInput') args: any): Promise<any> {
         const createdUser = await this.usersService.create(args);

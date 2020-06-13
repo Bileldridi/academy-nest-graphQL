@@ -37,6 +37,7 @@ type Course {
   chapters: [Chapter]
   comments: [Comment]
   levels: [Level]
+  modules: [Module]
   createDate: Float
   assistancePrice: Int
   status: String
@@ -93,6 +94,7 @@ input UpdateCourseInput {
   promotion: Int
   pic: String
   levels: [String]
+  modules: [String]
   chapters: [String]
   status: String
   Files: [String]

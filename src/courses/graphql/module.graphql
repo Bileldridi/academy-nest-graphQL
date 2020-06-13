@@ -1,0 +1,71 @@
+type Query {
+  getModules: [Module]
+  Module(id: String!): Module
+  getHomeModules: [PublicModule]
+  removeModule(id: String!): Message
+}
+
+type Mutation {
+  createModule(createModuleInput: CreateModuleInput): Module
+}
+type Mutation {
+  updateModule(updateModuleInput: UpdateModuleInput): Module
+}
+
+type Subscription {
+  ModuleCreated: Module
+}
+
+type Module {
+  id: String
+  title: String
+  createDate: Float
+  courses: [Course]
+  subTitle: String
+  desc: String
+  pic: String
+  promotion: Int
+  shortDesc: String
+  status: String
+  duration: Int
+  price: Int
+}
+
+type PublicModule {
+  id: String
+  title: String
+  courses: [PublicCourse]
+  subTitle: String
+  desc: String
+  status: String
+  promotion: Int
+  shortDesc: String
+  pic: String
+  price: Int
+}
+
+input CreateModuleInput {
+  title: String
+  courses: [String]
+  subTitle: String
+  desc: String
+  pic: String
+  shortDesc: String
+  promotion: Int
+  status: String
+  duration: Int
+  price: Int  
+}
+input UpdateModuleInput {
+  id: String
+  title: String
+  courses: [String]
+  subTitle: String
+  desc: String
+  pic: String
+  promotion: Int
+  shortDesc: String
+  status: String
+  duration: Int
+  price: Int
+}

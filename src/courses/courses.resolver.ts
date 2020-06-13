@@ -181,6 +181,13 @@ export class CoursesResolver {
     async findAccessByLevelId(@Args('id') id: string): Promise<any[]> {
         return await this.coursesService.findAccessByLevelId(id);
     }
+
+    @Roles('admin')
+    @Query('ModuleAccess')
+    @UseGuards(GraphqlAuthGuard, RolesGuard)
+    async findAccessByModuleId(@Args('id') id: string): Promise<any[]> {
+        return await this.coursesService.findAccessByModuleId(id);
+    }
     @Roles('admin')
     @UseGuards(GraphqlAuthGuard, RolesGuard)
     @Query('getCandidateAccess')
@@ -216,5 +223,41 @@ export class CoursesResolver {
     async updateProgress(@Args('updateProgressInput') args: any, @User() user): Promise<any> {
         return await this.coursesService.updateProgress(args, user);
     }
-
+ // MODULE CRUDs
+ @SetMetadata('roles', ['admin'])
+ @UseGuards(GraphqlAuthGuard, RolesGuard)
+ @Roles('admin')
+ @Query()
+ async getModules() {
+     return await this.coursesService.findAllModules();
+ }
+ @Query('getHomeModules')
+ async getHomeModules() {
+     return await this.coursesService.getHomeModules();
+ }
+ @Query('Module')
+ async findOneModuleById(@Args('id') id: string): Promise<any> {
+     return await this.coursesService.findOneModuleById(id);
+ }
+ @SetMetadata('roles', ['admin'])
+ @UseGuards(GraphqlAuthGuard, RolesGuard)
+ @Roles('admin')
+ @Query('removeModule')
+ async deleteOneModule(@Args('id') id: string): Promise<any> {
+     return await this.coursesService.deleteModule(id);
+ }
+ @SetMetadata('roles', ['admin'])
+ @UseGuards(GraphqlAuthGuard, RolesGuard)
+ @Roles('admin')
+ @Mutation('createModule')
+ async createModule(@Args('createModuleInput') args: any): Promise<any> {
+     return await this.coursesService.createModule(args);
+ }
+ @SetMetadata('roles', ['admin'])
+ @UseGuards(GraphqlAuthGuard, RolesGuard)
+ @Roles('admin')
+ @Mutation('updateModule')
+ async updateModule(@Args('updateModuleInput') args: any): Promise<any> {
+     return await this.coursesService.updateModule(args, args.id);
+ }
 }

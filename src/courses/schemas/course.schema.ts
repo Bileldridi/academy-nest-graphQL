@@ -6,6 +6,7 @@ export const schema: Schema = new Schema({
     chapters: [{ type: Types.ObjectId, ref: 'Chapter' }],
     comments: [{ type: Types.ObjectId, ref: 'Comment' }],
     levels: [{ type: Types.ObjectId, ref: 'Level' }],
+    modules: [{ type: Types.ObjectId, ref: 'Module' }],
     duration: { type: Number, default: -1 },
     createDate: { type: Number, default: Date.now },
     status: { type: String, default: 'published', enum: ['draft', 'published', 'deleted', 'coming soon'] },

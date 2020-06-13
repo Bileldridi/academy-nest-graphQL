@@ -16,6 +16,7 @@ export class CoursesService {
         @InjectModel('Access') private readonly accessModel: Model<any>,
         @InjectModel('Progress') private readonly progressModel: Model<any>,
         @InjectModel('Cemetery') private readonly cemeteryModel: Model<any>,
+        @InjectModel('Module') private readonly moduleModel: Model<any>,
     ) { }
     @Cron(CronExpression.EVERY_30_MINUTES)
     async handleCron() {
@@ -165,15 +166,22 @@ export class CoursesService {
             });
         return result;
     }
+    async findAccessByModuleId(id: string): Promise<any[]> {
+        const result = await this.accessModel.find({ module: id }).populate('candidate').populate('course').populate('module')
+            .then(data => {
+                return data.map(e => ({ ...e._doc, id: e._doc._id, timeLeft: Math.round((((e.duration * 86400000) + (e.createDate)) - Date.now()) / 86400000) }));
+            });
+        return result;
+    }
     async findAccessByCandidateId(id: string): Promise<any[]> {
-        const result = await this.accessModel.find({ candidate: id }).populate('candidate').populate('course').populate({ path: 'level', populate: { path: 'courses' } })
+        const result = await this.accessModel.find({ candidate: id }).populate('candidate').populate('course').populate({ path: 'level', populate: { path: 'courses' } }).populate({ path: 'module', populate: { path: 'courses' } })
             .then(data => {
                 return data.map(e => ({ ...e._doc, id: e._doc._id, timeLeft: Math.round((((e.duration * 86400000) + (e.createDate)) - Date.now()) / 86400000) }));
             });
         return result;
     }
     async findAllAccesss(): Promise<any[]> {
-        return await this.accessModel.find().populate('candidate').populate('course').populate('level').exec();
+        return await this.accessModel.find().populate('candidate').populate('course').populate('level').populate('module').exec();
     }
     async updateAccess(access, _id) {
         return await this.accessModel.findByIdAndUpdate({ _id }, access).catch(err => err);
@@ -197,6 +205,28 @@ export class CoursesService {
             return await this.progressModel.create(progress).catch(err => err);
         }
     }
+    // LEVEL MODULEs
+    async createModule(level: any): Promise<any> {
+        return await this.moduleModel.create(level).catch(err => err);
+    }
+    async findOneModuleById(id: string): Promise<any> {
+        return await this.moduleModel.findById(id).populate('courses').exec();
+    }
+    async findAllModules(): Promise<any[]> {
+        return await this.moduleModel.find().populate('courses').exec();
+    }
+    async getHomeModules(): Promise<any[]> {
+        return await this.moduleModel.find({$or:[{status: 'published'}, {status: 'coming soon' }]}).populate('courses').exec();
+    }
+    async updateModule(level, _id) {
 
+        return await this.moduleModel.findByIdAndUpdate({ _id }, level).catch(err => err);
+    }
+    async deleteModule(_id) {
+        const result = await this.moduleModel.findOne({ _id }).exec();
+        this.cemeteryModel.create({ object: result, type: 'Module' }).catch(err => err);
+        await this.moduleModel.findByIdAndDelete(_id).exec();
+        return result.id ? { message: 'OK' } : { message: 'NOT OK' }
+    }
 
 }

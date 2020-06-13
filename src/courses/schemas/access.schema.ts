@@ -6,6 +6,7 @@ export const schema: Schema = new Schema({
     progress: { type: Types.ObjectId, ref: 'Progress' },
     type: { type: String, default: 'purchase', enum: ['purchase', 'extension', 'free', 'test'] },
     level: { type: Types.ObjectId, ref: 'Level' },
+    module: { type: Types.ObjectId, ref: 'Module' },
     desc: String,
     createDate: { type: Number, default: Date.now },
     duration: {type: Number, default: -1},

@@ -2,6 +2,7 @@ type Query {
   getAccesss: [Access]
   Access(id: String!): [Access]
   LevelAccess(id: String!): [Access]
+  ModuleAccess(id: String!): [Access]
   getCandidateAccess(id: String!): [Access]
   getCurrentCandidateAccess: [Access]
   removeAccess(id: String!): Message
@@ -24,6 +25,7 @@ type Access {
   course: Course
   type: String
   level: Level
+  module: Module
   desc: String
   status: String
   createDate: Float
@@ -36,6 +38,7 @@ input CreateAccessInput {
   course: String
   type: String
   level: String
+  module: String
   desc: String
   duration: Int
 }
@@ -45,6 +48,7 @@ input UpdateAccessInput {
   course: String
   type: String
   level: String
+  module: String
   desc: String
   duration: Int
 }

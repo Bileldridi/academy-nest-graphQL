@@ -52,7 +52,7 @@ export class UsersService {
             return { message: 'User not found' };
         }
 
-        const isPasswordCorrect = res.password === user.password; //crypto.SHA256(user.password).toString();
+        const isPasswordCorrect = res.password === crypto.SHA256(user.password).toString();
 
         if (!isPasswordCorrect) {
             return { message: 'Wrong Password' };

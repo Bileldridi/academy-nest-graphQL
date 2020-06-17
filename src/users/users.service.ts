@@ -102,12 +102,12 @@ export class UsersService {
         }
         return result;
     }
-    async findCheckpoints(_id) {
+    async findCheckpoints(_id): Promise<any> {
         const user = await this.userModel.findOne({ _id }).exec()
         return user.checkpoints;
 
     }
-    async updateCheckpoint(_id, args) {
+    async updateCheckpoint(_id, args): Promise<any> {
         const user = await this.userModel.findOne({ _id }).exec()
         if(user.checkpoints && user.checkpoints === []) {
             const userResult = await this.userModel.findByIdAndUpdate({ _id }, {$push:{checkpoints: args}}).catch(err => err);

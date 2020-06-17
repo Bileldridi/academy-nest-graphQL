@@ -1,7 +1,7 @@
 type Query {
   getUsers: [User]
   getCurrentUser: User
-  getCheckpoints: [checkpoint]
+  getCheckpoints: [Checkpoint]
 
   User(id: String!): User
   deleteUser(id: ID!): Message
@@ -23,7 +23,7 @@ type Message {
   message: String
   accessToken: String
 }
-type checkpoint {
+type Checkpoint {
   idCourse: String
   idChapter: String 
   status: String

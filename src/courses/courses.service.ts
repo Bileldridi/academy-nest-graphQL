@@ -89,7 +89,6 @@ export class CoursesService {
     }
     // CHAPTER CRUDs
     async createChapter(chapter: any): Promise<any> {
-        console.log(chapter);
 
         const result = await this.chapterModel.create(chapter).catch(err => err);
         if (result.course) {
@@ -111,18 +110,14 @@ export class CoursesService {
         return await this.chapterModel.findByIdAndUpdate({ _id }, chapter).populate('course').exec()
     }
     async submitQuiz(quiz, userId) {
-        console.log(quiz);
         const chapter = await this.chapterModel.findOne({ _id: quiz.id });
-        console.log(chapter);
         const correctAnswers = chapter.quiz.map(q => q.correctAnswer);
         const score = (correctAnswers.filter((a, i) => quiz.answers[i] === a).length * 100) / correctAnswers.length;
         const progress = await this.progressModel.create({ candidate: userId, chapter: quiz.id, type: 'quiz', score }).catch(err => err);
-        console.log(progress);
         return { message: score.toString() };
     }
     async checkQuiz(idQuiz, userId) {
         const chapter = await this.progressModel.findOne({ candidate: userId, chapter: idQuiz, type:'quiz' });
-        console.log(chapter)
         return { message: chapter ? chapter.score : 'null' };
     }
     async deleteChapter(_id) {
@@ -194,8 +189,6 @@ export class CoursesService {
     }
     async updateProgress(progress, user) {
         progress.candidate = user.id;
-        console.log(progress);
-
         const progressResult = await this.progressModel.findOne({ chapter: progress.chapter }).exec();
         if (progressResult) {
             progress.score += progressResult.score;

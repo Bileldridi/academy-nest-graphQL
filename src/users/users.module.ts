@@ -7,11 +7,15 @@ import { JwtStrategy } from '../common/strategy/jwt.strategy';
 import { CoachSchema } from '../coaches/schemas/coaches.schema';
 import { CandidateSchema } from '../candidate/schemas/candidates.schema';
 import { CemeterySchema } from '../common/schemas/cemetery.schema';
+import { CourseSchema } from '../courses/schemas/course.schema';
+import { ChapterSchema } from '../courses/schemas/chapter.schema';
 // import { PassportModule } from '@nestjs/passport';
 // import { JwtService, JwtModule } from '@nestjs/jwt';
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
+    MongooseModule.forFeature([{ name: 'Course', schema: CourseSchema }]),
+    MongooseModule.forFeature([{ name: 'Chapter', schema: ChapterSchema }]),
     MongooseModule.forFeature([{ name: 'Coach', schema: CoachSchema }]),
     MongooseModule.forFeature([{ name: 'Candidate', schema: CandidateSchema }]),
     MongooseModule.forFeature([{ name: 'Cemetery', schema: CemeterySchema }]),

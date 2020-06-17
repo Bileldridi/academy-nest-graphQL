@@ -102,6 +102,29 @@ export class UsersService {
         }
         return result;
     }
+    async findCheckpoints(_id) {
+        const user = await this.userModel.findOne({ _id }).exec()
+        return user.checkpoints;
+
+    }
+    async updateCheckpoint(_id, args) {
+        const user = await this.userModel.findOne({ _id }).exec()
+        if(user.checkpoints && user.checkpoints === []) {
+            const userResult = await this.userModel.findByIdAndUpdate({ _id }, {$push:{checkpoints: args}}).catch(err => err);
+        } else {
+            const index = user.checkpoints.map(obj => {return obj.idCourse}).indexOf(args.idCourse);
+            console.log(index);
+            if(index !== -1) {
+                console.log('mawjoud')
+                user.checkpoints[index].idChapter = args.idChapter;
+                const res1 = await this.userModel.findByIdAndUpdate({ _id }, {$set:{checkpoints: user.checkpoints}}).catch(err => err);
+            } else {
+                console.log('mouch mawjoud');
+                const res2 = await this.userModel.findByIdAndUpdate({ _id }, {$push:{checkpoints: args}}).catch(err => err);
+            }
+        }
+        return []
+    }
     async validate({ _id }): Promise<any> {
         const user = await this.userModel.findOne({ _id });
         if (!user) {

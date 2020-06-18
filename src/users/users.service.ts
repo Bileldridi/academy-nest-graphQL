@@ -82,7 +82,7 @@ export class UsersService {
     }
     async updateUser(user, _id) {
         const oldUser = await this.userModel.findOne({ _id }).exec();
-        let pass = '';
+        let pass = ''; 
         if (user.password === '') {
             user.password = oldUser.password;
         } else {

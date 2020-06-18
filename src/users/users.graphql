@@ -10,7 +10,7 @@ type Query {
 }
 
 type Mutation {
-  updateCheckpoint(updateCheckpointInput: UpdateCheckpointInput): [Object]
+  updateCheckpoint(updateCheckpointInput: UpdateCheckpointInput): [Checkpoint]
   createUser(createUserInput: CreateUserInput): User
   updateUser(userInput: UserInput): User
   login(loginInput: LoginInput): UserLogin
@@ -52,11 +52,6 @@ type User {
 type UserLogin {
   message: String
   token: String
-}
-type Object {
-  idCourse: String
-  idChapter: String
-
 }
 
 input CreateUserInput {

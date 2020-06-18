@@ -61,29 +61,31 @@ deploy-review:
     - echo $CI_ENVIRONMENT_NAME
     - echo $__CI_ENVIRONMENT_SLUG__
 
-    # - kubectl version
-    # - cd k8s/
-    # - sed -i "s~__CI_REGISTRY_IMAGE__~${CI_REGISTRY_IMAGE}~" deployment.yaml
-    # - sed -i "s/__CI_ENVIRONMENT_SLUG__/${CI_ENVIRONMENT_SLUG}/" deployment.yaml ingress.yaml service.yaml
-    # - sed -i "s~__VERSION__~v${CI_PIPELINE_ID}~" deployment.yaml ingress.yaml service.yaml
-    # - sed -i "s/__HOST__/${CI_ENVIRONMENT_SLUG}/" ingress.yaml
-    # - |
-    #   if kubectl apply -f deployment.yaml | grep -q unchanged; then
-    #       echo "=> Patching deployment to force image update."
-    #       kubectl patch -f deployment.yaml -p "{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"ci-last-updated\":\"$(date +'%s')\"}}}}}"
-    #   else
-    #       echo "=> Deployment apply has changed the object, no need to force image update."
-    #   fi
-    # - kubectl apply -f service.yaml || true
-    # - kubectl apply -f ingress.yaml
-    # - kubectl apply -f mongo.controller.yaml
-    # - kubectl apply -f mongo.service.yaml
-    # - kubectl rollout status -f deployment.yaml
-    # - kubectl get deploy,svc,ing,pod -l app="$(echo ${CI_PROJECT_NAME} | tr "." "-")",ref="${CI_ENVIRONMENT_SLUG}"
-    # - echo $CI_PROJECT_NAME
-    # - echo $CI_ENVIRONMENT_SLUG
-    # - echo $CI_REGISTRY_IMAGE
-    # - echo $CI_COMMIT_REF_NAME
+    - kubectl version
+    - cd k8s/
+    - sed -i "s~__CI_REGISTRY_IMAGE__~${CI_REGISTRY_IMAGE}~" deployment.yaml
+    - sed -i "s/__CI_ENVIRONMENT_SLUG__/${CI_ENVIRONMENT_SLUG}/" deployment.yaml ingress.yaml service.yaml
+    - sed -i "s~__VERSION__~v${CI_PIPELINE_ID}~" deployment.yaml ingress.yaml service.yaml
+    - sed -i "s/__HOST__/${CI_ENVIRONMENT_SLUG}/" ingress.yaml
+    - |
+      if kubectl apply -f deployment.yaml | grep -q unchanged; then
+          echo "=> Patching deployment to force image update."
+          kubectl patch -f deployment.yaml -p "{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"ci-last-updated\":\"$(date +'%s')\"}}}}}"
+      else
+          echo "=> Deployment apply has changed the object, no need to force image update."
+      fi
+    - kubectl apply -f service.yaml || true
+    - kubectl apply -f ingress.yaml
+    - kubectl apply -f mongo.controller.yaml
+    - kubectl apply -f mongo.service.yaml
+    - kubectl rollout status -f deployment.yaml
+    - kubectl get deploy,svc,ing,pod -l app="$(echo ${CI_PROJECT_NAME} | tr "." "-")",ref="${CI_ENVIRONMENT_SLUG}"
+    - echo $CI_PROJECT_NAME
+    - echo $CI_ENVIRONMENT_SLUG
+    - echo $CI_REGISTRY_IMAGE
+    - echo $CI_COMMIT_REF_NAME
+  only:
+    - master
   environment:
     name: review/$CI_BUILD_REF_NAME
     url: http://${CI_ENVIRONMENT_SLUG}.backdev.academy.fivepoints.fr
@@ -126,19 +128,19 @@ stop-review:
   stage: deploy
   script:
     - cd k8s/
-    # - sed -i "s~__CI_REGISTRY_IMAGE__~${CI_REGISTRY_IMAGE}~" deployment.yaml
-    # - sed -i "s/__CI_ENVIRONMENT_SLUG__/${CI_ENVIRONMENT_SLUG}/" deployment.yaml ingress.yaml service.yaml
-    # - sed -i "s/__VERSION__/${CI_PIPELINE_ID}/" deployment.yaml ingress.yaml service.yaml
-    # - |
-    #   if kubectl apply -f deployment.yaml | grep -q unchanged; then
-    #       echo "=> Patching deployment to force image update."
-    #       kubectl patch -f deployment.yaml -p "{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"ci-last-updated\":\"$(date +'%s')\"}}}}}"
-    #   else
-    #       echo "=> Deployment apply has changed the object, no need to force image update."
-    #   fi
-    # - kubectl delete -f service.yaml
-    # - kubectl delete -f ingress.yaml
-    # - kubectl delete -f deployment.yaml
+    - sed -i "s~__CI_REGISTRY_IMAGE__~${CI_REGISTRY_IMAGE}~" deployment.yaml
+    - sed -i "s/__CI_ENVIRONMENT_SLUG__/${CI_ENVIRONMENT_SLUG}/" deployment.yaml ingress.yaml service.yaml
+    - sed -i "s/__VERSION__/${CI_PIPELINE_ID}/" deployment.yaml ingress.yaml service.yaml
+    - |
+      if kubectl apply -f deployment.yaml | grep -q unchanged; then
+          echo "=> Patching deployment to force image update."
+          kubectl patch -f deployment.yaml -p "{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"ci-last-updated\":\"$(date +'%s')\"}}}}}"
+      else
+          echo "=> Deployment apply has changed the object, no need to force image update."
+      fi
+    - kubectl delete -f service.yaml
+    - kubectl delete -f ingress.yaml
+    - kubectl delete -f deployment.yaml
   environment:
     name: review/$CI_BUILD_REF_NAME
     action: stop

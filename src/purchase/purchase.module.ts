@@ -8,8 +8,10 @@ import { UserSchema } from '../users/schemas/user.schema';
 import { AccessSchema } from '../courses/schemas/access.schema';
 import { CourseSchema } from '../courses/schemas/course.schema';
 import { LevelSchema } from '../courses/schemas/level.schema';
+import { PurchaseController } from './purchase.controller';
 
 @Module({
+  controllers: [PurchaseController],
   imports: [
     MongooseModule.forFeature([{ name: 'Order', schema: OrderSchema }]),
     MongooseModule.forFeature([{ name: 'Cemetery', schema: CemeterySchema }]),

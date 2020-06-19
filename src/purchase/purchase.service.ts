@@ -42,8 +42,8 @@ export class PurchaseService {
         // if(result.id) {
         //     sendOrderCreation(order,result.id);
         // }
-        sendOrderCreation(order,result.id);
-        return result.id ? { message: 'OK' } : { message: 'NOT OK' }
+        sendOrderCreation(order, result.id);
+        return result.id ? { message: order.orderId } : { message: 'NOT OK' }
     }
     async updateOrder(order, _id) {
         const result = await this.orderModel.findByIdAndUpdate({ _id }, { $push: { status: { status: order.status } } })
@@ -85,6 +85,11 @@ export class PurchaseService {
         }
         return result;
     }
+
+    updateOrderFromPaymentGpg(order) {
+
+    }
+
     async create(user) {
         let newUser = { firstname: user.firstname, lastname: user.lastname, email: user.email, tel: user.tel, password: '' }
         let randomPass = '';

@@ -9,7 +9,7 @@ export const schema: Schema = new Schema({
     firstname: String,
     lastname: String,
     email: String,
-    promotion: {type: Number, default: 0},
+    promotion: { type: Number, default: 0 },
     tel: String,
     zip: String,
     city: String,
@@ -17,7 +17,7 @@ export const schema: Schema = new Schema({
     status: [
         {
             createDate: { type: Number, default: Date.now },
-            status: { type: String, default: 'waitingPayment', enum: ['waitingPayment', 'payed', 'canceled', 'refunded', 'paymentError'] }
+            status: { type: String, default: 'waitingPayment', enum: ['waitingPayment', 'refused', 'payed', 'canceled', 'refunded', 'paymentError', 'chargeBack'] }
         }
     ],
     payment: {

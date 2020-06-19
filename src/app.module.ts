@@ -12,10 +12,12 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { AppResolver } from './app.resolver';
 import { PurchaseModule } from './purchase/purchase.module';
 import { ChatModule } from './chat/chat.module';
+import { AppController } from './app.controller';
 
 const dbhost = process.env.dbhost || 'localhost';
 
 @Module({
+  controllers: [AppController],
   imports: [
     CatsModule,
     ScheduleModule.forRoot(),

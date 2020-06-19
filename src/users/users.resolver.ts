@@ -39,7 +39,6 @@ export class UsersResolver {
     @UseGuards(GraphqlAuthGuard)
     @Mutation('updateCheckpoint')
     async updateCheckpoint(@Args('updateCheckpointInput') args: any,@User() user) {
-        console.log('hahahahahahahahahahahhahahahahahahaha')
         return await this.usersService.updateCheckpoint(user.id, args);
     }
     

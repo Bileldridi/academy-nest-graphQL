@@ -11,6 +11,7 @@ export class CreateAccessInput {
     course?: string;
     type?: string;
     level?: string;
+    module?: string;
     desc?: string;
     duration?: number;
 }
@@ -70,6 +71,7 @@ export class CreateCourseInput {
     longDesc?: string;
     pic?: string;
     price?: number;
+    promotion?: number;
     assistancePrice?: number;
     difficulty?: string;
     levels?: string[];
@@ -86,6 +88,20 @@ export class CreateLevelInput {
     desc?: string;
     pic?: string;
     shortDesc?: string;
+    promotion?: number;
+    status?: string;
+    duration?: number;
+    price?: number;
+}
+
+export class CreateModuleInput {
+    title?: string;
+    courses?: string[];
+    subTitle?: string;
+    desc?: string;
+    pic?: string;
+    shortDesc?: string;
+    promotion?: number;
     status?: string;
     duration?: number;
     price?: number;
@@ -98,6 +114,7 @@ export class CreateOrderInput {
     firstname: string;
     lastname: string;
     email: string;
+    promotion: number;
     tel: string;
     zip: string;
     city: string;
@@ -168,6 +185,7 @@ export class UpdateAccessInput {
     course?: string;
     type?: string;
     level?: string;
+    module?: string;
     desc?: string;
     duration?: number;
 }
@@ -193,6 +211,11 @@ export class UpdateChapterInput {
     files?: string[];
     comments?: string[];
     quiz?: QuizInput[];
+}
+
+export class UpdateCheckpointInput {
+    idCourse?: string;
+    idChapter?: string;
 }
 
 export class UpdateCoachInput {
@@ -222,8 +245,10 @@ export class UpdateCourseInput {
     price?: number;
     assistancePrice?: number;
     longDesc?: string;
+    promotion?: number;
     pic?: string;
     levels?: string[];
+    modules?: string[];
     chapters?: string[];
     status?: string;
     Files?: string[];
@@ -237,6 +262,21 @@ export class UpdateLevelInput {
     subTitle?: string;
     desc?: string;
     pic?: string;
+    promotion?: number;
+    shortDesc?: string;
+    status?: string;
+    duration?: number;
+    price?: number;
+}
+
+export class UpdateModuleInput {
+    id?: string;
+    title?: string;
+    courses?: string[];
+    subTitle?: string;
+    desc?: string;
+    pic?: string;
+    promotion?: number;
     shortDesc?: string;
     status?: string;
     duration?: number;
@@ -295,6 +335,7 @@ export class Access {
     course?: Course;
     type?: string;
     level?: Level;
+    module?: Module;
     desc?: string;
     status?: string;
     createDate?: number;
@@ -347,6 +388,12 @@ export class ChatMessage {
     createDate?: number;
 }
 
+export class Checkpoint {
+    idCourse?: string;
+    idChapter?: string;
+    status?: string;
+}
+
 export class Coach {
     tel?: string;
     image?: string;
@@ -381,10 +428,12 @@ export class Course {
     desc?: string;
     longDesc?: string;
     pic?: string;
+    promotion?: number;
     difficulty?: string;
     chapters?: Chapter[];
     comments?: Comment[];
     levels?: Level[];
+    modules?: Module[];
     createDate?: number;
     assistancePrice?: number;
     status?: string;
@@ -401,6 +450,7 @@ export class Level {
     subTitle?: string;
     desc?: string;
     pic?: string;
+    promotion?: number;
     shortDesc?: string;
     status?: string;
     duration?: number;
@@ -410,6 +460,21 @@ export class Level {
 export class Message {
     message?: string;
     accessToken?: string;
+}
+
+export class Module {
+    id?: string;
+    title?: string;
+    createDate?: number;
+    courses?: Course[];
+    subTitle?: string;
+    desc?: string;
+    pic?: string;
+    promotion?: number;
+    shortDesc?: string;
+    status?: string;
+    duration?: number;
+    price?: number;
 }
 
 export abstract class IMutation {
@@ -449,6 +514,10 @@ export abstract class IMutation {
 
     abstract updateLevel(updateLevelInput?: UpdateLevelInput): Level | Promise<Level>;
 
+    abstract createModule(createModuleInput?: CreateModuleInput): Module | Promise<Module>;
+
+    abstract updateModule(updateModuleInput?: UpdateModuleInput): Module | Promise<Module>;
+
     abstract createProgress(createProgressInput?: CreateProgressInput): Progress | Promise<Progress>;
 
     abstract updateProgress(updateProgressInput?: UpdateProgressInput): Progress | Promise<Progress>;
@@ -460,6 +529,8 @@ export abstract class IMutation {
     abstract createSession(createSessionInput?: CreateSessionInput): Session | Promise<Session>;
 
     abstract updateSession(updateSessionInput?: UpdateSessionInput): Session | Promise<Session>;
+
+    abstract updateCheckpoint(updateCheckpointInput?: UpdateCheckpointInput): Checkpoint[] | Promise<Checkpoint[]>;
 
     abstract createUser(createUserInput?: CreateUserInput): User | Promise<User>;
 
@@ -502,6 +573,7 @@ export class Order {
     createDate?: number;
     orderId?: string;
     assistance?: boolean;
+    promotion?: number;
     firstname?: string;
     lastname?: string;
     email?: string;
@@ -543,6 +615,8 @@ export class PublicCourse {
     longDesc?: string;
     pic?: string;
     price?: number;
+    status?: string;
+    promotion?: number;
     assistancePrice?: number;
     difficulty?: string;
     chapters?: PublicChapter[];
@@ -555,6 +629,21 @@ export class PublicLevel {
     courses?: PublicCourse[];
     subTitle?: string;
     desc?: string;
+    status?: string;
+    promotion?: number;
+    shortDesc?: string;
+    pic?: string;
+    price?: number;
+}
+
+export class PublicModule {
+    id?: string;
+    title?: string;
+    courses?: PublicCourse[];
+    subTitle?: string;
+    desc?: string;
+    status?: string;
+    promotion?: number;
     shortDesc?: string;
     pic?: string;
     price?: number;
@@ -599,6 +688,8 @@ export abstract class IQuery {
 
     abstract LevelAccess(id: string): Access[] | Promise<Access[]>;
 
+    abstract ModuleAccess(id: string): Access[] | Promise<Access[]>;
+
     abstract getCandidateAccess(id: string): Access[] | Promise<Access[]>;
 
     abstract getCurrentCandidateAccess(): Access[] | Promise<Access[]>;
@@ -637,6 +728,14 @@ export abstract class IQuery {
 
     abstract removeLevel(id: string): Message | Promise<Message>;
 
+    abstract getModules(): Module[] | Promise<Module[]>;
+
+    abstract Module(id: string): Module | Promise<Module>;
+
+    abstract getHomeModules(): PublicModule[] | Promise<PublicModule[]>;
+
+    abstract removeModule(id: string): Message | Promise<Message>;
+
     abstract getProgresss(): Progress[] | Promise<Progress[]>;
 
     abstract Progress(id: string): Progress | Promise<Progress>;
@@ -666,6 +765,8 @@ export abstract class IQuery {
     abstract getUsers(): User[] | Promise<User[]>;
 
     abstract getCurrentUser(): User | Promise<User>;
+
+    abstract getCheckpoints(): Checkpoint[] | Promise<Checkpoint[]>;
 
     abstract User(id: string): User | Promise<User>;
 
@@ -715,6 +816,8 @@ export abstract class ISubscription {
     abstract CourseCreated(): Course | Promise<Course>;
 
     abstract LevelCreated(): Level | Promise<Level>;
+
+    abstract ModuleCreated(): Module | Promise<Module>;
 
     abstract ProgressCreated(): Progress | Promise<Progress>;
 

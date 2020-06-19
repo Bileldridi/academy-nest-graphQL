@@ -25,7 +25,8 @@ type Message {
 }
 type Checkpoint {
   idCourse: String
-  idChapter: String 
+  idChapters: [String] 
+  lastChapter: String
   status: String
 }
 input UpdateCheckpointInput{

@@ -11,9 +11,9 @@ export class AppController {
     // return this.appService.getHello();
   }
   @Post('payment')
-  paymentNotif(@Body() body:any){
+  paymentNotif(){
     console.log('hello');
-    console.log(body);
+    // console.log(body);
     return {message:'NOT OK'};
   }
 }

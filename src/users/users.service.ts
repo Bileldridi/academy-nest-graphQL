@@ -109,18 +109,24 @@ export class UsersService {
     }
     async updateCheckpoint(_id, args): Promise<any> {
         const user = await this.userModel.findOne({ _id }).exec()
-        if(user.checkpoints && user.checkpoints === []) {
-            const userResult = await this.userModel.findByIdAndUpdate({ _id }, {$push:{checkpoints: args}}).catch(err => err);
+        if((user.checkpoints && user.checkpoints === []) || !user.checkpoints) {
+            const object = {idCourse: args.idCourse, idChapters: [args.idChapter],lastChapter: args.idChapter};
+            const userResult = await this.userModel.findByIdAndUpdate({ _id }, {$push:{checkpoints: object}}).catch(err => err);
         } else {
             const index = user.checkpoints.map(obj => {return obj.idCourse}).indexOf(args.idCourse);
-            console.log(index);
             if(index !== -1) {
-                console.log('mawjoud')
-                user.checkpoints[index].idChapter = args.idChapter;
+                const existChapter = user.checkpoints[index].idChapters.includes(args.idChapter);
+                if(!existChapter) {
+
+                    user.checkpoints[index].idChapters.push(args.idChapter);
+                    user.checkpoints[index].lastChapter = args.idChapter;
+                }else {
+                    user.checkpoints[index].lastChapter = args.idChapter;
+                }
                 const res1 = await this.userModel.findByIdAndUpdate({ _id }, {$set:{checkpoints: user.checkpoints}}).catch(err => err);
             } else {
-                console.log('mouch mawjoud');
-                const res2 = await this.userModel.findByIdAndUpdate({ _id }, {$push:{checkpoints: args}}).catch(err => err);
+                const object = {idCourse: args.idCourse, idChapters: [args.idChapter],lastChapter: args.idChapter}
+                const res2 = await this.userModel.findByIdAndUpdate({ _id }, {$push:{checkpoints: object}}).catch(err => err);
             }
         }
         return []

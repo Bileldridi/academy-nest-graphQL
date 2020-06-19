@@ -11,7 +11,7 @@ export const schema: Schema = new Schema({
     lastLogin: { type: Number, default: 0 },
     tel: { type: String },
     note: { type: String },
-    checkpoints: [{ idCourse: {type: Types.ObjectId, ref: 'Course'}, idChapter: {type: Types.ObjectId, ref: 'Chapter'}, status:{type: String, default: 'started', enum: ['started', 'finished']} }],
+    checkpoints: [{ idCourse: {type: Types.ObjectId, ref: 'Course'}, idChapters: [{type: Types.ObjectId, ref: 'Chapter'}],lastChapter:{type: Types.ObjectId, ref: 'Chapter'}, status:{type: String, default: 'started', enum: ['started', 'finished']} }],
     role: { type: String, default: 'candidate', enum: ['admin', 'coach', 'candidate'] },
     coach: { type: Types.ObjectId, ref: 'Coach' },
     candidate: { type: Types.ObjectId, ref: 'Candidate' },

@@ -104,8 +104,8 @@ export class CoursesService {
     }
     async updateChapter(chapter, _id) {
         if (chapter.course) {
-            const oldCourse = await this.courseModel.updateOne({ chapters: _id }, { $pull: { chapters: _id } }).exec();
-            const update = await this.courseModel.updateOne({ _id: chapter.course }, { $push: { chapters: chapter.id } }).exec();
+            // const oldCourse = await this.courseModel.updateOne({ chapters: _id }, { $pull: { chapters: _id } }).exec();
+            // const update = await this.courseModel.updateOne({ _id: chapter.course }, { $push: { chapters: chapter.id } }).exec();
         }
         return await this.chapterModel.findByIdAndUpdate({ _id }, chapter).populate('course').exec()
     }

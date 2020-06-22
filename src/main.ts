@@ -15,7 +15,7 @@ async function bootstrap() {
     new FastifyAdapter({ logger: true, })
   );
 
-  app.use(formidable());
+  // app.use(formidable());
 
   app.register(fp(async function (fastify, opts, next) {
     fastify.addContentTypeParser('multipart/form-data', function (req: any, done) {

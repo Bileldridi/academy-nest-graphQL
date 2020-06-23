@@ -42,7 +42,7 @@ export class PurchaseService {
         // if(result.id) {
         //     sendOrderCreation(order,result.id);
         // }
-        sendOrderCreation(order, result.id);
+        sendOrderCreation(order, result.id, product);
         return result.id ? { message: order.orderId } : { message: 'NOT OK' }
     }
     async updateOrder(order, _id) {

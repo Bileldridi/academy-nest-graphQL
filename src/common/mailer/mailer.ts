@@ -1623,13 +1623,13 @@ export const sendEmailInvoice = async (email, orderId, orderDate, name, courseTi
     });
 }
 
-export const sendOrderCreation = async (order, orderId): Promise<any> => {
+export const sendOrderCreation = async (order, orderId, product): Promise<any> => {
     let title = '';
     if(order.course) {
-        title = order.course.title;
+        title = product.title;
     }
     if(order.level) {
-        title = order.level.title;
+        title = product.title;
     }
     const htmlMsg = `
     <div class=""><div class="wide-content-host"><div class="_1_uypmLpuvFfZLEG0VSc1I"><div class="_2zX2caDms6Dyd9Ch--6tVn _3WlDZpUcpzvjQ13y53lZLc"><div class="_2UE8mawgPfA7HsY7A600GK"></div><div class="_1PykQrbOAi1vvEtfcvQEia"><div><div class="_21bgioiEBbnVoXvYXjL3tH JWNdg1hee9_Rz6bIGvG1c allowTextSelection"><div><div>

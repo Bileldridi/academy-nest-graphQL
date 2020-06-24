@@ -20,6 +20,7 @@ quality-scan:
         - npm install
         - npm run sonar
     when: manual
+
 build-app:
     image: node:lts-alpine
     stage: build-app
@@ -44,107 +45,48 @@ build-image:
     - sleep 10s
     - docker info
     - docker login -u "${CI_REGISTRY_USER}" -p "${CI_REGISTRY_PASSWORD}" "${CI_REGISTRY}"
-    - docker build -t "${CI_REGISTRY_IMAGE}:v${CI_PIPELINE_ID}" .
+    - docker build -t "academy-frontend:v${CI_PIPELINE_ID}" .
+    - echo "${CI_REGISTRY_IMAGE}"
     # - docker tag "${CI_REGISTRY_IMAGE}:latest" "${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_NAME}"
     # - test ! -z "${CI_COMMIT_TAG}" && docker push "${CI_REGISTRY_IMAGE}:latest"
-    - docker push "${CI_REGISTRY_IMAGE}:v${CI_PIPELINE_ID}"
+    - docker push "academy-frontend:v${CI_PIPELINE_ID}"
 
 
-deploy-review:
-  image:
-    name: lachlanevenson/k8s-kubectl:latest
-    entrypoint: ["/bin/sh", "-c"]
+deploy-dev:
   stage: deploy
-  
+  image: ubuntu:latest
+  before_script:
+    - 'which ssh-agent || (apt-get update && apt-get install openssh-client -y)'
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
   script:
-    - echo $CI_ENVIRONMENT_NAME
-    - echo $CI_ENVIRONMENT_NAME
-    - echo $__CI_ENVIRONMENT_SLUG__
-
-    - kubectl version
-    - cd k8s/
-    - sed -i "s~__CI_REGISTRY_IMAGE__~${CI_REGISTRY_IMAGE}~" deployment.yaml
-    - sed -i "s/__CI_ENVIRONMENT_SLUG__/${CI_ENVIRONMENT_SLUG}/" deployment.yaml ingress.yaml service.yaml
-    - sed -i "s~__VERSION__~v${CI_PIPELINE_ID}~" deployment.yaml ingress.yaml service.yaml
-    - sed -i "s/__HOST__/${CI_ENVIRONMENT_SLUG}/" ingress.yaml
-    - |
-      if kubectl apply -f deployment.yaml | grep -q unchanged; then
-          echo "=> Patching deployment to force image update."
-          kubectl patch -f deployment.yaml -p "{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"ci-last-updated\":\"$(date +'%s')\"}}}}}"
-      else
-          echo "=> Deployment apply has changed the object, no need to force image update."
-      fi
-    - kubectl apply -f service.yaml || true
-    - kubectl apply -f ingress.yaml
-    - kubectl apply -f mongo.controller.yaml
-    - kubectl apply -f mongo.service.yaml
-    - kubectl rollout status -f deployment.yaml
-    - kubectl get deploy,svc,ing,pod -l app="$(echo ${CI_PROJECT_NAME} | tr "." "-")",ref="${CI_ENVIRONMENT_SLUG}"
-    - echo $CI_PROJECT_NAME
-    - echo $CI_ENVIRONMENT_SLUG
-    - echo $CI_REGISTRY_IMAGE
-    - echo $CI_COMMIT_REF_NAME
-  only:
-    - master
-  environment:
-    name: review/$CI_BUILD_REF_NAME
-    url: http://${CI_ENVIRONMENT_SLUG}.backdev.academy.fivepoints.fr
-    #http://a9f2c06cfc8d811e9a31506631145b1f-1171893166.eu-central-1.elb.amazonaws.com
-    on_stop: stop-review
+    - echo $CI_PIPELINE_IID
+    - ssh -o StrictHostKeyChecking=no $dev_server_user@$dev_server_ip sudo docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
+    - scp -o StrictHostKeyChecking=no -r docker-compose.yml $dev_server_user@$dev_server_ip:/root/academy/front
+    - ssh -o StrictHostKeyChecking=no $dev_server_user@$dev_server_ip sudo docker pull registry.gitlab.com/fivepointslab/academy-platform/academy-frontend:v$CI_PIPELINE_ID
+    - ssh -o StrictHostKeyChecking=no $dev_server_user@$dev_server_ip sudo docker tag registry.gitlab.com/fivepointslab/academy-platform/academy-frontend:v$CI_PIPELINE_ID registry.gitlab.com/fivepointslab/academy-platform/academy-frontend:latest
+    #- ssh -o StrictHostKeyChecking=no $dev_server_user@$dev_server_ip docker push registry.gitlab.com/fivepointslab/eval-platform/docker-sandboxer:latest
+    - ssh -o StrictHostKeyChecking=no $dev_server_user@$dev_server_ip sudo docker-compose -f /root/academy/front/docker-compose.yml up -d
+#  only:
+#    - master
 
 deploy-prod:
-  image:
-    name: lachlanevenson/k8s-kubectl:latest
-    entrypoint: ["/bin/sh","-c"]
   stage: deploy
+  image: ubuntu:latest
+  before_script:
+    - 'which ssh-agent || (apt-get update && apt-get install openssh-client -y)'
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
   script:
-    - kubectl version
-    - cd k8s/
-    - sed -i "s~__CI_REGISTRY_IMAGE__~${CI_REGISTRY_IMAGE}~" deployment.prod.yaml
-    - sed -i "s~__CI_ENVIRONMENT_SLUG__~$(echo ${CI_ENVIRONMENT_NAME} | tr "/" "-" | tr '[:upper:]' '[:lower:]')~" deployment.prod.yaml ingress.prod.yaml service.prod.yaml
-    - sed -i "s~__VERSION__~v${CI_PIPELINE_ID}~" deployment.prod.yaml
-    - sed -i "s/__HOST__/${CI_ENVIRONMENT_SLUG}/" ingress.prod.yaml
-    - |
-      if kubectl apply -f deployment.prod.yaml | grep -q unchanged; then
-          echo "=> Patching deployment.prod to force image update."
-          kubectl patch -f deployment.prod.yaml -p "{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"ci-last-updated\":\"$(date +'%s')\"}}}}}"
-      else
-          echo "=> deployment.prod apply has changed the object, no need to force image update."
-      fi
-    - kubectl apply -f service.prod.yaml || true
-    - kubectl apply -f ingress.prod.yaml
-    - kubectl rollout status -f deployment.prod.yaml
-  environment:
-    name: Production
-    url: https://backend.academy.fivepoints.fr
+    - echo $CI_PIPELINE_IID
+    - ssh -o StrictHostKeyChecking=no $dev_server_user@$dev_server_ip sudo docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
+    - scp -o StrictHostKeyChecking=no -r docker-compose.yml $dev_server_user@$dev_server_ip:/root/academy/front
+    - ssh -o StrictHostKeyChecking=no $dev_server_user@$dev_server_ip sudo docker pull registry.gitlab.com/fivepointslab/academy-platform/academy-frontend:v$CI_PIPELINE_ID
+    - ssh -o StrictHostKeyChecking=no $dev_server_user@$dev_server_ip sudo docker tag registry.gitlab.com/fivepointslab/academy-platform/academy-frontend:v$CI_PIPELINE_ID registry.gitlab.com/fivepointslab/academy-platform/academy-frontend:latest
+    #- ssh -o StrictHostKeyChecking=no $dev_server_user@$dev_server_ip docker push registry.gitlab.com/fivepointslab/eval-platform/docker-sandboxer:latest
+    - ssh -o StrictHostKeyChecking=no $dev_server_user@$dev_server_ip sudo docker-compose -f /root/academy/front/docker-compose.yml up -d
   when: manual
   only:
     - master
 
-stop-review:
-  image:
-    name: lachlanevenson/k8s-kubectl:latest
-    entrypoint: ["/bin/sh", "-c"]
-  stage: deploy
-  script:
-    - cd k8s/
-    - sed -i "s~__CI_REGISTRY_IMAGE__~${CI_REGISTRY_IMAGE}~" deployment.yaml
-    - sed -i "s/__CI_ENVIRONMENT_SLUG__/${CI_ENVIRONMENT_SLUG}/" deployment.yaml ingress.yaml service.yaml
-    - sed -i "s/__VERSION__/${CI_PIPELINE_ID}/" deployment.yaml ingress.yaml service.yaml
-    - |
-      if kubectl apply -f deployment.yaml | grep -q unchanged; then
-          echo "=> Patching deployment to force image update."
-          kubectl patch -f deployment.yaml -p "{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"ci-last-updated\":\"$(date +'%s')\"}}}}}"
-      else
-          echo "=> Deployment apply has changed the object, no need to force image update."
-      fi
-    - kubectl delete -f service.yaml
-    - kubectl delete -f ingress.yaml
-    - kubectl delete -f deployment.yaml
-  environment:
-    name: review/$CI_BUILD_REF_NAME
-    action: stop
-  when: manual
-  only:
-  - master
 

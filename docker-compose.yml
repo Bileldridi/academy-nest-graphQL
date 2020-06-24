@@ -9,10 +9,6 @@ services:
     container_name: backend
     restart: unless-stopped
     environment:
-      - dbhost=db 
+      - dbhost="158.177.32.40" 
     ports:
       - "3000:3000"
-  db:
-    image: mvertes/alpine-mongo
-    container_name: db
-    restart: unless-stopped

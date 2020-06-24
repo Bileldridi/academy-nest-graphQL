@@ -36,13 +36,14 @@ build-app:
 
 build-image:
   stage: build-image
-  image: docker:18.09.7-dind
+  image: docker:stable
+  before_script:
+      - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
   services:
     - docker:dind
   script:
-    - sleep 10s
     - docker info
-    - docker login -u "${CI_REGISTRY_USER}" -p "${CI_REGISTRY_PASSWORD}" "${CI_REGISTRY}"
+#    - docker login -u "${CI_REGISTRY_USER}" -p "${CI_REGISTRY_PASSWORD}" "${CI_REGISTRY}"
     - docker build -t "${CI_REGISTRY_IMAGE}:v${CI_PIPELINE_ID}" .
     - echo "${CI_REGISTRY_IMAGE}"
     # - docker tag "${CI_REGISTRY_IMAGE}:latest" "${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_NAME}"

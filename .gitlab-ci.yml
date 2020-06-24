@@ -37,8 +37,6 @@ build-app:
 build-image:
   stage: build-image
   image: docker:18.09.7-dind
-  variables:
-    DOCKER_HOST: tcp://localhost:2375
   services:
     - docker:dind
   script:

@@ -173,6 +173,13 @@ export class QuizInput {
     options?: OptionInput[];
 }
 
+export class RefreshCheckpointInput {
+    idCourse?: string;
+    idChapters?: string[];
+    lastChapter?: string;
+    status?: string;
+}
+
 export class SendMessageInput {
     content?: string;
     type?: string;
@@ -390,7 +397,8 @@ export class ChatMessage {
 
 export class Checkpoint {
     idCourse?: string;
-    idChapter?: string;
+    idChapters?: string[];
+    lastChapter?: string;
     status?: string;
 }
 
@@ -531,6 +539,8 @@ export abstract class IMutation {
     abstract updateSession(updateSessionInput?: UpdateSessionInput): Session | Promise<Session>;
 
     abstract updateCheckpoint(updateCheckpointInput?: UpdateCheckpointInput): Checkpoint[] | Promise<Checkpoint[]>;
+
+    abstract refreshCheckpoint(refreshCheckpointInput?: RefreshCheckpointInput): Checkpoint[] | Promise<Checkpoint[]>;
 
     abstract createUser(createUserInput?: CreateUserInput): User | Promise<User>;
 

@@ -41,6 +41,11 @@ export class UsersResolver {
     async updateCheckpoint(@Args('updateCheckpointInput') args: any,@User() user) {
         return await this.usersService.updateCheckpoint(user.id, args);
     }
+    @UseGuards(GraphqlAuthGuard)
+    @Mutation('refreshCheckpoint')
+    async refreshCheckpoint(@Args('refreshCheckpointInput') args: any,@User() user) {
+        return await this.usersService.refreshCheckpoint(user.id, args);
+    }
     
     @Query('User')
     async findOneById(@Args('id') id: string): Promise<any> {
@@ -72,7 +77,6 @@ export class UsersResolver {
     }
     @Mutation('login')
     async login(@Args('loginInput') args: any): Promise<any> {
-        // 
         return await this.usersService.login(args);
     }
     @Mutation('updateUser')

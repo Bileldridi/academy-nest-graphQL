@@ -131,6 +131,13 @@ export class UsersService {
         }
         return []
     }
+    async refreshCheckpoint(_id, args): Promise<any> {
+        const user = await this.userModel.findOne({ _id }).exec();
+        const index = user.checkpoints.map(obj => {return obj.idCourse}).indexOf(args.idCourse);
+        user.checkpoints[index] = args;
+        const res1 = await this.userModel.findByIdAndUpdate({ _id }, {$set:{checkpoints: user.checkpoints}}).catch(err => err);
+        return []
+    }
     async validate({ _id }): Promise<any> {
         const user = await this.userModel.findOne({ _id });
         if (!user) {

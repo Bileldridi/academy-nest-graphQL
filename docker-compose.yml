@@ -5,7 +5,7 @@ services:
     # build:
     #   context: .
     #   dockerfile: Dockerfile
-    image: fivepointslab/academy-platform/academy-platform-backend:latest
+    image: academy-platform-backend:latest
     container_name: backend
     restart: unless-stopped
     environment:

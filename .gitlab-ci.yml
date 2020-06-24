@@ -63,7 +63,7 @@ deploy-dev:
     - ssh -o StrictHostKeyChecking=no $dev_server_user@$dev_server_ip sudo docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
     - scp -o StrictHostKeyChecking=no -r docker-compose.yml $dev_server_user@$dev_server_ip:/root/academy/back
     - ssh -o StrictHostKeyChecking=no $dev_server_user@$dev_server_ip sudo docker pull ${CI_REGISTRY_IMAGE}:v$CI_PIPELINE_ID
-    - ssh -o StrictHostKeyChecking=no $dev_server_user@$dev_server_ip sudo docker tag ${CI_REGISTRY_IMAGE}:v$CI_PIPELINE_ID ${CI_REGISTRY_IMAGE}:latest
+    - ssh -o StrictHostKeyChecking=no $dev_server_user@$dev_server_ip sudo docker tag ${CI_REGISTRY_IMAGE}:v$CI_PIPELINE_ID academy-platform-backend:latest
     #- ssh -o StrictHostKeyChecking=no $dev_server_user@$dev_server_ip docker push registry.gitlab.com/fivepointslab/eval-platform/docker-sandboxer:latest
     - ssh -o StrictHostKeyChecking=no $dev_server_user@$dev_server_ip sudo docker-compose -f /root/academy/back/docker-compose.yml up -d
   when: manual
@@ -71,23 +71,5 @@ deploy-dev:
 #  only:
 #    - master
 
-deploy-prod:
-  stage: deploy
-  image: ubuntu:latest
-  before_script:
-    - 'which ssh-agent || (apt-get update && apt-get install openssh-client -y)'
-    - eval $(ssh-agent -s)
-    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
-  script:
-    - echo $CI_PIPELINE_IID
-    - ssh -o StrictHostKeyChecking=no $dev_server_user@$dev_server_ip sudo docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
-    - scp -o StrictHostKeyChecking=no -r docker-compose.yml $dev_server_user@$dev_server_ip:/root/academy/front
-    - ssh -o StrictHostKeyChecking=no $dev_server_user@$dev_server_ip sudo docker pull registry.gitlab.com/fivepointslab/academy-platform/academy-frontend:v$CI_PIPELINE_ID
-    - ssh -o StrictHostKeyChecking=no $dev_server_user@$dev_server_ip sudo docker tag registry.gitlab.com/fivepointslab/academy-platform/academy-frontend:v$CI_PIPELINE_ID registry.gitlab.com/fivepointslab/academy-platform/academy-frontend:latest
-    #- ssh -o StrictHostKeyChecking=no $dev_server_user@$dev_server_ip docker push registry.gitlab.com/fivepointslab/eval-platform/docker-sandboxer:latest
-    - ssh -o StrictHostKeyChecking=no $dev_server_user@$dev_server_ip sudo docker-compose -f /root/academy/front/docker-compose.yml up -d
-  when: manual
-  only:
-    - master
 
 

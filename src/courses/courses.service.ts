@@ -113,7 +113,12 @@ export class CoursesService {
         const chapter = await this.chapterModel.findOne({ _id: quiz.id });
         const correctAnswers = chapter.quiz.map(q => q.correctAnswer);
         const score = (correctAnswers.filter((a, i) => quiz.answers[i] === a).length * 100) / correctAnswers.length;
-        const progress = await this.progressModel.create({ candidate: userId, chapter: quiz.id, type: 'quiz', score }).catch(err => err);
+        const existProgress = await this.progressModel.findOne({candidate: userId, chapter: quiz.id, type:'quiz'})
+        if(existProgress) {
+            const progress = await this.progressModel.findByIdAndUpdate(existProgress._id, {$set: {score}}).catch(err => err);
+        } else {
+            const progress = await this.progressModel.create({ candidate: userId, chapter: quiz.id, type: 'quiz', score }).catch(err => err);
+        }
         return { message: score.toString() };
     }
     async checkQuiz(idQuiz, userId) {

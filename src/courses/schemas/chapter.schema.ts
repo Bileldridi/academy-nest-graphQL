@@ -3,6 +3,7 @@ import { Schema, Types } from 'mongoose';
 export const schema: Schema = new Schema({
     title: String,
     content: String,
+    video: String,
     type: { type: String, default: 'text', enum: ['text', 'video', 'slides', 'quiz', 'project'] },
     comments: [{ type: Types.ObjectId, ref: 'Comment' }],
     course: { type: Types.ObjectId, ref: 'Course' },

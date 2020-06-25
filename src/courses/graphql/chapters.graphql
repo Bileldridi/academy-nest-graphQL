@@ -23,6 +23,7 @@ type Chapter {
   id: String
   title: String
   content: String
+  video: String
   type: String
   createDate: Float
   course: Course
@@ -51,6 +52,7 @@ input CreateChapterInput {
   title: String
   content: String
   course: String
+  video: String
   type: String
   status: String
   quiz: [QuizInput]
@@ -72,6 +74,7 @@ input UpdateChapterInput {
   title: String
   content: String
   course: String
+  video: String
   type: String
   status: String
   files: [String]

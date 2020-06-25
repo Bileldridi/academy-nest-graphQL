@@ -174,7 +174,7 @@ export class CoursesService {
         return result;
     }
     async findAccessByCandidateId(id: string): Promise<any[]> {
-        const result = await this.accessModel.find({ candidate: id }).populate('candidate').populate('course').populate({ path: 'level', populate: { path: 'courses' } }).populate({ path: 'module', populate: { path: 'courses' } })
+        const result = await this.accessModel.find({ candidate: id }).populate('candidate').populate({path: 'course', populate : {path: 'chapters'}}).populate({ path: 'level', populate: { path: 'courses' } }).populate({ path: 'module', populate: { path: 'courses' } })
             .then(data => {
                 return data.map(e => ({ ...e._doc, id: e._doc._id, timeLeft: Math.round((((e.duration * 86400000) + (e.createDate)) - Date.now()) / 86400000) }));
             });

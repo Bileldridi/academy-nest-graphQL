@@ -36,6 +36,7 @@ export class CreateChapterInput {
     title?: string;
     content?: string;
     course?: string;
+    video?: string;
     type?: string;
     status?: string;
     quiz?: QuizInput[];
@@ -96,7 +97,7 @@ export class CreateLevelInput {
 
 export class CreateModuleInput {
     title?: string;
-    courses?: string[];
+    levels?: string[];
     subTitle?: string;
     desc?: string;
     pic?: string;
@@ -178,6 +179,7 @@ export class RefreshCheckpointInput {
     idChapters?: string[];
     lastChapter?: string;
     status?: string;
+    progress?: number;
 }
 
 export class SendMessageInput {
@@ -213,6 +215,7 @@ export class UpdateChapterInput {
     title?: string;
     content?: string;
     course?: string;
+    video?: string;
     type?: string;
     status?: string;
     files?: string[];
@@ -279,7 +282,7 @@ export class UpdateLevelInput {
 export class UpdateModuleInput {
     id?: string;
     title?: string;
-    courses?: string[];
+    levels?: string[];
     subTitle?: string;
     desc?: string;
     pic?: string;
@@ -365,6 +368,7 @@ export class Chapter {
     id?: string;
     title?: string;
     content?: string;
+    video?: string;
     type?: string;
     createDate?: number;
     course?: Course;
@@ -400,6 +404,7 @@ export class Checkpoint {
     idChapters?: string[];
     lastChapter?: string;
     status?: string;
+    progress?: number;
 }
 
 export class Coach {
@@ -474,7 +479,7 @@ export class Module {
     id?: string;
     title?: string;
     createDate?: number;
-    courses?: Course[];
+    levels?: Level[];
     subTitle?: string;
     desc?: string;
     pic?: string;
@@ -649,7 +654,7 @@ export class PublicLevel {
 export class PublicModule {
     id?: string;
     title?: string;
-    courses?: PublicCourse[];
+    levels?: PublicLevel[];
     subTitle?: string;
     desc?: string;
     status?: string;

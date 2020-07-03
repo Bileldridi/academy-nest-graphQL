@@ -20,7 +20,7 @@ type Module {
   id: String
   title: String
   createDate: Float
-  courses: [Course]
+  levels: [Level]
   subTitle: String
   desc: String
   pic: String
@@ -34,7 +34,7 @@ type Module {
 type PublicModule {
   id: String
   title: String
-  courses: [PublicCourse]
+  levels: [PublicLevel]
   subTitle: String
   desc: String
   status: String
@@ -46,7 +46,7 @@ type PublicModule {
 
 input CreateModuleInput {
   title: String
-  courses: [String]
+  levels: [String]
   subTitle: String
   desc: String
   pic: String
@@ -59,7 +59,7 @@ input CreateModuleInput {
 input UpdateModuleInput {
   id: String
   title: String
-  courses: [String]
+  levels: [String]
   subTitle: String
   desc: String
   pic: String

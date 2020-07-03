@@ -9,6 +9,7 @@ import { sendEmailRecover, sendEmailAccess } from '../common/mailer/mailer';
 export class UsersService {
     constructor(
         @InjectModel('User') private readonly userModel: Model<any>,
+        @InjectModel('Course') private readonly courseModel: Model<any>,
         @InjectModel('Coach') private readonly coachModel: Model<any>,
         @InjectModel('Candidate') private readonly candidateModel: Model<any>,
         @InjectModel('Cemetery') private readonly cemeteryModel: Model<any>,
@@ -108,9 +109,12 @@ export class UsersService {
 
     }
     async updateCheckpoint(_id, args): Promise<any> {
-        const user = await this.userModel.findOne({ _id }).exec()
+        const user = await this.userModel.findOne({ _id }).exec();
+        const course = await this.courseModel.findById(args.idCourse).exec();
         if((user.checkpoints && user.checkpoints === []) || !user.checkpoints) {
             const object = {idCourse: args.idCourse, idChapters: [args.idChapter],lastChapter: args.idChapter};
+            object['progress'] = Math.round((100)/ course.chapters.length);
+            object['status'] = 'started';
             const userResult = await this.userModel.findByIdAndUpdate({ _id }, {$push:{checkpoints: object}}).catch(err => err);
         } else {
             const index = user.checkpoints.map(obj => {return obj.idCourse}).indexOf(args.idCourse);
@@ -120,6 +124,10 @@ export class UsersService {
 
                     user.checkpoints[index].idChapters.push(args.idChapter);
                     user.checkpoints[index].lastChapter = args.idChapter;
+                    user.checkpoints[index].progress = Math.round((user.checkpoints[index].idChapters.length*100)/ course.chapters.length);
+                    if(user.checkpoints[index].progress === 100) {
+                        user.checkpoints[index].status = 'finished';
+                    }
                 }else {
                     user.checkpoints[index].lastChapter = args.idChapter;
                 }

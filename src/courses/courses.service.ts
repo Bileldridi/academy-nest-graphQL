@@ -174,7 +174,7 @@ export class CoursesService {
         return result;
     }
     async findAccessByCandidateId(id: string): Promise<any[]> {
-        const result = await this.accessModel.find({ candidate: id }).populate('candidate').populate({path: 'course', populate : {path: 'chapters'}}).populate({ path: 'level', populate: { path: 'courses' } }).populate({ path: 'module', populate: { path: 'courses' } })
+        const result = await this.accessModel.find({ candidate: id }).populate('candidate').populate({path: 'course', populate : {path: 'chapters'}}).populate({ path: 'level', populate: { path: 'courses' } }).populate({ path: 'module', populate: { path: 'levels', populate: {path: 'courses'}  } })
             .then(data => {
                 return data.map(e => ({ ...e._doc, id: e._doc._id, timeLeft: Math.round((((e.duration * 86400000) + (e.createDate)) - Date.now()) / 86400000) }));
             });
@@ -204,21 +204,21 @@ export class CoursesService {
         }
     }
     // LEVEL MODULEs
-    async createModule(level: any): Promise<any> {
-        return await this.moduleModel.create(level).catch(err => err);
+    async createModule(module: any): Promise<any> {
+        return await this.moduleModel.create(module).catch(err => err);
     }
     async findOneModuleById(id: string): Promise<any> {
-        return await this.moduleModel.findById(id).populate('courses').exec();
+        return await this.moduleModel.findById(id).populate('levels').exec();
     }
     async findAllModules(): Promise<any[]> {
-        return await this.moduleModel.find().populate('courses').exec();
+        return await this.moduleModel.find().populate('levels').exec();
     }
     async getHomeModules(): Promise<any[]> {
-        return await this.moduleModel.find({$or:[{status: 'published'}, {status: 'coming soon' }]}).populate('courses').exec();
+        return await this.moduleModel.find({$or:[{status: 'published'}, {status: 'coming soon' }]}).populate('levels').exec();
     }
-    async updateModule(level, _id) {
+    async updateModule(module, _id) {
 
-        return await this.moduleModel.findByIdAndUpdate({ _id }, level).catch(err => err);
+        return await this.moduleModel.findByIdAndUpdate({ _id }, module).catch(err => err);
     }
     async deleteModule(_id) {
         const result = await this.moduleModel.findOne({ _id }).exec();

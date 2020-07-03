@@ -8,7 +8,7 @@ export const schema: Schema = new Schema({
     pic: String,
     promotion: {type: Number, default: 0},
     price: { type: Number, default: 0 },
-    courses: [{ type: Types.ObjectId, ref: 'Course' }],
+    levels: [{ type: Types.ObjectId, ref: 'Level' }],
     status: { type: String, default: 'private', enum: ['draft', 'private', 'published', 'deleted', 'coming soon'] },
     duration: { type: Number, default: -1 },
     createDate: { type: Number, default: Date.now },

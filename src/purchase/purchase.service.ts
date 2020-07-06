@@ -31,12 +31,21 @@ export class PurchaseService {
     async createOrder(order) {
         console.log('createOrder')
         order.orderId = this.makeid(7);
-        order.status = { status: order.status };
+        order.status = [{ status: "waitingPayment" }];
         const product = order.course ? await this.courseModel.findOne({ _id: order.course }).exec() : await this.levelModel.findOne({ _id: order.level }).exec()
         if (product.promotion && product.promotion !== 0) {
-            order.payment = { mode: order.mode, transfereId: '-', method: order.method, amount: order.assistance ? (product.price - ((product.price * order.promotion) / 100)) + product.assistancePrice : (product.price - ((product.price * order.promotion) / 100)) };
+            order.payment = {
+                mode: order.mode,
+                transfereId: '-',
+                method: order.method,
+                amount: order.assistance ? (product.price - ((product.price * order.promotion) / 100)) + product.assistancePrice : (product.price - ((product.price * order.promotion) / 100))
+            };
         } else {
-            order.payment = { mode: order.mode, transfereId: '-', method: order.method, amount: order.assistance ? product.price + product.assistancePrice : product.price };
+            order.payment = {
+                mode: order.mode, transfereId: '-',
+                method: order.method,
+                amount: order.assistance ? product.price + product.assistancePrice : product.price
+            };
         }
         const result = await this.orderModel.create(order).catch(err => err);
         // if(result.id) {

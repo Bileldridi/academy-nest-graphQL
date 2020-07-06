@@ -20,8 +20,6 @@ export class PurchaseController {
   }
   @Post('paymentGpg')
   paymentNotif(@Body() body: any) {
-    console.log('hello');
-    console.log(body);
     let paymentStatus = 'waitingPayment';
     switch (body.TransStatus) {
       case '00':
@@ -43,7 +41,7 @@ export class PurchaseController {
         paymentStatus = 'waitingPayment';
         break;
     }
-    this.purchaseService.updateOrderFromPaymentGpg({ paymentStatus, orderId: body.PAYID });
+    this.purchaseService.updateOrderFromPaymentGpg({ status: paymentStatus, orderId: body.PAYID });
     return { message: 'NOT OK' };
   }
 }

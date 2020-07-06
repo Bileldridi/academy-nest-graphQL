@@ -98,7 +98,7 @@ export class PurchaseService {
     }
 
     async updateOrderFromPaymentGpg(order) {
-        const result = await this.orderModel.findByIdAndUpdate({ orderId: order.orderId }, { $push: { status: { status: order.status } } })
+        const result = await this.orderModel.findOneAndUpdate({ orderId: order.orderId }, { $push: { status: { status: order.status } } })
             .populate('course').populate('level').catch(err => err);
         let user = await this.userModel.findOne({ email: result.email }).exec();
         if (order.status === 'payed' && !user) {

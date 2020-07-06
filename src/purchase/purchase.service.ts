@@ -43,7 +43,7 @@ export class PurchaseService {
         //     sendOrderCreation(order,result.id);
         // }
         sendOrderCreation(order, result.id, product);
-        return result.id ? { message: order.orderId } : { message: 'NOT OK' }
+        return result.id ? { message: order.orderId } : { message: order.orderId }
     }
     async updateOrder(order, _id) {
         const result = await this.orderModel.findByIdAndUpdate({ _id }, { $push: { status: { status: order.status } } })

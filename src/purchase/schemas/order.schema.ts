@@ -27,7 +27,7 @@ export const schema: Schema = new Schema({
         method: String,
         currency: String,
         mode: {
-            type: String, enum: ['transfere', 'online']
+            type: String
         }
     }
 });

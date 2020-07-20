@@ -1,5 +1,7 @@
 type Query {
+  getAllProgress: [Progress]
   getProgresss: [Progress]
+  refreshProgress(id: String!): [ProgressUpdate]
   Progress(id: String!): Progress
   removeProgress(id: String!): Message
 }
@@ -24,14 +26,31 @@ type Progress {
   score: Int
   desc: String
   createDate: Float
+  path: PathProgress
+  bootcamp: BootcampProgress
 }
-
+type ProgressUpdate {
+  id: String
+  candidate: User
+  chapter: Chapter
+  type: String
+  score: Int
+  desc: String
+  createDate: Float
+  path: PathProgressUpdate
+  bootcamp: BootcampProgressUpdate
+}
 input CreateProgressInput {
   candidate: String
   chapter: String
   type: String
   score: Int
   desc: String
+  idPath: String
+  actualCourse: String
+  advance: Int
+  idModule: String
+  actualPath: String
 }
 
 input UpdateProgressInput {
@@ -41,4 +60,29 @@ input UpdateProgressInput {
   type: String
   score: Int
   desc: String
+  idPath: String
+  actualCourse: String
+  advance: Int
+  idModule: String
+  actualPath: String
+}
+type PathProgress {
+  idPath: String
+  actualCourse: String
+  advance: Int
+}
+type BootcampProgress {
+  idModule: String
+  actualPath: String
+  advance: Int
+}
+type PathProgressUpdate {
+  idPath: Level
+  actualCourse: String
+  advance: Int
+}
+type BootcampProgressUpdate {
+  idModule: Module
+  actualPath: String
+  advance: Int
 }

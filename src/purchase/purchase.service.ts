@@ -29,7 +29,7 @@ export class PurchaseService {
         return result.id ? { message: 'OK' } : { message: 'NOT OK' }
     }
     async createOrder(order) {
-        console.log('createOrder')
+        // console.log('createOrder')
         order.orderId = this.makeid(7);
         order.status = [{ status: "waitingPayment" }];
         const product = order.course ? await this.courseModel.findOne({ _id: order.course }).exec() : await this.levelModel.findOne({ _id: order.level }).exec()
@@ -48,7 +48,7 @@ export class PurchaseService {
             };
         }
         const result = await this.orderModel.create(order).catch(err => err);
-        // console.log(result);
+        // // console.log(result);
 
         // if(result.id) {
         //     sendOrderCreation(order,result.id);
@@ -64,7 +64,7 @@ export class PurchaseService {
         let user = await this.userModel.findOne({ email: result.email }).exec();
         if (order.status === 'payed' && !user) {
             const newUser = await this.create(result).catch(err => err)//.exec();
-            console.log(newUser);
+            // console.log(newUser);
             user = newUser;
         }
         if (order.status === 'payed') {
@@ -72,9 +72,13 @@ export class PurchaseService {
                 await this.accessModel.create({
                     candidate: user.id, course: result.course.id, duration: -1 //result.course.duration
                 }).catch(err => err);
-            } else {
+            } else if (result.level) {
                 await this.accessModel.create({
                     candidate: user.id, level: result.level.id, duration: -1 //result.course.duration
+                }).catch(err => err);
+            } else {
+                await this.accessModel.create({
+                    candidate: user.id, module: result.module.id, duration: -1 //result.course.duration
                 }).catch(err => err);
             }
             await sendEmailInvoice(user.email,
@@ -103,7 +107,7 @@ export class PurchaseService {
         let user = await this.userModel.findOne({ email: result.email }).exec();
         if (order.status === 'payed' && !user) {
             const newUser = await this.create(result).catch(err => err)//.exec();
-            console.log(newUser);
+            // console.log(newUser);
             user = newUser;
         }
         if (order.status === 'payed') {
@@ -133,7 +137,7 @@ export class PurchaseService {
         randomPass = Math.random().toString(36).slice(-8);
         newUser.password = crypto.SHA256(randomPass).toString();
         await sendEmailAccess(user.email, randomPass)
-        console.log('NEW UESER', newUser);
+        // console.log('NEW UESER', newUser);
         return await this.userModel.create(newUser).catch(err => err)
     }
 }

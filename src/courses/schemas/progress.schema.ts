@@ -1,11 +1,11 @@
 import { Schema, Types } from 'mongoose';
 
 export const schema: Schema = new Schema({
-    candidate: { type: Types.ObjectId, ref: 'user' },
+    candidate: { type: Types.ObjectId, ref: 'User' },
     chapter: { type: Types.ObjectId, ref: 'Chapter' },
-    type: { type: String, enum: ['challenge', 'course', 'quiz'] },
-    path: { type: Types.ObjectId, ref: 'Level' },
-    bootcamp: { type: Types.ObjectId, ref: 'Module' },
+    type: { type: String, enum: ['challenge', 'course', 'quiz','level', 'module'] },
+    path: { idPath: {type: Types.ObjectId, ref: 'Level'}, actualCourse: {type: Types.ObjectId, ref: 'Course'}, advance: {type: Number, default: 0}  },
+    bootcamp: { idModule: {type: Types.ObjectId, ref: 'Module'}, actualPath: {type: Types.ObjectId, ref: 'Level'}, advance: {type: Number, default: 0} },
     advancement: { type: Number },
     score: { type: Number, default: 0, min: 0 },
     desc: String,

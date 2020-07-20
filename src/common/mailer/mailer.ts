@@ -24,7 +24,7 @@ export const sendEmail = async (email: string, link: string) => {
         html: `<b>Hello </b><br><a href="${link}">confirm Email</a>`, // html body
     }).catch(console.error);
 
-    console.log('Message sent: %s', info.messageId);
+    // console.log('Message sent: %s', info.messageId);
     // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
 };
 
@@ -442,14 +442,14 @@ export const sendEmailAccess = async (email, pass): Promise<any> => {
     this.transporter = await nodemailer.createTransport(smtpMyMailConfig, {
         pool: true,
     });
-    console.log('Sending Mail');
+    // console.log('Sending Mail');
     this.transporter.sendMail(message, (error, info) => {
         if (error) {
-            console.log('Error occurred');
-            console.log(error.message);
+            // console.log('Error occurred');
+            // console.log(error.message);
         }
-        console.log('Message sent successfully!');
-        console.log('Server responded with "%s"', info.response);
+        // console.log('Message sent successfully!');
+        // console.log('Server responded with "%s"', info.response);
     });
 }
 export const sendEmailRecover = async (email, passPhrase): Promise<any> => {
@@ -865,14 +865,14 @@ export const sendEmailRecover = async (email, passPhrase): Promise<any> => {
     this.transporter = await nodemailer.createTransport(smtpMyMailConfig, {
         pool: true,
     });
-    console.log('Sending Mail');
+    // console.log('Sending Mail');
     this.transporter.sendMail(message, (error, info) => {
         if (error) {
-            console.log('Error occurred');
-            console.log(error.message);
+            // console.log('Error occurred');
+            // console.log(error.message);
         }
-        console.log('Message sent successfully!');
-        console.log('Server responded with "%s"', info.response);
+        // console.log('Message sent successfully!');
+        // console.log('Server responded with "%s"', info.response);
     });
 }
 export const sendEmailInvoice = async (email, orderId, orderDate, name, courseTitle, orderTotal, orderCurrency): Promise<any> => {
@@ -1612,14 +1612,14 @@ export const sendEmailInvoice = async (email, orderId, orderDate, name, courseTi
     this.transporter = await nodemailer.createTransport(smtpMyMailConfig, {
         pool: true,
     });
-    console.log('Sending Mail');
+    // console.log('Sending Mail');
     this.transporter.sendMail(message, (error, info) => {
         if (error) {
-            console.log('Error occurred');
-            console.log(error.message);
+            // console.log('Error occurred');
+            // console.log(error.message);
         }
-        console.log('Message sent successfully!');
-        console.log('Server responded with "%s"', info.response);
+        // console.log('Message sent successfully!');
+        // console.log('Server responded with "%s"', info.response);
     });
 }
 
@@ -1730,13 +1730,13 @@ Pour rappel, vous avez sélectionné le mode de paiement par ${order.payment.mod
     this.transporter = await nodemailer.createTransport(smtpMyMailConfig, {
         pool: true,
     });
-    console.log('Sending Mail');
+    // console.log('Sending Mail');
     this.transporter.sendMail(message, (error, info) => {
         if (error) {
-            console.log('Error occurred');
-            console.log(error.message);
+            // console.log('Error occurred');
+            // console.log(error.message);
         }
-        console.log('Message sent successfully!');
-        console.log('Server responded with "%s"', info.response);
+        // console.log('Message sent successfully!');
+        // console.log('Server responded with "%s"', info.response);
     });
 }

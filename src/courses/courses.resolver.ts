@@ -208,8 +208,8 @@ export class CoursesResolver {
     @Roles('admin')
     @UseGuards(GraphqlAuthGuard, RolesGuard)
     @Mutation('createAccess')
-    async createAccess(@Args('createAccessInput') args: any): Promise<any> {
-        return await this.coursesService.createAccess(args);
+    async createAccess(@Args('createAccessInput') args: any, @User() user): Promise<any> {
+        return await this.coursesService.createAccess(args, user);
     }
     @Roles('admin')
     @UseGuards(GraphqlAuthGuard, RolesGuard)
@@ -221,43 +221,63 @@ export class CoursesResolver {
     @UseGuards(GraphqlAuthGuard)
     @Mutation('updateProgress')
     async updateProgress(@Args('updateProgressInput') args: any, @User() user): Promise<any> {
-        return await this.coursesService.updateProgress(args, user);
+        if (args.idPath) {
+            const res = await this.coursesService.updateProgressLevel(args, user);
+        }
+        if (args.idModule) { 
+            const res2 = await this.coursesService.updateProgressModule(args, user); 
+        }
+        if (args.chapter) {
+            return await this.coursesService.updateProgress(args, user);
+        }
+        return null;
     }
- // MODULE CRUDs
- @SetMetadata('roles', ['admin'])
- @UseGuards(GraphqlAuthGuard, RolesGuard)
- @Roles('admin')
- @Query()
- async getModules() {
-     return await this.coursesService.findAllModules();
- }
- @Query('getHomeModules')
- async getHomeModules() {
-     return await this.coursesService.getHomeModules();
- }
- @Query('Module')
- async findOneModuleById(@Args('id') id: string): Promise<any> {
-     return await this.coursesService.findOneModuleById(id);
- }
- @SetMetadata('roles', ['admin'])
- @UseGuards(GraphqlAuthGuard, RolesGuard)
- @Roles('admin')
- @Query('removeModule')
- async deleteOneModule(@Args('id') id: string): Promise<any> {
-     return await this.coursesService.deleteModule(id);
- }
- @SetMetadata('roles', ['admin'])
- @UseGuards(GraphqlAuthGuard, RolesGuard)
- @Roles('admin')
- @Mutation('createModule')
- async createModule(@Args('createModuleInput') args: any): Promise<any> {
-     return await this.coursesService.createModule(args);
- }
- @SetMetadata('roles', ['admin'])
- @UseGuards(GraphqlAuthGuard, RolesGuard)
- @Roles('admin')
- @Mutation('updateModule')
- async updateModule(@Args('updateModuleInput') args: any): Promise<any> {
-     return await this.coursesService.updateModule(args, args.id);
- }
+    @UseGuards(GraphqlAuthGuard)
+    @Query('getAllProgress')
+    async getAllProgress(@User() user) {
+        // console.log(user)
+        return await this.coursesService.getAllProgress(user);
+    }
+    @UseGuards(GraphqlAuthGuard)
+    @Query('refreshProgress')
+    async refreshProgress(@Args('id') id: string, @User() user) {
+        return await this.coursesService.refreshProgress(id, user);
+    }
+    // MODULE CRUDs
+    @SetMetadata('roles', ['admin'])
+    @UseGuards(GraphqlAuthGuard, RolesGuard)
+    @Roles('admin')
+    @Query()
+    async getModules() {
+        return await this.coursesService.findAllModules();
+    }
+    @Query('getHomeModules')
+    async getHomeModules() {
+        return await this.coursesService.getHomeModules();
+    }
+    @Query('Module')
+    async findOneModuleById(@Args('id') id: string): Promise<any> {
+        return await this.coursesService.findOneModuleById(id);
+    }
+    @SetMetadata('roles', ['admin'])
+    @UseGuards(GraphqlAuthGuard, RolesGuard)
+    @Roles('admin')
+    @Query('removeModule')
+    async deleteOneModule(@Args('id') id: string): Promise<any> {
+        return await this.coursesService.deleteModule(id);
+    }
+    @SetMetadata('roles', ['admin'])
+    @UseGuards(GraphqlAuthGuard, RolesGuard)
+    @Roles('admin')
+    @Mutation('createModule')
+    async createModule(@Args('createModuleInput') args: any): Promise<any> {
+        return await this.coursesService.createModule(args);
+    }
+    @SetMetadata('roles', ['admin'])
+    @UseGuards(GraphqlAuthGuard, RolesGuard)
+    @Roles('admin')
+    @Mutation('updateModule')
+    async updateModule(@Args('updateModuleInput') args: any): Promise<any> {
+        return await this.coursesService.updateModule(args, args.id);
+    }
 }

@@ -62,7 +62,7 @@ export class ChatService {
         }
         const result = new Promise((resolve, reject) => {
             Zoom.meeting.create(meeting, async (response) => {
-                console.log(response);
+                // console.log(response);
                 const conf = await this.conferenceModel.create({
                     start_url: response.start_url,
                     join_url: response.join_url,

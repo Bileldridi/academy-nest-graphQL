@@ -92,7 +92,7 @@ export class UsersService {
         if (user.generate) {
             const randomPass = Math.random().toString(36).slice(-8);
             user.password = crypto.SHA256(randomPass).toString();
-            console.log(randomPass);
+            // console.log(randomPass);
             pass = randomPass
         }
         const userResult = await this.userModel.findByIdAndUpdate({ _id }, user).catch(err => err);
@@ -133,7 +133,8 @@ export class UsersService {
                 }
                 const res1 = await this.userModel.findByIdAndUpdate({ _id }, {$set:{checkpoints: user.checkpoints}}).catch(err => err);
             } else {
-                const object = {idCourse: args.idCourse, idChapters: [args.idChapter],lastChapter: args.idChapter}
+
+                const object = {idCourse: args.idCourse, idChapters: [args.idChapter],lastChapter: args.idChapter, progress: Math.round(100/ course.chapters.length)}
                 const res2 = await this.userModel.findByIdAndUpdate({ _id }, {$push:{checkpoints: object}}).catch(err => err);
             }
         }

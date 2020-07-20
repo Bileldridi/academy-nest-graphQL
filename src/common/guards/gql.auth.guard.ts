@@ -9,8 +9,8 @@ export class GraphqlAuthGuard extends AuthGuard('jwt') {
         const ctx = GqlExecutionContext.create(context);
         let { request } = ctx.getContext();
         if (typeof request === 'undefined') {
-            console.log(context.switchToWs())
-            console.log(context.switchToWs().getClient())
+            // console.log(context.switchToWs())
+            // console.log(context.switchToWs().getClient())
             const token = context.switchToWs().getData().token;
             if (!token) {
                 // return true;

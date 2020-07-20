@@ -130,6 +130,11 @@ export class CreateProgressInput {
     type?: string;
     score?: number;
     desc?: string;
+    idPath?: string;
+    actualCourse?: string;
+    advance?: number;
+    idModule?: string;
+    actualPath?: string;
 }
 
 export class CreateSessionInput {
@@ -313,6 +318,11 @@ export class UpdateProgressInput {
     type?: string;
     score?: number;
     desc?: string;
+    idPath?: string;
+    actualCourse?: string;
+    advance?: number;
+    idModule?: string;
+    actualPath?: string;
 }
 
 export class UpdateSessionInput {
@@ -351,6 +361,18 @@ export class Access {
     createDate?: number;
     duration?: number;
     timeLeft?: number;
+}
+
+export class BootcampProgress {
+    idModule?: string;
+    actualPath?: string;
+    advance?: number;
+}
+
+export class BootcampProgressUpdate {
+    idModule?: Module;
+    actualPath?: string;
+    advance?: number;
 }
 
 export class Candidate {
@@ -600,6 +622,18 @@ export class Order {
     payment?: Payment;
 }
 
+export class PathProgress {
+    idPath?: string;
+    actualCourse?: string;
+    advance?: number;
+}
+
+export class PathProgressUpdate {
+    idPath?: Level;
+    actualCourse?: string;
+    advance?: number;
+}
+
 export class Payment {
     createDate?: number;
     mode?: string;
@@ -616,6 +650,20 @@ export class Progress {
     score?: number;
     desc?: string;
     createDate?: number;
+    path?: PathProgress;
+    bootcamp?: BootcampProgress;
+}
+
+export class ProgressUpdate {
+    id?: string;
+    candidate?: User;
+    chapter?: Chapter;
+    type?: string;
+    score?: number;
+    desc?: string;
+    createDate?: number;
+    path?: PathProgressUpdate;
+    bootcamp?: BootcampProgressUpdate;
 }
 
 export class PublicChapter {
@@ -751,7 +799,11 @@ export abstract class IQuery {
 
     abstract removeModule(id: string): Message | Promise<Message>;
 
+    abstract getAllProgress(): Progress[] | Promise<Progress[]>;
+
     abstract getProgresss(): Progress[] | Promise<Progress[]>;
+
+    abstract refreshProgress(id: string): ProgressUpdate[] | Promise<ProgressUpdate[]>;
 
     abstract Progress(id: string): Progress | Promise<Progress>;
 

@@ -42,7 +42,7 @@ export class SessionsService {
 
     if (coach) {
       const result = await this.sessionModel.updateOne({ _id: id }, { $push: { coaches: coach._id } }).exec()
-      console.log(email, id, coach, result)
+      // console.log(email, id, coach, result)
       return await this.sessionModel.findById(id).exec();
     }
     return {}

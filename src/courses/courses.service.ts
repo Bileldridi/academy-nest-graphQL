@@ -50,7 +50,7 @@ export class CoursesService {
         return result.filter((e, i) => i < 6);
     }
     async getHomeCourses(): Promise<any[]> {
-        const result = await this.courseModel.find({$or:[{status: 'published'}, {status: 'coming soon' }]}).populate('chapters').exec();
+        const result = await this.courseModel.find({$or:[ {status: 'coming soon' }]}).populate('chapters').exec();
         return result;
     }
     async findOneCourseById(id: string): Promise<any> {

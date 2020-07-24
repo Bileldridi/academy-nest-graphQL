@@ -15,7 +15,7 @@ metadata:
     app.gitlab.com/app: academy-backend-__CI_ENVIRONMENT_SLUG__
 
 spec:
-  replicas:
+  replicas: 0
   selector:
     matchLabels:
       app: academy-backend-__CI_ENVIRONMENT_SLUG__

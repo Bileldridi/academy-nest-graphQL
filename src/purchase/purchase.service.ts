@@ -54,7 +54,7 @@ export class PurchaseService {
         //     sendOrderCreation(order,result.id);
         // }
         if (order.mode == "transfere") {
-            sendOrderCreation(order, result.id, product);
+            // sendOrderCreation(order, result.id, product);
         }
         return result.id ? { message: order.orderId } : { message: "NOT OK" }
     }
@@ -82,13 +82,13 @@ export class PurchaseService {
                     candidate: user.id, module: result.module.id, duration: -1 //result.course.duration
                 }).catch(err => err);
             }
-            await sendEmailInvoice(user.email,
-                result.orderId,
-                new Date(result.createDate).toLocaleDateString(),
-                user.firstname + ' ' + user.lastname,
-                result.course ? result.course.title : result.level.title,
-                result.payment.amount, 'TND'
-            )
+            // await sendEmailInvoice(user.email,
+            //     result.orderId,
+            //     new Date(result.createDate).toLocaleDateString(),
+            //     user.firstname + ' ' + user.lastname,
+            //     result.course ? result.course.title : result.level.title,
+            //     result.payment.amount, 'TND'
+            // )
         }
         return result.id ? { message: 'OK' } : { message: 'NOT OK' }
     }

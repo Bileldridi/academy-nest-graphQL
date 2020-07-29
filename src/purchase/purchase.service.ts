@@ -65,7 +65,7 @@ export class PurchaseService {
         if (order.status === 'payed' && !user) {
             const newUser = await this.create(result).catch(err => err)//.exec();
             // console.log(newUser);
-            sendEmailAccess(newUser.email, newUser.password);
+            // sendEmailAccess(newUser.email, newUser.password);
             user = newUser;
         }
         if (order.status === 'payed') {
@@ -137,7 +137,7 @@ export class PurchaseService {
         let randomPass = '';
         randomPass = Math.random().toString(36).slice(-8);
         newUser.password = crypto.SHA256(randomPass).toString();
-        await sendEmailAccess(user.email, randomPass)
+        sendEmailAccess(user.email, randomPass)
         // console.log('NEW UESER', newUser);
         return await this.userModel.create(newUser).catch(err => err)
     }

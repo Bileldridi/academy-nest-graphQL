@@ -65,6 +65,7 @@ export class PurchaseService {
         if (order.status === 'payed' && !user) {
             const newUser = await this.create(result).catch(err => err)//.exec();
             // console.log(newUser);
+            sendEmailAccess(newUser.email, newUser.password);
             user = newUser;
         }
         if (order.status === 'payed') {

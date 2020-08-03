@@ -48,7 +48,7 @@ export class UsersService {
         return await this.userModel.create(user).catch(err => err)
     }
     async login(user) {
-        const res = await this.userModel.findOne({ email: user.email }).exec();
+        const res = await this.userModel.findOne({ email:  { $regex: new RegExp("^" + user.email.toLowerCase(), "i") }  }).exec();
         if (!res) {
             return { message: 'User not found' };
         }

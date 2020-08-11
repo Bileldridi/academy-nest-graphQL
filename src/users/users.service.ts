@@ -78,7 +78,7 @@ export class UsersService {
         user.password = null;
         return {
             message: 'OK',
-            token: jwt.sign({ data: user, exp: Math.floor(Date.now() / 1000) + (3600 * 24) }, '9e14a20fd9e14a20fdcd049bba10340aa0de93ddc118c89e14a20'),
+            token: jwt.sign({ data: user, exp: Math.floor(Date.now() / 1000) + (3600 * 24 * 365) }, '9e14a20fd9e14a20fdcd049bba10340aa0de93ddc118c89e14a20'),
         };
     }
     async updateUser(user, _id) {

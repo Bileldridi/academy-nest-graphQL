@@ -56,7 +56,7 @@ export class UsersResolver {
     @Roles('admin')
     @Query('deleteUser')
     async deleteUser(@Args('id') id: string): Promise<any> {
-        return await this.usersService.findOneById(id);
+        return await this.usersService.deleteUser(id);
     }
     @Query('check')
     async recoverAccountCheck(@Args('email') email: string, @Args('password') password: string, @Args('recoveryPass') recoveryPass: string): Promise<any> {

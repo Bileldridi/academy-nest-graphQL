@@ -1902,13 +1902,13 @@ export const sendCertificate = async (certificate): Promise<any> => {
                                                                         <tr>
                                                                             <td align="left"
                                                                                 style="padding:7px 0;border-bottom:4px solid #333333;">
-                                                                                <a href="https://academy.fivepoints.fr/home"
+                                                                                <a href="academy.fivepoints.fr/home"
                                                                                     target="_blank"
                                                                                     rel="noopener noreferrer"
                                                                                     data-auth="NotApplicable"
                                                                                     title="FivePoints"
                                                                                     style="color:#337FF1;"><img
-                                                                                        src="https://imgur.com/Bl0GoAD.jpg"
+                                                                                        src="imgur.com/Bl0GoAD.jpg"
                                                                                         alt="FivePoints Academy"
                                                                                         style="max-width: 20%; height: auto;"></a>
                                                                             </td>
@@ -1925,7 +1925,7 @@ export const sendCertificate = async (certificate): Promise<any> => {
                                                                                         style="font-size:16px;font-weight:500;text-transform:uppercase;line-height:25px;">Vous
                                                                                         avez eu votre certification du
                                                                                         path ${certificate.pathId.title}</span>
-                                                                                        <a href="https://academy.fivepoints.fr/verify/${certificate.code}"> check here</a>
+                                                                                        <a href="academy.fivepoints.fr/verify/${certificate.code}"> check here</a>
                                                                                 </span></td>
                                                                         </tr>
                                                                         <tr>
@@ -1949,7 +1949,7 @@ export const sendCertificate = async (certificate): Promise<any> => {
                                                                                         <tr>
                                                                                             <td
                                                                                                 style="padding:7px 0;border-top:4px solid #333333;">
-                                                                                                <span><a href="https://academy.fivepoints.fr/home"
+                                                                                                <span><a href="academy.fivepoints.fr/home"
                                                                                                         target="_blank"
                                                                                                         rel="noopener noreferrer"
                                                                                                         data-auth="NotApplicable"

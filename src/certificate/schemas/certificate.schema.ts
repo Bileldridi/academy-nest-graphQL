@@ -2,10 +2,10 @@
 import { Schema, Types } from 'mongoose'
 
 export const schema: Schema = new Schema({
-    user: { type: Types.ObjectId, ref: 'User' },
+    candidate: { type: Types.ObjectId, ref: 'User' },
     code: { type: String },
     imgURL: { type: String },
-    pathName: { type: String }
+    pathId: { type: Types.ObjectId, ref: 'Level' }
 })
 
 schema.virtual('id').get(function () {

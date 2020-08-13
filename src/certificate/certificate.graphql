@@ -5,17 +5,17 @@ type Query {
 
 type Mutation {
 
-  addCertificate(imgURL: String!, pathName: String!, user: UserInput): Certificate
-  
+  addCertificate(pathId: String!): Certificate
+  updateCertificate(urlImg:String, id:String): Certificate
 }
 
 
 type Certificate {
   id:String
-  user: User
+  candidate: User
   code: String
-  imageUrl: String
-  pathName: String
+  imgURL: String
+  pathId: String
 }
 
 input UserInput {

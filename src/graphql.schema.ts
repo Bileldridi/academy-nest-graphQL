@@ -386,6 +386,13 @@ export class Cat {
     age?: number;
 }
 
+export class Certificate {
+    id?: string;
+    candidate?: User;
+    code?: string;
+    imgURL?: string;
+}
+
 export class Chapter {
     id?: string;
     title?: string;
@@ -518,6 +525,10 @@ export abstract class IMutation {
     abstract updateCandidate(updateCandidateInput?: UpdateCandidateInput): MyCandidate | Promise<MyCandidate>;
 
     abstract createCat(createCatInput?: CreateCatInput): Cat | Promise<Cat>;
+
+    abstract addCertificate(): Certificate | Promise<Certificate>;
+
+    abstract updateCertificate(urlImg?: string, id?: string): Certificate | Promise<Certificate>;
 
     abstract sendMessage(sendMessageInput?: SendMessageInput): Message | Promise<Message>;
 
@@ -726,6 +737,8 @@ export abstract class IQuery {
     abstract getCats(): Cat[] | Promise<Cat[]>;
 
     abstract cat(_id: string): Cat | Promise<Cat>;
+
+    abstract getCertificate(code: string): Certificate | Promise<Certificate>;
 
     abstract getChats(): Chat[] | Promise<Chat[]>;
 

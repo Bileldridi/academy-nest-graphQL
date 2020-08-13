@@ -239,6 +239,12 @@ export class CoursesResolver {
         return await this.coursesService.getAllProgress(user);
     }
     @UseGuards(GraphqlAuthGuard)
+    @Query('getPathProgress')
+    async getPathProgress(@Args('pathId') pathId: string, @User() user) {
+        return await this.coursesService.getPathProgress(user, pathId)
+    }
+
+    @UseGuards(GraphqlAuthGuard)
     @Query('refreshProgress')
     async refreshProgress(@Args('id') id: string, @User() user) {
         return await this.coursesService.refreshProgress(id, user);

@@ -4,6 +4,8 @@ type Query {
   refreshProgress(id: String!): [ProgressUpdate]
   Progress(id: String!): Progress
   removeProgress(id: String!): Message
+  getPathProgress(pathId:String!):Progress
+
 }
 
 type Mutation {

@@ -212,6 +212,9 @@ export class CoursesService {
         return result.id ? { message: 'OK' } : { message: 'NOT OK' };
     }
     // CRUD Progress
+    async getPathProgress(user, pathId) {
+        return await this.progressModel.findOne({ candidate: user.id, 'path.idPath': pathId }).exec()
+    }
     async updateProgress(progress, user) {
             progress.candidate = user.id;
             const progressResult = await this.progressModel.findOne({ chapter: progress.chapter }).exec();

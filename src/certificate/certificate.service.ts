@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from 'mongoose'
-import { sendCertif } from '../common/mailer/mailer'
+// import { sendCertif } from '../common/mailer/mailer'
+import { idText } from 'typescript';
+import { sendCertificate } from '../common/mailer/mailer'
+
 
 
 
@@ -12,20 +15,20 @@ export class CertificateService {
         @InjectModel('Certificate') private readonly certificateModel: Model<any>
     ) { }
 
-    addCertificate = async (userId, imgURL, pathName ) => {
-
+    addCertificate = async (idPath, userId) => {
+        const exist = await this.certificateModel.findOne({candidate: userId, pathId: idPath}).exec();
+        if(exist) {
+            return null;
+        }
         const generatedCode = this.makeid(8)
-        const newCertificate = new this.certificateModel({
-            user: userId,
-            code: generatedCode,
-            imgURL,
-            pathName
-        })
-
-        const createdCertificate = await newCertificate.save();
-        const certificate = await this.certificateModel.findById({ _id: createdCertificate.id }).populate('user').exec();
-        sendCertif(certificate.user, pathName, imgURL);
-        return createdCertificate
+        const object = {candidate: userId, code: generatedCode, pathId: idPath};
+        const createdCertificate = await this.certificateModel.create(object);
+        return createdCertificate;
+    }
+    updateCertificate = async (urlImg, id) => {
+        const certificate = await this.certificateModel.findByIdAndUpdate({ _id: id }, {$set: {imgURL: urlImg}}, {new: true, upsert: false}).populate('candidate').populate('pathId').exec();
+        sendCertificate(certificate)
+        return certificate;
     }
     getCertificate = async (userId, code) => {
 

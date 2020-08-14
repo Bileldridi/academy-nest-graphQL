@@ -30,11 +30,10 @@ export class CertificateService {
         sendCertificate(certificate)
         return certificate;
     }
-    getCertificate = async (userId, code) => {
-
+    getCertificate = async (code) => {
         const certificate = await this.certificateModel.findOne({ code: code }).populate('user').exec()
         
-            if (certificate.user.id === userId) {
+            if (certificate) {
                 return certificate;
             } else {
                 return null;

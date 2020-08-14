@@ -8,10 +8,10 @@ import { User } from '../common/decorators/current-user.decorator';
 export class CertificateResolver {
     constructor(private certificateService: CertificateService) { }
 
-    @UseGuards(GraphqlAuthGuard)
+    
     @Query('getCertificate')
-    async getCertificate(@Args('code') code: string, @User() user) {
-        return await this.certificateService.getCertificate(user.id, code);
+    async getCertificate(@Args('code') code: string) {
+        return await this.certificateService.getCertificate(code);
     }
 
     @UseGuards(GraphqlAuthGuard)

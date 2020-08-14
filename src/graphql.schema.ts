@@ -391,6 +391,7 @@ export class Certificate {
     candidate?: User;
     code?: string;
     imgURL?: string;
+    pathId?: string;
 }
 
 export class Chapter {
@@ -526,7 +527,7 @@ export abstract class IMutation {
 
     abstract createCat(createCatInput?: CreateCatInput): Cat | Promise<Cat>;
 
-    abstract addCertificate(): Certificate | Promise<Certificate>;
+    abstract addCertificate(pathId: string): Certificate | Promise<Certificate>;
 
     abstract updateCertificate(urlImg?: string, id?: string): Certificate | Promise<Certificate>;
 
@@ -821,6 +822,8 @@ export abstract class IQuery {
     abstract Progress(id: string): Progress | Promise<Progress>;
 
     abstract removeProgress(id: string): Message | Promise<Message>;
+
+    abstract getPathProgress(pathId: string): Progress | Promise<Progress>;
 
     abstract getOrders(): Order[] | Promise<Order[]>;
 

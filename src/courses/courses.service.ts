@@ -51,6 +51,20 @@ export class CoursesService {
       .populate("levels")
       .populate("chapters")
       .exec();
+
+    // pull all deleted chapters from courses to get correct progress
+    // one time use and the delete chapter methode will do the job
+    const chapterCemetery = await this.cemeteryModel
+      .find({ type: "Chapter" })
+      .exec();
+    chapterCemetery.forEach((chapter) => {
+      this.courseModel
+        .updateMany(
+          { chapters: chapter.object._id },
+          { $pull: { chapters: chapter.object._id } }
+        )
+        .exec();
+    });
     return result;
   }
   async getFeaturedCourses(): Promise<any[]> {
@@ -177,6 +191,8 @@ export class CoursesService {
     this.cemeteryModel
       .create({ object: result, type: "Chapter" })
       .catch((err) => err);
+
+    // pull the chapter from course array and then delete it
     await this.courseModel.findByIdAndUpdate(result.course, {
       $pull: { chapters: result._id },
     });

@@ -4,7 +4,7 @@ import { Schema, Types } from 'mongoose'
 export const schema: Schema = new Schema({
     candidate: { type: Types.ObjectId, ref: 'User' },
     code: { type: String },
-    imgURL: { type: String },
+    imgURL: { type: String }, 
     pathId: { type: Types.ObjectId, ref: 'Level' }
 })
 

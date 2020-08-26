@@ -1,12 +1,14 @@
 type Query {
   getCertificate(code:String!): Certificate
-  
+  getCertificateAdmin(idUser:String!, idPath: String!): Certificate
 }
 
 type Mutation {
 
   addCertificate(pathId: String!): Certificate
   updateCertificate(urlImg:String, id:String): Certificate
+  updateCertificateAdmin(urlImg:String, idPath:String, idUser:String): Certificate
+
 }
 
 
@@ -15,7 +17,7 @@ type Certificate {
   candidate: User
   code: String
   imgURL: String
-  pathId: String
+  pathId: Level
 }
 
 input UserInput {

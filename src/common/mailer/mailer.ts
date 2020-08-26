@@ -1930,12 +1930,7 @@ export const sendCertificate = async (certificate): Promise<any> => {
                                                                         </tr>
                                                                         <tr>
                                                                             <td style="padding:0;">&nbsp;</td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td style="padding:0;">
-                                                                                <img style="width:90%;" src="${certificate.imgURL}" />
-                                                                            </td>
-                                                                        </tr>
+                                                                        </tr<
                                                                         <tr>
                                                                             <td
                                                                                 style="background-color:#F8F8F8;padding:7px 0;border:1px solid #D6D4D4;">
@@ -1986,6 +1981,13 @@ const message = {
         to: certificate.candidate.email,
         subject: 'FivePoints Academy - Congratulation',
         html: htmlMsg,
+        attachments: [
+            {
+                filename: certificate.pathId.title + '.jpg',
+                path: certificate.imgURL, // <-- should be path instead of content
+                cid: certificate.pathId.title + '.jpg'
+            }
+        ]
     };
 
     const smtpMyMailConfig = smtpPool({

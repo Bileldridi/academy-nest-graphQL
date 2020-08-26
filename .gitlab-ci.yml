@@ -125,5 +125,32 @@ deploy-prod:
     url: https://next.backend.academy.fivepoints.fr
   when: manual
 
+stop-review:
+  image:
+    name: lachlanevenson/k8s-kubectl:latest
+    entrypoint: ["/bin/sh", "-c"]
+  stage: deploy
+  script:
+    - cd k8s/
+    - sed -i "s~__CI_REGISTRY_IMAGE__~${CI_REGISTRY_IMAGE}~" deployment.yaml
+    - sed -i "s/__CI_ENVIRONMENT_SLUG__/${CI_ENVIRONMENT_SLUG}/" deployment.yaml ingress.yaml service.yaml
+    - sed -i "s/__VERSION__/${CI_PIPELINE_ID}/" deployment.yaml ingress.yaml service.yaml
+    - |
+      if kubectl apply -f deployment.yaml | grep -q unchanged; then
+          echo "=> Patching deployment to force image update."
+          kubectl patch -f deployment.yaml -p "{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"ci-last-updated\":\"$(date +'%s')\"}}}}}"
+      else
+          echo "=> Deployment apply has changed the object, no need to force image update."
+      fi
+    - kubectl delete -f service.yaml
+    - kubectl delete -f ingress.yaml
+    - kubectl delete -f deployment.yaml
+  environment:
+    name: review/$CI_BUILD_REF_NAME
+    action: stop
+  when: manual
+  only:
+  - master
+
 
 

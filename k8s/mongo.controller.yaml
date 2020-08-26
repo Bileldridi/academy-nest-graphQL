@@ -27,17 +27,15 @@ spec:
           persistentVolumeClaim:
             claimName: my-data
 
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: my-data
-  namespace: academy-backend
-  annotations:
-    volume.beta.kubernetes.io/storage-class: gp2
-spec:
-  accessModes:
-  - ReadWriteOnce
-  resources:
-    requests:
-      storage: 50Gi
+# ---
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: my-data
+#   namespace: academy-backend
+# spec:
+#   accessModes:
+#   - ReadWriteOnce
+#   resources:
+#     requests:
+#       storage: 50Gi

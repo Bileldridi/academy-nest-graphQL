@@ -13,7 +13,7 @@ metadata:
     namespace: academy-backend
 spec:
     rules:
-    - host: backendacademy.fivepoints.fr
+    - host: next.backend.academy.fivepoints.fr
       http:
         paths:
         - backend:
@@ -22,5 +22,5 @@ spec:
           path: /
     tls:
     - hosts:
-      - backendacademy.fivepoints.fr
+      - next.backend.academy.fivepoints.fr
       secretName: backendacademy-auto-deploy-tls

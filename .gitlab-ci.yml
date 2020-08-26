@@ -88,7 +88,7 @@ deploy-review:
     - master
   environment:
     name: review/$CI_BUILD_REF_NAME
-    url: http://${CI_ENVIRONMENT_SLUG}.backdev.academy.fivepoints.fr
+    url: http://${CI_ENVIRONMENT_SLUG}.next.backdev.academy.fivepoints.fr
     #http://a9f2c06cfc8d811e9a31506631145b1f-1171893166.eu-central-1.elb.amazonaws.com
     on_stop: stop-review
 
@@ -115,11 +115,10 @@ deploy-prod:
     - kubectl apply -f ingress.prod.yaml
     - kubectl rollout status -f deployment.prod.yaml
   environment:
-    name: Production
-    url: https://backend.academy.fivepoints.fr
+    name: production
+    url: https://next.backend.academy.fivepoints.fr
   when: manual
-  only:
-    - master
+
 
 stop-review:
   image:

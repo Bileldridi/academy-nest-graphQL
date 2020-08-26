@@ -35,21 +35,26 @@ build-app:
 
 
 build-image:
+build-image:
+  image: docker:18.09.7-dind
   stage: build-image
-  image: docker:stable
-  before_script:
-      - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
+  variables:
+    DOCKER_HOST: tcp://localhost:2375
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ""
   services:
     - docker:dind
   script:
+    - sleep 10s
     - docker info
-#    - docker login -u "${CI_REGISTRY_USER}" -p "${CI_REGISTRY_PASSWORD}" "${CI_REGISTRY}"
+    # - export DOCKER_HOST=tcp://localhost:2375
+    # - sleep 10s
+    # - docker info
+    - docker login -u "${CI_REGISTRY_USER}" -p "${CI_REGISTRY_PASSWORD}" "${CI_REGISTRY}"
     - docker build -t "${CI_REGISTRY_IMAGE}:v${CI_PIPELINE_ID}" .
-    - echo "${CI_REGISTRY_IMAGE}"
     # - docker tag "${CI_REGISTRY_IMAGE}:latest" "${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_NAME}"
     # - test ! -z "${CI_COMMIT_TAG}" && docker push "${CI_REGISTRY_IMAGE}:latest"
     - docker push "${CI_REGISTRY_IMAGE}:v${CI_PIPELINE_ID}"
-
 
 deploy-review:
   image:

@@ -35,6 +35,9 @@ export class UsersService {
 
     async create(user) {
         let randomPass = '';
+        const unique = await this.userModel.findOne({ email: user.email }).exec()
+        if (unique) return { message: 'email already in use' }
+
         if (!user.password) {
             randomPass = Math.random().toString(36).slice(-8);
             user['password'] = crypto.SHA256(randomPass).toString();
@@ -47,8 +50,18 @@ export class UsersService {
         }
         return await this.userModel.create(user).catch(err => err)
     }
+
+    async register(user) {
+        const unique = await this.userModel.findOne({ email: user.email }).exec()
+        if (unique) { return { message: 'email already in use' } }
+
+
+        await this.userModel.create(user).catch(err => err)
+        return { message: 'user created successfully' }
+    }
+
     async login(user) {
-        const res = await this.userModel.findOne({ email:  { $regex: new RegExp("^" + user.email.toLowerCase(), "i") }  }).exec();
+        const res = await this.userModel.findOne({ email: { $regex: new RegExp("^" + user.email.toLowerCase(), "i") } }).exec();
         if (!res) {
             return { message: 'User not found' };
         }
@@ -88,7 +101,7 @@ export class UsersService {
     }
     async updateUser(user, _id) {
         const oldUser = await this.userModel.findOne({ _id }).exec();
-        let pass = ''; 
+        let pass = '';
         if (user.password === '') {
             user.password = oldUser.password;
         } else {
@@ -99,6 +112,12 @@ export class UsersService {
             user.password = crypto.SHA256(randomPass).toString();
             // console.log(randomPass);
             pass = randomPass
+        }
+
+        console.log('Image', user.image);
+        if (!user.image) {
+            user.image = oldUser.image
+            console.log('oldImage', oldUser.image);
         }
         const userResult = await this.userModel.findByIdAndUpdate({ _id }, user).catch(err => err);
         const coachResult = await this.coachModel.findByIdAndUpdate({ _id: userResult.coach }, user).catch(err => err);
@@ -116,40 +135,40 @@ export class UsersService {
     async updateCheckpoint(_id, args): Promise<any> {
         const user = await this.userModel.findOne({ _id }).exec();
         const course = await this.courseModel.findById(args.idCourse).exec();
-        if((user.checkpoints && user.checkpoints === []) || !user.checkpoints) {
-            const object = {idCourse: args.idCourse, idChapters: [args.idChapter],lastChapter: args.idChapter};
-            object['progress'] = Math.round((100)/ course.chapters.length);
+        if ((user.checkpoints && user.checkpoints === []) || !user.checkpoints) {
+            const object = { idCourse: args.idCourse, idChapters: [args.idChapter], lastChapter: args.idChapter };
+            object['progress'] = Math.round((100) / course.chapters.length);
             object['status'] = 'started';
-            const userResult = await this.userModel.findByIdAndUpdate({ _id }, {$push:{checkpoints: object}}).catch(err => err);
+            const userResult = await this.userModel.findByIdAndUpdate({ _id }, { $push: { checkpoints: object } }).catch(err => err);
         } else {
-            const index = user.checkpoints.map(obj => {return obj.idCourse}).indexOf(args.idCourse);
-            if(index !== -1) {
+            const index = user.checkpoints.map(obj => { return obj.idCourse }).indexOf(args.idCourse);
+            if (index !== -1) {
                 const existChapter = user.checkpoints[index].idChapters.includes(args.idChapter);
-                if(!existChapter) {
+                if (!existChapter) {
 
                     user.checkpoints[index].idChapters.push(args.idChapter);
                     user.checkpoints[index].lastChapter = args.idChapter;
-                    user.checkpoints[index].progress = Math.round((user.checkpoints[index].idChapters.length*100)/ course.chapters.length);
-                    if(user.checkpoints[index].progress === 100) {
+                    user.checkpoints[index].progress = Math.round((user.checkpoints[index].idChapters.length * 100) / course.chapters.length);
+                    if (user.checkpoints[index].progress === 100) {
                         user.checkpoints[index].status = 'finished';
                     }
-                }else {
+                } else {
                     user.checkpoints[index].lastChapter = args.idChapter;
                 }
-                const res1 = await this.userModel.findByIdAndUpdate({ _id }, {$set:{checkpoints: user.checkpoints}}).catch(err => err);
+                const res1 = await this.userModel.findByIdAndUpdate({ _id }, { $set: { checkpoints: user.checkpoints } }).catch(err => err);
             } else {
 
-                const object = {idCourse: args.idCourse, idChapters: [args.idChapter],lastChapter: args.idChapter, progress: Math.round(100/ course.chapters.length)}
-                const res2 = await this.userModel.findByIdAndUpdate({ _id }, {$push:{checkpoints: object}}).catch(err => err);
+                const object = { idCourse: args.idCourse, idChapters: [args.idChapter], lastChapter: args.idChapter, progress: Math.round(100 / course.chapters.length) }
+                const res2 = await this.userModel.findByIdAndUpdate({ _id }, { $push: { checkpoints: object } }).catch(err => err);
             }
         }
         return []
     }
     async refreshCheckpoint(_id, args): Promise<any> {
         const user = await this.userModel.findOne({ _id }).exec();
-        const index = user.checkpoints.map(obj => {return obj.idCourse}).indexOf(args.idCourse);
+        const index = user.checkpoints.map(obj => { return obj.idCourse }).indexOf(args.idCourse);
         user.checkpoints[index] = args;
-        const res1 = await this.userModel.findByIdAndUpdate({ _id }, {$set:{checkpoints: user.checkpoints}}).catch(err => err);
+        const res1 = await this.userModel.findByIdAndUpdate({ _id }, { $set: { checkpoints: user.checkpoints } }).catch(err => err);
         return []
     }
     async validate({ _id }): Promise<any> {

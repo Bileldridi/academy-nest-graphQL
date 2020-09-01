@@ -19,7 +19,7 @@ export class UsersResolver {
     @Roles('admin')
     @Query('getUsers')
     async getUsers(@User() user) {
-        
+
 
         return await this.usersService.findAll();
     }
@@ -38,15 +38,15 @@ export class UsersResolver {
     }
     @UseGuards(GraphqlAuthGuard)
     @Mutation('updateCheckpoint')
-    async updateCheckpoint(@Args('updateCheckpointInput') args: any,@User() user) {
+    async updateCheckpoint(@Args('updateCheckpointInput') args: any, @User() user) {
         return await this.usersService.updateCheckpoint(user.id, args);
     }
     @UseGuards(GraphqlAuthGuard)
     @Mutation('refreshCheckpoint')
-    async refreshCheckpoint(@Args('refreshCheckpointInput') args: any,@User() user) {
+    async refreshCheckpoint(@Args('refreshCheckpointInput') args: any, @User() user) {
         return await this.usersService.refreshCheckpoint(user.id, args);
     }
-    
+
     @Query('User')
     async findOneById(@Args('id') id: string): Promise<any> {
         return await this.usersService.findOneById(id);
@@ -82,5 +82,10 @@ export class UsersResolver {
     @Mutation('updateUser')
     async updateUser(@Args('userInput') args: any): Promise<any> {
         return await this.usersService.updateUser(args, args.id);
+    }
+
+    @Mutation('register')
+    async register(@Args('createUserInput') args: any): Promise<any> {
+        return await this.usersService.register(args);
     }
 }

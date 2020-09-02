@@ -55,6 +55,7 @@ export class UsersService {
         const unique = await this.userModel.findOne({ email: user.email }).exec()
         if (unique) { return { message: 'email already in use' } }
 
+        user.password = crypto.SHA256(user.password).toString();
 
         await this.userModel.create(user).catch(err => err)
         return { message: 'user created successfully' }

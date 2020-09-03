@@ -2015,3 +2015,100 @@ const message = {
         console.log('Server responded with "%s"', info.response);
     });
 }
+
+export const sendContactMail = async (email): Promise<any> => {
+
+    const htmlMsg = `
+    <div class="">
+    <div class="wide-content-host">
+        <div class="_1_uypmLpuvFfZLEG0VSc1I">
+            <div class="_2zX2caDms6Dyd9Ch--6tVn _3WlDZpUcpzvjQ13y53lZLc">
+                <div class="_2UE8mawgPfA7HsY7A600GK"></div>
+                <div class="_1PykQrbOAi1vvEtfcvQEia">
+                    <div>
+                        <div class="_21bgioiEBbnVoXvYXjL3tH JWNdg1hee9_Rz6bIGvG1c allowTextSelection">
+                            <div>
+                                <div>
+                                    <div dir="ltr">
+                                        <div>
+                                            <div>
+                                                <table style="width:100%;margin-top:10px;">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td style="width:20px;padding:7px 0;">&nbsp;</td>
+                                                            <td align="center" style="padding:7px 0;">
+                                                                <table bgcolor="white" style="width:100%;">
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td align="left"
+                                                                                style="padding:7px 0;border-bottom:4px solid #333333;">
+                                                                                <a href="https://academy.fivepoints.fr/home"
+                                                                                    target="_blank"
+                                                                                    rel="noopener noreferrer"
+                                                                                    data-auth="NotApplicable"
+                                                                                    title="FivePoints"
+                                                                                    style="color:#337FF1;"><img
+                                                                                        src="https://imgur.com/Bl0GoAD.jpg"
+                                                                                        alt="FivePoints Academy"
+                                                                                        style="max-width: 20%; height: auto;"></a>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td align="center" style="padding:7px 0;">
+                                                                                        <span
+                                                                                        style="font-size:16px;font-weight:500;text-transform:uppercase;line-height:25px;">Bonjour, merci pour votre message, notre équipe vous repondra dans les plus brefs délais.</span>
+                                                                                        
+                                                                                </span>
+
+                                                                                    </td>
+                                                                        </tr>
+                                                                       
+                                                                    </tbody>
+                                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>`;
+   
+const message = {
+        from: `FivePoints <contact@mailing.fivepoints.fr>`,
+        to: email,
+        subject: 'FivePoints Academy - Contact',
+        html: htmlMsg,
+    };
+
+    const smtpMyMailConfig = smtpPool({
+        host: 'email-smtp.eu-west-1.amazonaws.com',
+        port: 465,
+        secure: true,
+        auth: {
+            user: 'AKIAVZK2RHPIFINRV3MY',
+            pass: 'BB7UoD25zu6Y4Yo2VIUzsA0XDREJYoKVv7JkqFuzg5ws',
+        },
+        maxConnections: 5,
+        maxMessages: 10,
+        rateLimit: 5,
+    });
+    this.transporter = await nodemailer.createTransport(smtpMyMailConfig, {
+        pool: true,
+    });
+    console.log('Sending Mail');
+    this.transporter.sendMail(message, (error, info) => {
+        if (error) {
+            console.log('Error occurred');
+            console.log(error.message);
+        }
+        console.log('Message sent successfully!');
+        console.log('Server responded with "%s"', info.response);
+    });
+}

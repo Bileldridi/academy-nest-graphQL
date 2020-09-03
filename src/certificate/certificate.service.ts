@@ -3,15 +3,10 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Model } from 'mongoose'
 // import { sendCertif } from '../common/mailer/mailer'
 import { idText } from 'typescript';
-<<<<<<< HEAD
-import { sendCertificate } from '../common/mailer/mailer'
-import { throwError } from 'rxjs';
+import { sendCertificate, sendContactMail } from '../common/mailer/mailer'
 
 
 
-=======
-import { sendCertificate } from '../common/mailer/mailer';
->>>>>>> 9695f9196d8ad94560a10ff7e59db76f09a957b1
 
 @Injectable()
 export class CertificateService {
@@ -51,19 +46,18 @@ export class CertificateService {
         sendCertificate(certificate)
         return certificate;
     }
+    sendMailContact = async (email) => {
+        sendContactMail(email)
+        return {email};
+    }
     getCertificate = async (code) => {
         const certificate = await this.certificateModel.findOne({ code: code }).populate('candidate').populate('pathId').exec();
             if (certificate) {
                 return certificate;
             } else {
-<<<<<<< HEAD
                 throw new NotFoundException('Could not find certificate');
             }
         
-=======
-                return null;
-            }   
->>>>>>> 9695f9196d8ad94560a10ff7e59db76f09a957b1
     }
     
     getCertificateAdmin = async (idUser, idPath) => {

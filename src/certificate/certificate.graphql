@@ -8,6 +8,7 @@ type Mutation {
   addCertificate(pathId: String!): Certificate
   updateCertificate(urlImg:String, id:String): Certificate
   updateCertificateAdmin(urlImg:String, idPath:String, idUser:String): Certificate
+  sendMailContact(email:String, name:String, textarea: String): email
 
 }
 
@@ -18,6 +19,9 @@ type Certificate {
   code: String
   imgURL: String
   pathId: Level
+}
+type email {
+  email:String
 }
 
 input UserInput {

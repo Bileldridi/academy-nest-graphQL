@@ -38,5 +38,10 @@ export class CertificateResolver {
     async updateCertificateAdmin(@Args('urlImg') urlImg: string,@Args('idPath') idPath: string, @Args('idUser') idUser: string) {
         return await this.certificateService.updateCertificateAdmin(urlImg, idPath, idUser);
     }
+
+    @Mutation('sendMailContact')
+    async sendMailContact(@Args('email') email: string) {
+       return await this.certificateService.sendMailContact(email);
+    }
     
 }

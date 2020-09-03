@@ -13,6 +13,7 @@ type Mutation {
   updateCheckpoint(updateCheckpointInput: UpdateCheckpointInput): [Checkpoint]
   refreshCheckpoint(refreshCheckpointInput: RefreshCheckpointInput): [Checkpoint]
 
+  register(createUserInput: CreateUserInput): UserRegister
   
   createUser(createUserInput: CreateUserInput): User
   updateUser(userInput: UserInput): User
@@ -55,11 +56,18 @@ type User {
   email: String
   image: String
   tel: String
+  address: String
+  country: String
+  postcode: String
   note: String
   candidate: Candidate
   coach: Coach
   role: String
   status: String
+}
+
+type UserRegister{
+  message: String
 }
 
 type UserLogin {
@@ -78,6 +86,9 @@ input CreateUserInput {
   note: String
   role: String
   tel: String
+  address: String
+  country: String
+  postcode: String
   sendEmail: Boolean
 }
 

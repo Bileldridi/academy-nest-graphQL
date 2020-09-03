@@ -1,7 +1,6 @@
 type Query {
   getUsers: [User]
   getCurrentUser: User
-  getCheckpoints: [Checkpoint]
 
   User(id: String!): User
   deleteUser(id: ID!): Message
@@ -10,10 +9,6 @@ type Query {
 }
 
 type Mutation {
-  updateCheckpoint(updateCheckpointInput: UpdateCheckpointInput): [Checkpoint]
-  refreshCheckpoint(refreshCheckpointInput: RefreshCheckpointInput): [Checkpoint]
-
-  
   createUser(createUserInput: CreateUserInput): User
   updateUser(userInput: UserInput): User
   login(loginInput: LoginInput): UserLogin
@@ -25,24 +20,6 @@ type Subscription {
 type Message {
   message: String
   accessToken: String
-}
-type Checkpoint {
-  idCourse: String
-  idChapters: [String] 
-  lastChapter: String
-  status: String
-  progress: Int
-}
-input UpdateCheckpointInput{
-  idCourse: String
-  idChapter: String 
-}
-input RefreshCheckpointInput{
-  idCourse: String
-  idChapters: [String]
-  lastChapter: String
-  status: String
-  progress: Int
 }
 
 type User {

@@ -1,13 +1,18 @@
 type Query {
   getAllProgress: [Progress]
-  getProgresss: [Progress]
-  refreshProgress(id: String!): [ProgressUpdate]
   Progress(id: String!): Progress
   removeProgress(id: String!): Message
+  getCurrentProgress(id: String!): Progress
+  updateAllPathsAdvancements: Progress
+  updateAllBootcampsAdvancements: Progress
+  updateAllCoursesAdvancements: Progress
 }
 
 type Mutation {
   createProgress(createProgressInput: CreateProgressInput): Progress
+  updateAdvancement(updateAdvanceInput: UpdateAdvanceInput): Progress
+  updateAdvancementPath(updateAdvanceInput: UpdateAdvanceInput): Progress
+  updateAdvancementModule(updateAdvanceInput: UpdateAdvanceInput): Progress
 }
 
 type Mutation {
@@ -26,8 +31,15 @@ type Progress {
   score: Int
   desc: String
   createDate: Float
-  path: PathProgress
-  bootcamp: BootcampProgress
+  course: CourseProgress
+  path: String
+  bootcamp: String
+  progress: Int
+}
+type CourseProgress {
+  id: String
+  lastChapter: String
+  checkedChapters: [String]
 }
 type ProgressUpdate {
   id: String
@@ -37,8 +49,13 @@ type ProgressUpdate {
   score: Int
   desc: String
   createDate: Float
-  path: PathProgressUpdate
-  bootcamp: BootcampProgressUpdate
+}
+input UpdateAdvanceInput {
+  id: String
+  lastChapter: String
+  checkedChapters: [String]
+  path: String
+  bootcamp: String
 }
 input CreateProgressInput {
   candidate: String
@@ -46,11 +63,6 @@ input CreateProgressInput {
   type: String
   score: Int
   desc: String
-  idPath: String
-  actualCourse: String
-  advance: Int
-  idModule: String
-  actualPath: String
 }
 
 input UpdateProgressInput {
@@ -60,29 +72,4 @@ input UpdateProgressInput {
   type: String
   score: Int
   desc: String
-  idPath: String
-  actualCourse: String
-  advance: Int
-  idModule: String
-  actualPath: String
-}
-type PathProgress {
-  idPath: String
-  actualCourse: String
-  advance: Int
-}
-type BootcampProgress {
-  idModule: String
-  actualPath: String
-  advance: Int
-}
-type PathProgressUpdate {
-  idPath: Level
-  actualCourse: String
-  advance: Int
-}
-type BootcampProgressUpdate {
-  idModule: Module
-  actualPath: String
-  advance: Int
 }

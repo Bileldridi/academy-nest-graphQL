@@ -103,50 +103,6 @@ export class UsersService {
         }
         return result;
     }
-    async findCheckpoints(_id): Promise<any> {
-        const user = await this.userModel.findOne({ _id }).exec()
-        return user.checkpoints;
-
-    }
-    async updateCheckpoint(_id, args): Promise<any> {
-        const user = await this.userModel.findOne({ _id }).exec();
-        const course = await this.courseModel.findById(args.idCourse).exec();
-        if((user.checkpoints && user.checkpoints === []) || !user.checkpoints) {
-            const object = {idCourse: args.idCourse, idChapters: [args.idChapter],lastChapter: args.idChapter};
-            object['progress'] = Math.round((100)/ course.chapters.length);
-            object['status'] = 'started';
-            const userResult = await this.userModel.findByIdAndUpdate({ _id }, {$push:{checkpoints: object}}).catch(err => err);
-        } else {
-            const index = user.checkpoints.map(obj => {return obj.idCourse}).indexOf(args.idCourse);
-            if(index !== -1) {
-                const existChapter = user.checkpoints[index].idChapters.includes(args.idChapter);
-                if(!existChapter) {
-
-                    user.checkpoints[index].idChapters.push(args.idChapter);
-                    user.checkpoints[index].lastChapter = args.idChapter;
-                    user.checkpoints[index].progress = Math.round((user.checkpoints[index].idChapters.length*100)/ course.chapters.length);
-                    if(user.checkpoints[index].progress === 100) {
-                        user.checkpoints[index].status = 'finished';
-                    }
-                }else {
-                    user.checkpoints[index].lastChapter = args.idChapter;
-                }
-                const res1 = await this.userModel.findByIdAndUpdate({ _id }, {$set:{checkpoints: user.checkpoints}}).catch(err => err);
-            } else {
-
-                const object = {idCourse: args.idCourse, idChapters: [args.idChapter],lastChapter: args.idChapter, progress: Math.round(100/ course.chapters.length)}
-                const res2 = await this.userModel.findByIdAndUpdate({ _id }, {$push:{checkpoints: object}}).catch(err => err);
-            }
-        }
-        return []
-    }
-    async refreshCheckpoint(_id, args): Promise<any> {
-        const user = await this.userModel.findOne({ _id }).exec();
-        const index = user.checkpoints.map(obj => {return obj.idCourse}).indexOf(args.idCourse);
-        user.checkpoints[index] = args;
-        const res1 = await this.userModel.findByIdAndUpdate({ _id }, {$set:{checkpoints: user.checkpoints}}).catch(err => err);
-        return []
-    }
     async validate({ _id }): Promise<any> {
         const user = await this.userModel.findOne({ _id });
         if (!user) {

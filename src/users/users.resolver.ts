@@ -30,23 +30,6 @@ export class UsersResolver {
     async getCurrentUser(@User() user) {
         return user;
     }
-
-    @UseGuards(GraphqlAuthGuard)
-    @Query('getCheckpoints')
-    async getCheckpoints(@User() user) {
-        return await this.usersService.findCheckpoints(user.id);
-    }
-    @UseGuards(GraphqlAuthGuard)
-    @Mutation('updateCheckpoint')
-    async updateCheckpoint(@Args('updateCheckpointInput') args: any,@User() user) {
-        return await this.usersService.updateCheckpoint(user.id, args);
-    }
-    @UseGuards(GraphqlAuthGuard)
-    @Mutation('refreshCheckpoint')
-    async refreshCheckpoint(@Args('refreshCheckpointInput') args: any,@User() user) {
-        return await this.usersService.refreshCheckpoint(user.id, args);
-    }
-    
     @Query('User')
     async findOneById(@Args('id') id: string): Promise<any> {
         return await this.usersService.findOneById(id);

@@ -151,25 +151,50 @@ export class CoursesService {
     }
     // ACCESS CRUDs
     async createAccess(access: any, user): Promise<any> {
-        if(access.level) {
-            const  res = await this.updateProgressLevel({idPath: access.level}, user);
-            // const existLevel = await this.progressModel.findOne({'path.idPath': access.level, candidate: user.id}).exec();
-            // if(!existLevel) {
-            //     const level = await this.levelModel.findById(access.level).exec();
-            //     const object = {candidate: user.id, type: 'level', path: {idPath: access.level, actualCourse: level.courses[0] } }
-            //     await this.progressModel.create(object).catch(err => err);
-            // }
-        } else if (access.module) {
-            const res = await this.updateProgressModule({idModule: access.module}, user);
-            // const existModule = await this.progressModel.findOne({'bootcamp.idModule': access.module, candidate: user.id}).exec();
-            // if(!existModule) {
-            //     const module = await this.moduleModel.findById(access.module).exec();
-            //     const object = {candidate: user.id, type: 'module', bootcamp: {idModule: access.module, actualPath: module.levels[0] } }
-            //     await this.progressModel.create(object).catch(err => err);
-            // }
+        if(access.course) {
+            const course = await this.courseModel.findById(access.course).exec();
+            const exists = await this.progressModel.findOne({candidate: user.id, 'course.id': access.course}).exec();
+            if(!exists) {
+            const objectProgress = {candidate: user.id,type: 'course', course: {id: access.course, lastChapter: course.chapters[0], checkedChapters: []}};
+            await this.progressModel.create(objectProgress).catch(err => err);
+            }
+        } else if(access.level) {
+            const exists = await this.progressModel.findOne({candidate: user.id, path: access.level}).exec();
+            if(!exists) {
+                const objectProgress = {candidate: user.id,type: 'level', path: access.level};
+                await this.progressModel.create(objectProgress).catch(err => err);
+                this.checkCourseInPath(access.level, user);
+            }
+        } else {
+            const exists = await this.progressModel.findOne({candidate: user.id, bootcamp: access.module}).exec();
+            if(!exists) {
+            const objectProgress = {candidate: user.id,type: 'module', bootcamp: access.module};
+            await this.progressModel.create(objectProgress).catch(err => err);
+            this.checkPathInBootcamp(access.module, user);
+            }
         }
         return await this.accessModel.create(access).catch(err => err);
-
+    }
+    async checkCourseInPath(level, user) {
+        const path = await this.levelModel.findById(level).populate('courses').exec();
+        path.courses.map(async course => {
+            const alreadyExist = await this.progressModel.findOne({candidate: user.id,'course.id': course._id}).exec();
+            if(!alreadyExist) {
+            const objectProgress = {candidate: user.id,type: 'course', course: {id: course._id, lastChapter: course.chapters[0], checkedChapters: []}};
+            await this.progressModel.create(objectProgress).catch(err => err);
+            }
+        });
+    }
+    async checkPathInBootcamp(module, user) {
+        const bootcamp = await this.moduleModel.findById(module).populate('levels').exec();
+        bootcamp.levels.map(async level => {
+            const alreadyExist = await this.progressModel.findOne({candidate: user.id, path: level._id}).exec();
+            if(!alreadyExist) {
+                const objectProgress = {candidate: user.id,type: 'level', path: level._id};
+                await this.progressModel.create(objectProgress).catch(err => err);
+                this.checkCourseInPath(level._id, user);
+            }
+        });
     }
     async findAccessByCourseId(id: string): Promise<any[]> {
         const result = await this.accessModel.find({ course: id }).populate('candidate').populate('course').populate('level')
@@ -211,98 +236,7 @@ export class CoursesService {
         await this.accessModel.findByIdAndDelete(_id).exec();
         return result.id ? { message: 'OK' } : { message: 'NOT OK' };
     }
-    // CRUD Progress
-    async updateProgress(progress, user) {
-            progress.candidate = user.id;
-            const progressResult = await this.progressModel.findOne({ chapter: progress.chapter }).exec();
-            if (progressResult) {
-                progress.score += progressResult.score;
-                return await this.progressModel.updateOne({ chapter: progress.chapter }, { $set: progress }).catch(err => err);
-            }
-            else {
-                return await this.progressModel.create(progress).catch(err => err);
-            }  
-    }
-    async updateProgressLevel(progress, user) {
-        if(progress.idPath) {            
-            let totalAdvance = 0;
-            const connectedUser = await this.userModel.findById(user.id).exec()
-            const progressResult = await this.progressModel.findOne({'path.idPath': progress.idPath, candidate: user.id }).exec();
-            const actualPath = await this.levelModel.findById(progress.idPath).populate('courses').exec();
-            actualPath.courses = actualPath.courses.map(obj=> {return obj._id});
-                connectedUser.checkpoints.map(course => {
-                    if(actualPath.courses.includes(course.idCourse)) {
-                        if(course.progress) {
-                        totalAdvance= totalAdvance + course.progress;
-                        }
-                    }
-                });
-            if (progressResult) {
-                await this.progressModel.updateOne({'path.idPath': progress.idPath, candidate: user.id }, {$set: {'path.advance': Math.round(totalAdvance/actualPath.courses.length)}}).catch(err => err);
-            } else {
-                const object = {candidate: user.id, type: 'level', path: {idPath: progress.idPath, actualCourse: actualPath.courses[0]._id, advance: Math.round(totalAdvance/actualPath.courses.length) } }
-                const res = await this.progressModel.create(object).catch(err => err);                
-            }
-        }
-        const dup = await this.checkDuplicates(user);
-        return null;
-    }
-    async updateProgressModule(progress, user) {
-        if(progress && progress.idModule && progress.idModule !== 'undefined') {
-            const progressResult = await this.progressModel.findOne({'bootcamp.idModule': progress.idModule, candidate: user.id }).exec();
-            let totalAdvance = 0;
-            const actualModule = await this.moduleModel.findById(progress.idModule).populate('levels').exec();
-            actualModule.levels = actualModule.levels.map(obj=> {return obj._id});
-            actualModule.levels.map(obj => {
-                this.updateProgressLevel({idPath: obj}, user);
-            })
-            const touchedLevels = await this.progressModel.find({candidate: user.id, type: 'level'}).exec();
-            touchedLevels.map(level => {
-                if(actualModule.levels.includes(level.path.idPath)) {
-                    totalAdvance = totalAdvance + level.path.advance;
-                }
-            });
-            if (progressResult) {
-                await this.progressModel.updateOne({'bootcamp.idModule': progress.idModule, candidate: user.id }, {$set: {'bootcamp.advance': Math.round(totalAdvance/actualModule.levels.length)}}).catch(err => err);
-            } else {
-                const object = {candidate: user.id, type: 'module', bootcamp: {idModule: progress.idModule, actualPath: actualModule.levels[0]._id, advance: Math.round(totalAdvance/actualModule.levels.length) } }
-                const res = await this.progressModel.create(object).catch(err => err);
-            }
-        } 
-        return null;
-    }
-    async refreshProgress(idCourse, user) {
-        const listProgress = await this.progressModel.find({$or: [{candidate: user.id, type: 'level'}, {candidate: user.id, type: 'module'}]}).populate('candidate').populate('path.idPath').populate('bootcamp.idModule').exec();
-         listProgress.map(async progress => {
-            if(progress.type === 'level') {
-                if (progress.path.idPath.courses.includes(idCourse)) {
-                    const res =  await this.updateProgressLevel({idPath: progress.path.idPath._id}, user);
-                    listProgress.filter(obj => obj.type === 'module').map(async bootcamp => {
-                        if(bootcamp.bootcamp.idModule.levels.includes(progress.path.idPath._id) )
-                        {
-                            const res2 =  await this.updateProgressModule({idModule: bootcamp.bootcamp.idModule._id }, user);
-                        }
-                    });
-                }
-            }
-        });        
-        return null;
-    }
-   async checkDuplicates(user) {
-        let previousName= '';
-        const liste = await this.progressModel.find({candidate: user.id, type: 'level'}).sort('path.idPath').exec();
-        liste.map( async progress => {
-            const name = progress.path.idPath;
-            console.log(previousName ,  name);
-            if (''+name === ''+previousName) {
-                await this.progressModel.findByIdAndDelete({_id: progress._id}).catch(err => err);
-            }
-        previousName = name;
-        })
-    }
-    async getAllProgress(user) {
-        return await this.progressModel.find({candidate: user.id}).populate('candidate').exec();
-    } 
+    
     // LEVEL MODULEs
     async createModule(module: any): Promise<any> {
         return await this.moduleModel.create(module).catch(err => err);
@@ -326,5 +260,88 @@ export class CoursesService {
         await this.moduleModel.findByIdAndDelete(_id).exec();
         return result.id ? { message: 'OK' } : { message: 'NOT OK' }
     }
-
+// CRUD Progress
+async getAllAdvancements(user) {
+    return await this.progressModel.find({candidate: user.id}).populate('candidate').exec();
+} 
+async updateProgress(progress, user) {
+    progress.candidate = user.id;
+    const progressResult = await this.progressModel.findOne({ chapter: progress.chapter }).exec();
+    if (progressResult) {
+        progress.score += progressResult.score;
+        return await this.progressModel.updateOne({ chapter: progress.chapter }, { $set: progress }).catch(err => err);
+    }
+    else {
+        return await this.progressModel.create(progress).catch(err => err);
+    }
+}
+async getCurrentProgress(idCourse, user) {
+    return await this.progressModel.findOne({'course.id': idCourse, candidate: user.id}).populate('candidate').exec();
+}
+async updateAdvancement(advance, user) {
+    const globalCourse = await this.courseModel.findById(advance.id).exec();
+    const progressCourse = await this.progressModel.findOne({ 'course.id': advance.id, candidate: user.id }).exec();
+    if(!progressCourse.course.checkedChapters.includes(advance.lastChapter)) {
+        progressCourse.course.checkedChapters.push(advance.lastChapter);
+        advance.checkedChapters = progressCourse.course.checkedChapters;
+    } else {
+        advance.checkedChapters = progressCourse.course.checkedChapters;
+    }
+    const updatedProgress = await this.progressModel.findOneAndUpdate({ 'course.id': advance.id, candidate: user.id }, { $set: { course: advance}}, {new: true, upsert: false}).catch(err => err);
+    const averageProgress = Math.round((updatedProgress.course.checkedChapters.length * 100) / globalCourse.chapters.length);
+    const res = await this.progressModel.findByIdAndUpdate(progressCourse._id, { $set: { progress: averageProgress} }, {new: true}).populate('candidate').catch(err => err);
+    return res;
+}
+async updateAdvancementPath(idPath, user) {
+    let progress = 0;
+    const progressPath = await this.progressModel.findOne({path: idPath}).populate('path').exec();
+    const coursesPath = await this.progressModel.find({type: 'course'}).exec();
+    if(progressPath) {
+        coursesPath.map(course => {
+            if(progressPath.path.courses.includes(course.course.id)) {
+                progress += course.progress;
+            } 
+        });
+        
+        const averageProgress = Math.round(progress / progressPath.path.courses.length);
+        const updatedProgress = await this.progressModel.findOneAndUpdate({ 'path': idPath, candidate: user.id }, { $set: { progress: averageProgress}}, {new: true, upsert: false}).populate('candidate').catch(err => err);
+        return updatedProgress;
+    }
+    return null;
+}
+async updateAdvancementModule(idBootcamp, user) {
+    let progress = 0;
+    const progressBootcamp = await this.progressModel.findOne({bootcamp: idBootcamp}).populate('bootcamp').exec();
+    const PathsBootcamp = await this.progressModel.find({type: 'level'}).exec();
+    PathsBootcamp.map(path => {
+        if(progressBootcamp.bootcamp.levels.includes(path.path)) {
+            progress += path.progress;
+        } 
+    });
+    
+    const averageProgress = Math.round(progress / progressBootcamp.bootcamp.levels.length);
+    const updatedProgress = await this.progressModel.findOneAndUpdate({ bootcamp: idBootcamp, candidate: user.id }, { $set: { progress: averageProgress}}, {new: true, upsert: false}).populate('candidate').catch(err => err);
+    return updatedProgress;
+}
+async updateAllCoursesAdvancements(user) {
+    const allProgress = await this.progressModel.find({candidate: user.id, type: 'course'}).exec();
+    allProgress.map(async progress => {
+            const res = await this.updateAdvancement(progress.course, user);
+    });
+    return null;
+}
+async updateAllPathsAdvancements(user) {
+    const allProgress = await this.progressModel.find({candidate: user.id, type: 'level'}).exec();
+    allProgress.map(async progress => {
+            const res = await this.updateAdvancementPath(progress.path, user);
+    });
+    return null;
+}
+async updateAllBootcampsAdvancements(user) {
+    const allProgress = await this.progressModel.find({candidate: user.id, type: 'module'}).exec();
+    allProgress.map(async progress => {
+            const res = await this.updateAdvancementModule(progress.bootcamp, user);
+    });
+    return null;
+}
 }

@@ -34,7 +34,7 @@ async function bootstrap() {
   //   timeWindow: '1 minute',
   // })
   // app.use(helmet());
-  app.use(cookieParser());
+  // app.use(cookieParser());
 
   // app.use(csurf({ cookie: false }));
 

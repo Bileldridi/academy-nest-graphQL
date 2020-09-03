@@ -6,6 +6,8 @@ type Query {
   updateAllPathsAdvancements: Progress
   updateAllBootcampsAdvancements: Progress
   updateAllCoursesAdvancements: Progress
+  getPathProgress(pathId:String!):Progress
+
 }
 
 type Mutation {

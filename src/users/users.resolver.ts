@@ -19,7 +19,7 @@ export class UsersResolver {
     @Roles('admin')
     @Query('getUsers')
     async getUsers(@User() user) {
-        
+
 
         return await this.usersService.findAll();
     }
@@ -39,7 +39,7 @@ export class UsersResolver {
     @Roles('admin')
     @Query('deleteUser')
     async deleteUser(@Args('id') id: string): Promise<any> {
-        return await this.usersService.findOneById(id);
+        return await this.usersService.deleteUser(id);
     }
     @Query('check')
     async recoverAccountCheck(@Args('email') email: string, @Args('password') password: string, @Args('recoveryPass') recoveryPass: string): Promise<any> {
@@ -65,5 +65,10 @@ export class UsersResolver {
     @Mutation('updateUser')
     async updateUser(@Args('userInput') args: any): Promise<any> {
         return await this.usersService.updateUser(args, args.id);
+    }
+
+    @Mutation('register')
+    async register(@Args('createUserInput') args: any): Promise<any> {
+        return await this.usersService.register(args);
     }
 }

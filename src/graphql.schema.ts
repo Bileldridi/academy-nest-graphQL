@@ -386,6 +386,14 @@ export class Cat {
     age?: number;
 }
 
+export class Certificate {
+    id?: string;
+    candidate?: User;
+    code?: string;
+    imgURL?: string;
+    pathId?: Level;
+}
+
 export class Chapter {
     id?: string;
     title?: string;
@@ -518,6 +526,12 @@ export abstract class IMutation {
     abstract updateCandidate(updateCandidateInput?: UpdateCandidateInput): MyCandidate | Promise<MyCandidate>;
 
     abstract createCat(createCatInput?: CreateCatInput): Cat | Promise<Cat>;
+
+    abstract addCertificate(pathId: string): Certificate | Promise<Certificate>;
+
+    abstract updateCertificate(urlImg?: string, id?: string): Certificate | Promise<Certificate>;
+
+    abstract updateCertificateAdmin(urlImg?: string, idPath?: string, idUser?: string): Certificate | Promise<Certificate>;
 
     abstract sendMessage(sendMessageInput?: SendMessageInput): Message | Promise<Message>;
 
@@ -727,6 +741,10 @@ export abstract class IQuery {
 
     abstract cat(_id: string): Cat | Promise<Cat>;
 
+    abstract getCertificate(code: string): Certificate | Promise<Certificate>;
+
+    abstract getCertificateAdmin(idUser: string, idPath: string): Certificate | Promise<Certificate>;
+
     abstract getChats(): Chat[] | Promise<Chat[]>;
 
     abstract Chat(id: string): Chat | Promise<Chat>;
@@ -808,6 +826,8 @@ export abstract class IQuery {
     abstract Progress(id: string): Progress | Promise<Progress>;
 
     abstract removeProgress(id: string): Message | Promise<Message>;
+
+    abstract getPathProgress(pathId: string): Progress | Promise<Progress>;
 
     abstract getOrders(): Order[] | Promise<Order[]>;
 

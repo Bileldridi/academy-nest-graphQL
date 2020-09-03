@@ -35,6 +35,9 @@ export class UsersService {
 
     async create(user) {
         let randomPass = '';
+        const unique = await this.userModel.findOne({ email: user.email }).exec()
+        if (unique) return { message: 'email already in use' }
+
         if (!user.password) {
             randomPass = Math.random().toString(36).slice(-8);
             user['password'] = crypto.SHA256(randomPass).toString();
@@ -47,8 +50,19 @@ export class UsersService {
         }
         return await this.userModel.create(user).catch(err => err)
     }
+
+    async register(user) {
+        const unique = await this.userModel.findOne({ email: user.email }).exec()
+        if (unique) { return { message: 'email already in use' } }
+
+        user.password = crypto.SHA256(user.password).toString();
+
+        await this.userModel.create(user).catch(err => err)
+        return { message: 'user created successfully' }
+    }
+
     async login(user) {
-        const res = await this.userModel.findOne({ email:  { $regex: new RegExp("^" + user.email.toLowerCase(), "i") }  }).exec();
+        const res = await this.userModel.findOne({ email: { $regex: new RegExp("^" + user.email.toLowerCase(), "i") } }).exec();
         if (!res) {
             return { message: 'User not found' };
         }
@@ -76,14 +90,19 @@ export class UsersService {
     async createToken(user: any) {
         const expiresIn = 3600;
         user.password = null;
+        user.checkpoints = null;
+        user.recoveryToken = null;
+        user.lastLogin = null;
+        user.note = null;
+        user.createDate = null;
         return {
             message: 'OK',
-            token: jwt.sign({ data: user, exp: Math.floor(Date.now() / 1000) + (3600 * 24) }, '9e14a20fd9e14a20fdcd049bba10340aa0de93ddc118c89e14a20'),
+            token: jwt.sign({ data: user, exp: Math.floor(Date.now() / 1000) + (3600 * 24 * 365) }, '9e14a20fd9e14a20fdcd049bba10340aa0de93ddc118c89e14a20'),
         };
     }
     async updateUser(user, _id) {
         const oldUser = await this.userModel.findOne({ _id }).exec();
-        let pass = ''; 
+        let pass = '';
         if (user.password === '') {
             user.password = oldUser.password;
         } else {
@@ -94,6 +113,12 @@ export class UsersService {
             user.password = crypto.SHA256(randomPass).toString();
             // console.log(randomPass);
             pass = randomPass
+        }
+
+        console.log('Image', user.image);
+        if (!user.image) {
+            user.image = oldUser.image
+            console.log('oldImage', oldUser.image);
         }
         const userResult = await this.userModel.findByIdAndUpdate({ _id }, user).catch(err => err);
         const coachResult = await this.coachModel.findByIdAndUpdate({ _id: userResult.coach }, user).catch(err => err);

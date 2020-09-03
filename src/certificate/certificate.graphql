@@ -1,0 +1,36 @@
+type Query {
+  getCertificate(code:String!): Certificate
+  getCertificateAdmin(idUser:String!, idPath: String!): Certificate
+}
+
+type Mutation {
+
+  addCertificate(pathId: String!): Certificate
+  updateCertificate(urlImg:String, id:String): Certificate
+  updateCertificateAdmin(urlImg:String, idPath:String, idUser:String): Certificate
+
+}
+
+
+type Certificate {
+  id:String
+  candidate: User
+  code: String
+  imgURL: String
+  pathId: Level
+}
+
+input UserInput {
+  id: String
+  image: String
+  firstname: String
+  lastname: String
+  email: String
+  password: String
+  role: String
+  tel: String
+  note: String
+  coach: String
+  sendEmail: Boolean
+  generate: Boolean
+}

@@ -140,58 +140,9 @@ export class CoursesService {
     }
     return result;
   }
-  async findOneChapterById(id: string): Promise<any> {
-    return await this.chapterModel.findById(id).populate("course").exec();
-  }
-  async findAllChapters(): Promise<any[]> {
-    return await this.chapterModel.find().populate("course").exec();
-  }
-  async updateChapter(chapter, _id) {
-    if (chapter.course) {
-      // const oldCourse = await this.courseModel.updateOne({ chapters: _id }, { $pull: { chapters: _id } }).exec();
-      // const update = await this.courseModel.updateOne({ _id: chapter.course }, { $push: { chapters: chapter.id } }).exec();
-    }
-    return await this.chapterModel
-      .findByIdAndUpdate({ _id }, chapter)
-      .populate("course")
-      .exec();
-  }
-  async submitQuiz(quiz, userId) {
-    const chapter = await this.chapterModel.findOne({ _id: quiz.id });
-    const correctAnswers = chapter.quiz.map((q) => q.correctAnswer);
-    const score =
-      (correctAnswers.filter((a, i) => quiz.answers[i] === a).length * 100) /
-      correctAnswers.length;
-    const existProgress = await this.progressModel.findOne({
-      candidate: userId,
-      chapter: quiz.id,
-      type: "quiz",
-    });
-    if (existProgress) {
-      const progress = await this.progressModel
-        .findByIdAndUpdate(existProgress._id, { $set: { score } })
-        .catch((err) => err);
-    } else {
-      const progress = await this.progressModel
-        .create({ candidate: userId, chapter: quiz.id, type: "quiz", score })
-        .catch((err) => err);
-    }
-    return { message: score.toString() };
-  }
-  async checkQuiz(idQuiz, userId) {
-    const chapter = await this.progressModel.findOne({
-      candidate: userId,
-      chapter: idQuiz,
-      type: "quiz",
-    });
-    return { message: chapter ? chapter.score : "null" };
-  }
   async deleteChapter(_id) {
     const result = await this.chapterModel.findOne({ _id }).exec();
-    this.cemeteryModel
-      .create({ object: result, type: "Chapter" })
-      .catch((err) => err);
-
+    await this.cemeteryModel.create({ object: result, type: "Chapter" }).catch((err) => err);
     // pull the chapter from course array and then delete it
     await this.courseModel.findByIdAndUpdate(result.course, {
       $pull: { chapters: result._id },
@@ -199,194 +150,12 @@ export class CoursesService {
     await this.chapterModel.findByIdAndDelete(_id).exec();
     return result.id ? { message: "OK" } : { message: "NOT OK" };
   }
-  // COMMENTS CRUDs
-  async createComment(comment: any): Promise<any> {
-    return await this.commentModel.create(comment).catch((err) => err);
-  }
-  async findOneCommentById(id: string): Promise<any> {
-    return await this.commentModel.findById(id).exec();
-  }
-  async findAllComments(): Promise<any[]> {
-    return await this.commentModel.find().exec();
-  }
-  async updateComment(comment, _id) {
-    return await this.userModel
-      .findByIdAndUpdate({ _id }, comment)
-      .catch((err) => err);
-  }
-  async deleteOneComment(id: string): Promise<any> {
-    await this.commentModel.findByIdAndDelete(id).exec();
-    return { id };
-  }
-  // ACCESS CRUDs
-  async createAccess(access: any, user): Promise<any> {
-    if (access.level) {
-      const res = await this.updateProgressLevel(
-        { idPath: access.level },
-        user
-      );
-      // const existLevel = await this.progressModel.findOne({'path.idPath': access.level, candidate: user.id}).exec();
-      // if(!existLevel) {
-      //     const level = await this.levelModel.findById(access.level).exec();
-      //     const object = {candidate: user.id, type: 'level', path: {idPath: access.level, actualCourse: level.courses[0] } }
-      //     await this.progressModel.create(object).catch(err => err);
-      // }
-    } else if (access.module) {
-      const res = await this.updateProgressModule(
-        { idModule: access.module },
-        user
-      );
-      // const existModule = await this.progressModel.findOne({'bootcamp.idModule': access.module, candidate: user.id}).exec();
-      // if(!existModule) {
-      //     const module = await this.moduleModel.findById(access.module).exec();
-      //     const object = {candidate: user.id, type: 'module', bootcamp: {idModule: access.module, actualPath: module.levels[0] } }
-      //     await this.progressModel.create(object).catch(err => err);
-      // }
-    }
-    return await this.accessModel.create(access).catch((err) => err);
-  }
-  async findAccessByCourseId(id: string): Promise<any[]> {
-    const result = await this.accessModel
-      .find({ course: id })
-      .populate("candidate")
-      .populate("course")
-      .populate("level")
-      .then((data) => {
-        return data.map((e) => ({
-          ...e._doc,
-          id: e._doc._id,
-          timeLeft: Math.round(
-            (e.duration * 86400000 + e.createDate - Date.now()) / 86400000
-          ),
-        }));
-      });
-    return result;
-  }
-  async findAccessByLevelId(id: string): Promise<any[]> {
-    const result = await this.accessModel
-      .find({ level: id })
-      .populate("candidate")
-      .populate("course")
-      .populate("level")
-      .then((data) => {
-        return data.map((e) => ({
-          ...e._doc,
-          id: e._doc._id,
-          timeLeft: Math.round(
-            (e.duration * 86400000 + e.createDate - Date.now()) / 86400000
-          ),
-        }));
-      });
-    return result;
-  }
-  async findAccessByModuleId(id: string): Promise<any[]> {
-    const result = await this.accessModel
-      .find({ module: id })
-      .populate("candidate")
-      .populate("course")
-      .populate("module")
-      .then((data) => {
-        return data.map((e) => ({
-          ...e._doc,
-          id: e._doc._id,
-          timeLeft: Math.round(
-            (e.duration * 86400000 + e.createDate - Date.now()) / 86400000
-          ),
-        }));
-      });
-    return result;
-  }
-  async findAccessByCandidateId(id: string): Promise<any[]> {
-    const result = await this.accessModel
-      .find({ candidate: id })
-      .populate("candidate")
-      .populate({ path: "course", populate: { path: "chapters" } })
-      .populate({
-        path: "level",
-        populate: { path: "courses", populate: { path: "chapters" } },
-      })
-      .populate({
-        path: "module",
-        populate: {
-          path: "levels",
-          populate: { path: "courses", populate: { path: "chapters" } },
-        },
-      })
-      .then((data) => {
-        return data.map((e) => ({
-          ...e._doc,
-          id: e._doc._id,
-          timeLeft: Math.round(
-            (e.duration * 86400000 + e.createDate - Date.now()) / 86400000
-          ),
-        }));
-      });
-    return result;
-  }
-  async findAllAccesss(): Promise<any[]> {
-    return await this.accessModel
-      .find()
-      .populate("candidate")
-      .populate("course")
-      .populate("level")
-      .populate("module")
-      .exec();
-  }
-  async updateAccess(access, _id) {
-    return await this.accessModel
-      .findByIdAndUpdate({ _id }, access)
-      .catch((err) => err);
-  }
-  async deleteAccess(_id) {
-    const result = await this.accessModel.findOne({ _id }).exec();
-    this.cemeteryModel
-      .create({ object: result, type: "Access" })
-      .catch((err) => err);
-    await this.accessModel.findByIdAndDelete(_id).exec();
-    return result.id ? { message: "OK" } : { message: "NOT OK" };
-  }
   // CRUD Progress
   async getPathProgress(user, pathId) {
     return await this.progressModel
-      .findOne({ candidate: user.id, "path.idPath": pathId })
+      .findOne({ candidate: user.id, path: pathId })
       .exec();
   }
-  async updateProgress(progress, user) {
-    progress.candidate = user.id;
-    const progressResult = await this.progressModel
-      .findOne({ chapter: progress.chapter })
-      .exec();
-    if (progressResult) {
-      progress.score += progressResult.score;
-      return await this.progressModel
-        .updateOne({ chapter: progress.chapter }, { $set: progress })
-        .catch((err) => err);
-    } else {
-      return await this.progressModel.create(progress).catch((err) => err);
-    }
-  }
-  async updateProgressLevel(progress, user) {
-    if (progress.idPath) {
-      let totalAdvance = 0;
-      const connectedUser = await this.userModel.findById(user.id).exec();
-      const progressResult = await this.progressModel
-        .findOne({ "path.idPath": progress.idPath, candidate: user.id })
-        .exec();
-      const actualPath = await this.levelModel
-        .findById(progress.idPath)
-        .populate("courses")
-        .exec();
-      actualPath.courses = actualPath.courses.map((obj) => {
-        return obj._id;
-      });
-      connectedUser.checkpoints.map((course) => {
-        if (actualPath.courses.includes(course.idCourse)) {
-          if (course.progress) {
-            totalAdvance = totalAdvance + course.progress;
-          }
-        }
-        return result;
-    }
     async findOneChapterById(id: string): Promise<any> {
         return await this.chapterModel.findById(id).populate('course').exec();
     }
@@ -415,12 +184,6 @@ export class CoursesService {
     async checkQuiz(idQuiz, userId) {
         const chapter = await this.progressModel.findOne({ candidate: userId, chapter: idQuiz, type:'quiz' });
         return { message: chapter ? chapter.score : 'null' };
-    }
-    async deleteChapter(_id) {
-        const result = await this.chapterModel.findOne({ _id }).exec();
-        this.cemeteryModel.create({ object: result, type: 'Chapter' }).catch(err => err);
-        await this.chapterModel.findByIdAndDelete(_id).exec();
-        return result.id ? { message: 'OK' } : { message: 'NOT OK' }
     }
     // COMMENTS CRUDs
     async createComment(comment: any): Promise<any> {

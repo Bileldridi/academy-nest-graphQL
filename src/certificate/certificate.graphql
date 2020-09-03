@@ -8,7 +8,8 @@ type Mutation {
   addCertificate(pathId: String!): Certificate
   updateCertificate(urlImg:String, id:String): Certificate
   updateCertificateAdmin(urlImg:String, idPath:String, idUser:String): Certificate
-  sendMailContact(email:String, name:String, textarea: String): email
+  sendMailContact(email:String): email
+  receiveMailContact(email:String, name:String, msg: String): email
 
 }
 

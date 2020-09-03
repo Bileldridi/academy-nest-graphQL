@@ -101,10 +101,6 @@ deploy-prod:
     name: lachlanevenson/k8s-kubectl:latest
     entrypoint: ["/bin/sh","-c"]
   stage: deploy
-  before_script:
-    - 'which ssh-agent || (apt-get update && apt-get install openssh-client -y)'
-    - eval $(ssh-agent -s)
-    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
   script:
     - kubectl version
     - cd k8s/

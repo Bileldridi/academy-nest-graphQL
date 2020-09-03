@@ -33,8 +33,6 @@ build-app:
         - dist
         - node_modules
 
-
-build-image:
 build-image:
   image: docker:18.09.7-dind
   stage: build-image
@@ -103,7 +101,6 @@ deploy-prod:
     name: lachlanevenson/k8s-kubectl:latest
     entrypoint: ["/bin/sh","-c"]
   stage: deploy
-  image: ubuntu:latest
   before_script:
     - 'which ssh-agent || (apt-get update && apt-get install openssh-client -y)'
     - eval $(ssh-agent -s)

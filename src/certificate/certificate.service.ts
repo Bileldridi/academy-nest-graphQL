@@ -46,7 +46,7 @@ export class CertificateService {
         sendCertificate(certificate)
         return certificate;
     }
-    
+
     sendMailContact = async (email) => {
         sendContactMail(email)
         return {email};
@@ -81,7 +81,6 @@ export class CertificateService {
         for (let i = 0; i < length; i++) {
             text += possible.charAt(Math.floor(Math.random() * possible.length));
         }
-    
         return text;
     }
 

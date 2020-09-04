@@ -42,7 +42,7 @@ const dbhost = process.env.dbhost || 'localhost';
     CoursesModule,
     PurchaseModule,
     CertificateModule,
-    // ChatModule,
+    ChatModule,
   ],
   providers: [AppResolver],
 

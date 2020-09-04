@@ -43,6 +43,7 @@ export class CertificateResolver {
     async sendMailContact(@Args('email') email: string) {
        return await this.certificateService.sendMailContact(email);
     }
+    
     @Mutation('receiveMailContact')
     async receiveMailContact(@Args('email') email: string, @Args('name') name: string, @Args('msg') msg: string) {
        return await this.certificateService.receiveMailContact(email, name, msg);

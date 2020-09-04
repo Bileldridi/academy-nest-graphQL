@@ -46,10 +46,12 @@ export class CertificateService {
         sendCertificate(certificate)
         return certificate;
     }
+    
     sendMailContact = async (email) => {
         sendContactMail(email)
         return {email};
     }
+
     receiveMailContact = async (email, name, msg) => {
         receiveContactMail(email, name, msg)
         return {email};

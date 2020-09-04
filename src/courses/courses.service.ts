@@ -407,17 +407,17 @@ async updateAllBootcampsAdvancements(user) {
 
 async migrateData() {
   await this.progressModel.deleteMany().catch(err => err);
-  const allUsers = await this.userModel.find().exec();
-  allUsers.map(async user => {
-    const allAccess = await this.accessModel.find({candidate: user._id}).exec();
-    allAccess.map(async access => {
-    if(user['checkpoints'] && access.course) {
-      const index = user['checkpoints'].findIndex(obj => ''+obj.idCourse === ''+access.course);
-       (index !== -1) ? access['existCourse'] = {id: access.course, lastChapter: user['checkpoints'][index].lastChapter, checkedChapters: user['checkpoints'][index].idChapters,progress: user['checkpoints'][index].progress}: null;
-    }
-      await this.createAccess(access, user);
-    })
-  });
+  // const allUsers = await this.userModel.find().exec();
+  // allUsers.map(async user => {
+  //   const allAccess = await this.accessModel.find({candidate: user._id}).exec();
+  //   allAccess.map(async access => {
+  //   if(user['checkpoints'] && access.course) {
+  //     const index = user['checkpoints'].findIndex(obj => ''+obj.idCourse === ''+access.course);
+  //      (index !== -1) ? access['existCourse'] = {id: access.course, lastChapter: user['checkpoints'][index].lastChapter, checkedChapters: user['checkpoints'][index].idChapters,progress: user['checkpoints'][index].progress}: null;
+  //   }
+  //     await this.createAccess(access, user);
+  //   })
+  // });
   return null;
 }
 }

@@ -302,5 +302,9 @@ export class CoursesResolver {
     async updateAllBootcampsAdvancements(@User() user): Promise<any> {
         return await this.coursesService.updateAllBootcampsAdvancements(user);
     }
+    @Query('migrateData')
+    async migrateData(): Promise<any> {
+        return await this.coursesService.migrateData();
+    }
     
 }

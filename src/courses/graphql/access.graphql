@@ -6,6 +6,7 @@ type Query {
   getCandidateAccess(id: String!): [Access]
   getCurrentCandidateAccess: [Access]
   removeAccess(id: String!): Message
+  migrateData: Access
 }
 
 type Mutation {

@@ -47,14 +47,14 @@ export class CertificateService {
         return certificate;
     }
 
-    sendMailContact = async (email) => {
+     async sendMailContact (email: string): Promise<any>  {
         sendContactMail(email)
-        return {email};
+        return 'send, success!';
     }
 
-    receiveMailContact = async (email, name, msg) => {
+    async receiveMailContact (email, name, msg): Promise<any>  {
         receiveContactMail(email, name, msg)
-        return {email};
+        return 'send, success!';
     }
     getCertificate = async (code) => {
         const certificate = await this.certificateModel.findOne({ code: code }).populate('candidate').populate('pathId').exec();

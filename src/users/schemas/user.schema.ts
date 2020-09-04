@@ -14,7 +14,6 @@ export const schema: Schema = new Schema({
     country: { type: String },
     postcode: { type: String },
     note: { type: String },
-    checkpoints: [{ idCourse: { type: Types.ObjectId, ref: 'Course' }, idChapters: [{ type: Types.ObjectId, ref: 'Chapter' }], lastChapter: { type: Types.ObjectId, ref: 'Chapter' }, status: { type: String, default: 'started', enum: ['started', 'finished'] }, progress: { type: Number } }],
     role: { type: String, default: 'candidate', enum: ['admin', 'coach', 'candidate'] },
     coach: { type: Types.ObjectId, ref: 'Coach' },
     candidate: { type: Types.ObjectId, ref: 'Candidate' },

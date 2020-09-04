@@ -217,38 +217,8 @@ export class CoursesResolver {
     async updateAccess(@Args('updateAccessInput') args: any): Promise<any> {
         return await this.coursesService.updateAccess(args, args.id);
     }
-    // PROGRESS
-    @UseGuards(GraphqlAuthGuard)
-    @Mutation('updateProgress')
-    async updateProgress(@Args('updateProgressInput') args: any, @User() user): Promise<any> {
-        if (args.idPath) {
-            const res = await this.coursesService.updateProgressLevel(args, user);
-        }
-        if (args.idModule) { 
-            const res2 = await this.coursesService.updateProgressModule(args, user); 
-        }
-        if (args.chapter) {
-            return await this.coursesService.updateProgress(args, user);
-        }
-        return null;
-    }
-    @UseGuards(GraphqlAuthGuard)
-    @Query('getAllProgress')
-    async getAllProgress(@User() user) {
-        // console.log(user)
-        return await this.coursesService.getAllProgress(user);
-    }
-    @UseGuards(GraphqlAuthGuard)
-    @Query('getPathProgress')
-    async getPathProgress(@Args('pathId') pathId: string, @User() user) {
-        return await this.coursesService.getPathProgress(user, pathId)
-    }
+    
 
-    @UseGuards(GraphqlAuthGuard)
-    @Query('refreshProgress')
-    async refreshProgress(@Args('id') id: string, @User() user) {
-        return await this.coursesService.refreshProgress(id, user);
-    }
     // MODULE CRUDs
     @SetMetadata('roles', ['admin'])
     @UseGuards(GraphqlAuthGuard, RolesGuard)
@@ -286,4 +256,51 @@ export class CoursesResolver {
     async updateModule(@Args('updateModuleInput') args: any): Promise<any> {
         return await this.coursesService.updateModule(args, args.id);
     }
+    // PROGRESS
+    @UseGuards(GraphqlAuthGuard)
+    @Mutation('updateProgress')
+    async updateProgress(@Args('updateProgressInput') args: any, @User() user): Promise<any> {
+        return await this.coursesService.updateProgress(args, user);
+    }
+    @UseGuards(GraphqlAuthGuard)
+    @Query('getAllProgress')
+    async getAllProgress(@User() user) {
+        return await this.coursesService.getAllAdvancements(user);
+    }
+    @UseGuards(GraphqlAuthGuard)
+    @Mutation('updateAdvancement')
+    async updateAdvancement(@Args('updateAdvanceInput') args, @User() user): Promise<any> {
+        return await this.coursesService.updateAdvancement(args, user);
+    }
+    @UseGuards(GraphqlAuthGuard)
+    @Mutation('updateAdvancementPath')
+    async updateAdvancementPath(@Args('updateAdvanceInput') args, @User() user): Promise<any> {
+        return await this.coursesService.updateAdvancementPath(args.path, user);
+    }
+    @UseGuards(GraphqlAuthGuard)
+    @Mutation('updateAdvancementModule')
+    async updateAdvancementModule(@Args('updateAdvanceInput') args, @User() user): Promise<any> {
+        return await this.coursesService.updateAdvancementModule(args.bootcamp, user);
+    }
+    @UseGuards(GraphqlAuthGuard)
+    @Query('getCurrentProgress')
+    async getCurrentProgress(@Args('id') id, @User() user): Promise<any> {
+        return await this.coursesService.getCurrentProgress(id, user);
+    }
+    @UseGuards(GraphqlAuthGuard)
+    @Query('updateAllCoursesAdvancements')
+    async updateAllCoursesAdvancements(@User() user): Promise<any> {
+        return await this.coursesService.updateAllCoursesAdvancements(user);
+    }
+    @UseGuards(GraphqlAuthGuard)
+    @Query('updateAllPathsAdvancements')
+    async updateAllPathsAdvancements(@User() user): Promise<any> {
+        return await this.coursesService.updateAllPathsAdvancements(user);
+    }
+    @UseGuards(GraphqlAuthGuard)
+    @Query('updateAllBootcampsAdvancements')
+    async updateAllBootcampsAdvancements(@User() user): Promise<any> {
+        return await this.coursesService.updateAllBootcampsAdvancements(user);
+    }
+    
 }

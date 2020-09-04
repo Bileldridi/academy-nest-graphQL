@@ -397,4 +397,16 @@ async updateAllBootcampsAdvancements(user) {
     });
     return null;
 }
+
+async migrateData() {
+  await this.progressModel.deleteMany().catch(err => err);
+  const allUsers = await this.userModel.find().exec();
+  allUsers.map(async user => {
+    const allAccess = await this.accessModel.find({candidate: user._id}).exec();
+    allAccess.map(async access => {
+      await this.createAccess(access, user);
+    })
+  });
+  return null;
+}
 }

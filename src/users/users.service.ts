@@ -56,7 +56,7 @@ export class UsersService {
     async register(user) {
         const unique = await this.userModel.findOne({ email: user.email }).exec()
         if (unique) { return { message: 'email already in use' } }
-        const code = Math.random().toString(36).slice(-16);
+        const code = Math.random().toString(36).slice(-14);
 
         const settings = await this.settingsModel.create({ code })
 
@@ -67,7 +67,7 @@ export class UsersService {
         const newUser = await this.userModel.create(user).catch(err => err)
         await this.settingsModel.findByIdAndUpdate(settings._id, { user: newUser._id })
 
-        const link = `http://localhost:4200/auth/login?token=${code}`
+        const link = `https://app.academy.fivepoints.fr/auth/login?token=${code}`
         await sendOneTimeAccess(user.email, pass, link)
 
         return { message: 'user created successfully' }

@@ -88,4 +88,9 @@ export class UsersResolver {
     async register(@Args('createUserInput') args: any): Promise<any> {
         return await this.usersService.register(args);
     }
+
+    @Mutation('firstLogin')
+    async firstLogin(@Args('verifCode') args: string): Promise<any> {
+        return await this.usersService.firstLogin(args)
+    }
 }

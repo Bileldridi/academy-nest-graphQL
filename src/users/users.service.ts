@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import * as jwt from 'jsonwebtoken';
 import * as crypto from 'crypto-js';
 import { sendEmailRecover, sendEmailAccess } from '../common/mailer/mailer';
+import { sendOneTimeAccess } from '../common/mailer/singleLinkMailer'
 
 @Injectable()
 export class UsersService {
@@ -13,6 +14,7 @@ export class UsersService {
         @InjectModel('Coach') private readonly coachModel: Model<any>,
         @InjectModel('Candidate') private readonly candidateModel: Model<any>,
         @InjectModel('Cemetery') private readonly cemeteryModel: Model<any>,
+        @InjectModel('Settings') private readonly settingsModel: Model<any>,
     ) { }
 
     findAll() {
@@ -54,11 +56,35 @@ export class UsersService {
     async register(user) {
         const unique = await this.userModel.findOne({ email: user.email }).exec()
         if (unique) { return { message: 'email already in use' } }
+        const code = Math.random().toString(36).slice(-16);
+
+        const settings = await this.settingsModel.create({ code })
+
+        const pass = user.password
 
         user.password = crypto.SHA256(user.password).toString();
+        user.status = 'blocked'
+        const newUser = await this.userModel.create(user).catch(err => err)
+        await this.settingsModel.findByIdAndUpdate(settings._id, { user: newUser._id })
 
-        await this.userModel.create(user).catch(err => err)
+        const link = `http://localhost:4200/auth/login?token=${code}`
+        await sendOneTimeAccess(user.email, pass, link)
+
         return { message: 'user created successfully' }
+    }
+
+    async firstLogin(obj) {
+        const verifCode = await this.settingsModel.findOne({ code: obj.code })
+        if (!verifCode) return { message: 'thank you for using the login form to access the platform' }
+        const res = await this.userModel.findById(verifCode.user).exec();
+        if (!res) {
+            return { message: 'User not found' };
+        }
+        await this.userModel.updateOne({ email: res.email }, { $set: { lastLogin: Date.now() }, status: 'active' }).exec()
+        await this.settingsModel.deleteOne({ _id: verifCode._id })
+        const result = this.createToken(res);
+
+        return result;
     }
 
     async login(user) {
@@ -72,9 +98,9 @@ export class UsersService {
         if (!isPasswordCorrect) {
             return { message: 'Wrong Password' };
         }
-        // if (res.status === 'Not Approved') {
-        //     return { message: 'Not Approved' };
-        // }
+        if (res.status === 'blocked') {
+            return { message: 'Your account needs to be activated' };
+        }
 
         await this.userModel.updateOne({ email: user.email }, { $set: { lastLogin: Date.now() } }).exec()
 

@@ -67,7 +67,8 @@ export class UsersService {
         const newUser = await this.userModel.create(user).catch(err => err)
         await this.settingsModel.findByIdAndUpdate(settings._id, { user: newUser._id })
 
-        const link = `https://app.academy.fivepoints.fr/auth/login?token=${code}`
+        const link = `https://app.academy.fivepoints.fr/auth/login/${code}`
+        // const link = `http://localhost:4200/auth/login/${code}`
         await sendOneTimeAccess(user.email, pass, link)
 
         return { message: 'user created successfully' }
@@ -75,7 +76,8 @@ export class UsersService {
 
     async firstLogin(obj) {
         const verifCode = await this.settingsModel.findOne({ code: obj.code })
-        if (!verifCode) return { message: 'thank you for using the login form to access the platform' }
+        if (!verifCode) return
+        // { message: 'thank you for using the login form to access the platform' }
         const res = await this.userModel.findById(verifCode.user).exec();
         if (!res) {
             return { message: 'User not found' };

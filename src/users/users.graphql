@@ -13,6 +13,7 @@ type Mutation {
   createUser(createUserInput: CreateUserInput): User
   updateUser(userInput: UserInput): User
   login(loginInput: LoginInput): UserLogin
+  firstLogin(verifCode: VerifCode): UserLogin
 }
 
 type Subscription {
@@ -73,6 +74,11 @@ input LoginInput {
   email: String
   password: String
 }
+
+input VerifCode {
+  code: String
+}
+
 input UserInput {
   id: String
   image: String

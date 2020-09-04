@@ -117,15 +117,18 @@ export class UsersService {
     }
     async createToken(user: any) {
         const expiresIn = 3600;
-        user.password = null;
-        user['checkpoints'] = null;
-        user.recoveryToken = null;
-        user.lastLogin = null;
-        user.note = null;
-        user.createDate = null;
+        // user.password = null;
+        // user['checkpoints'] = null;
+        // user.recoveryToken = null;
+        // user.lastLogin = null;
+        // user.note = null;
+        // user.createDate = null;
+        const object = {firstname: user.firstname, lastname: user.lastname, email: user.email,
+                        image: user.image, tel: user.tel, status: user.status, role: user.role,
+                        coach: user.coach, candidate: user.candidate}
         return {
             message: 'OK',
-            token: jwt.sign({ data: user, exp: Math.floor(Date.now() / 1000) + (3600 * 24 * 365) }, '9e14a20fd9e14a20fdcd049bba10340aa0de93ddc118c89e14a20'),
+            token: jwt.sign({ data: object, exp: Math.floor(Date.now() / 1000) + (3600 * 24 * 365) }, '9e14a20fd9e14a20fdcd049bba10340aa0de93ddc118c89e14a20'),
         };
     }
     async updateUser(user, _id) {

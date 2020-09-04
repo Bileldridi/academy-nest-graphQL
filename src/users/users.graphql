@@ -42,8 +42,15 @@ type User {
   coach: Coach
   role: String
   status: String
+  checkpoints: [Checkpoint]
 }
-
+type Checkpoint {
+  idChapters: [String]
+  status: String
+  idCourse: String
+  lastChapter: String
+  progress: Int
+}
 type UserRegister{
   message: String
 }

@@ -116,7 +116,7 @@ export class UsersService {
     async createToken(user: any) {
         const expiresIn = 3600;
         user.password = null;
-        user.checkpoints = null;
+        user['checkpoints'] = null;
         user.recoveryToken = null;
         user.lastLogin = null;
         user.note = null;

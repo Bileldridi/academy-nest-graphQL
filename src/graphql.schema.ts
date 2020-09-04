@@ -130,11 +130,6 @@ export class CreateProgressInput {
     type?: string;
     score?: number;
     desc?: string;
-    idPath?: string;
-    actualCourse?: string;
-    advance?: number;
-    idModule?: string;
-    actualPath?: string;
 }
 
 export class CreateSessionInput {
@@ -156,6 +151,9 @@ export class CreateUserInput {
     note?: string;
     role?: string;
     tel?: string;
+    address?: string;
+    country?: string;
+    postcode?: string;
     sendEmail?: boolean;
 }
 
@@ -179,14 +177,6 @@ export class QuizInput {
     options?: OptionInput[];
 }
 
-export class RefreshCheckpointInput {
-    idCourse?: string;
-    idChapters?: string[];
-    lastChapter?: string;
-    status?: string;
-    progress?: number;
-}
-
 export class SendMessageInput {
     content?: string;
     type?: string;
@@ -202,6 +192,14 @@ export class UpdateAccessInput {
     module?: string;
     desc?: string;
     duration?: number;
+}
+
+export class UpdateAdvanceInput {
+    id?: string;
+    lastChapter?: string;
+    checkedChapters?: string[];
+    path?: string;
+    bootcamp?: string;
 }
 
 export class UpdateCandidateInput {
@@ -226,11 +224,6 @@ export class UpdateChapterInput {
     files?: string[];
     comments?: string[];
     quiz?: QuizInput[];
-}
-
-export class UpdateCheckpointInput {
-    idCourse?: string;
-    idChapter?: string;
 }
 
 export class UpdateCoachInput {
@@ -318,11 +311,6 @@ export class UpdateProgressInput {
     type?: string;
     score?: number;
     desc?: string;
-    idPath?: string;
-    actualCourse?: string;
-    advance?: number;
-    idModule?: string;
-    actualPath?: string;
 }
 
 export class UpdateSessionInput {
@@ -349,6 +337,10 @@ export class UserInput {
     generate?: boolean;
 }
 
+export class VerifCode {
+    code?: string;
+}
+
 export class Access {
     id?: string;
     candidate?: User;
@@ -361,18 +353,6 @@ export class Access {
     createDate?: number;
     duration?: number;
     timeLeft?: number;
-}
-
-export class BootcampProgress {
-    idModule?: string;
-    actualPath?: string;
-    advance?: number;
-}
-
-export class BootcampProgressUpdate {
-    idModule?: Module;
-    actualPath?: string;
-    advance?: number;
 }
 
 export class Candidate {
@@ -429,14 +409,6 @@ export class ChatMessage {
     createDate?: number;
 }
 
-export class Checkpoint {
-    idCourse?: string;
-    idChapters?: string[];
-    lastChapter?: string;
-    status?: string;
-    progress?: number;
-}
-
 export class Coach {
     tel?: string;
     image?: string;
@@ -483,6 +455,12 @@ export class Course {
     duration?: number;
     price?: number;
     files?: string[];
+}
+
+export class CourseProgress {
+    id?: string;
+    lastChapter?: string;
+    checkedChapters?: string[];
 }
 
 export class Level {
@@ -569,6 +547,12 @@ export abstract class IMutation {
 
     abstract createProgress(createProgressInput?: CreateProgressInput): Progress | Promise<Progress>;
 
+    abstract updateAdvancement(updateAdvanceInput?: UpdateAdvanceInput): Progress | Promise<Progress>;
+
+    abstract updateAdvancementPath(updateAdvanceInput?: UpdateAdvanceInput): Progress | Promise<Progress>;
+
+    abstract updateAdvancementModule(updateAdvanceInput?: UpdateAdvanceInput): Progress | Promise<Progress>;
+
     abstract updateProgress(updateProgressInput?: UpdateProgressInput): Progress | Promise<Progress>;
 
     abstract createOrder(createOrderInput?: CreateOrderInput): Message | Promise<Message>;
@@ -579,15 +563,15 @@ export abstract class IMutation {
 
     abstract updateSession(updateSessionInput?: UpdateSessionInput): Session | Promise<Session>;
 
-    abstract updateCheckpoint(updateCheckpointInput?: UpdateCheckpointInput): Checkpoint[] | Promise<Checkpoint[]>;
-
-    abstract refreshCheckpoint(refreshCheckpointInput?: RefreshCheckpointInput): Checkpoint[] | Promise<Checkpoint[]>;
+    abstract register(createUserInput?: CreateUserInput): UserRegister | Promise<UserRegister>;
 
     abstract createUser(createUserInput?: CreateUserInput): User | Promise<User>;
 
     abstract updateUser(userInput?: UserInput): User | Promise<User>;
 
     abstract login(loginInput?: LoginInput): UserLogin | Promise<UserLogin>;
+
+    abstract firstLogin(verifCode?: VerifCode): UserLogin | Promise<UserLogin>;
 }
 
 export class MyCandidate {
@@ -636,18 +620,6 @@ export class Order {
     payment?: Payment;
 }
 
-export class PathProgress {
-    idPath?: string;
-    actualCourse?: string;
-    advance?: number;
-}
-
-export class PathProgressUpdate {
-    idPath?: Level;
-    actualCourse?: string;
-    advance?: number;
-}
-
 export class Payment {
     createDate?: number;
     mode?: string;
@@ -664,8 +636,10 @@ export class Progress {
     score?: number;
     desc?: string;
     createDate?: number;
-    path?: PathProgress;
-    bootcamp?: BootcampProgress;
+    course?: CourseProgress;
+    path?: string;
+    bootcamp?: string;
+    progress?: number;
 }
 
 export class ProgressUpdate {
@@ -676,8 +650,6 @@ export class ProgressUpdate {
     score?: number;
     desc?: string;
     createDate?: number;
-    path?: PathProgressUpdate;
-    bootcamp?: BootcampProgressUpdate;
 }
 
 export class PublicChapter {
@@ -819,13 +791,17 @@ export abstract class IQuery {
 
     abstract getAllProgress(): Progress[] | Promise<Progress[]>;
 
-    abstract getProgresss(): Progress[] | Promise<Progress[]>;
-
-    abstract refreshProgress(id: string): ProgressUpdate[] | Promise<ProgressUpdate[]>;
-
     abstract Progress(id: string): Progress | Promise<Progress>;
 
     abstract removeProgress(id: string): Message | Promise<Message>;
+
+    abstract getCurrentProgress(id: string): Progress | Promise<Progress>;
+
+    abstract updateAllPathsAdvancements(): Progress | Promise<Progress>;
+
+    abstract updateAllBootcampsAdvancements(): Progress | Promise<Progress>;
+
+    abstract updateAllCoursesAdvancements(): Progress | Promise<Progress>;
 
     abstract getPathProgress(pathId: string): Progress | Promise<Progress>;
 
@@ -852,8 +828,6 @@ export abstract class IQuery {
     abstract getUsers(): User[] | Promise<User[]>;
 
     abstract getCurrentUser(): User | Promise<User>;
-
-    abstract getCheckpoints(): Checkpoint[] | Promise<Checkpoint[]>;
 
     abstract User(id: string): User | Promise<User>;
 
@@ -922,6 +896,9 @@ export class User {
     email?: string;
     image?: string;
     tel?: string;
+    address?: string;
+    country?: string;
+    postcode?: string;
     note?: string;
     candidate?: Candidate;
     coach?: Coach;
@@ -932,4 +909,8 @@ export class User {
 export class UserLogin {
     message?: string;
     token?: string;
+}
+
+export class UserRegister {
+    message?: string;
 }

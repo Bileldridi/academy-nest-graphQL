@@ -56,7 +56,13 @@ export class UsersService {
     async register(user) {
         const unique = await this.userModel.findOne({ email: user.email }).exec()
         if (unique) { return { message: 'email already in use' } }
-        const code = Math.random().toString(36).slice(-14);
+        // const code = Math.random().toString(36).slice(-14);
+        let code = "";
+        const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+        for (let i = 0; i <= 16; i++) {
+            code += possible.charAt(Math.floor(Math.random() * possible.length));
+        }
 
         const settings = await this.settingsModel.create({ code })
 
@@ -68,7 +74,7 @@ export class UsersService {
         await this.settingsModel.findByIdAndUpdate(settings._id, { user: newUser._id })
 
         const link = `https://app.academy.fivepoints.fr/auth/login/${code}`
-        // const link = `http://localhost:4200/auth/login/${code}`
+        // const link = `http://localhost:4400/auth/login/${code}`
         await sendOneTimeAccess(user.email, pass, link)
 
         return { message: 'user created successfully' }
@@ -123,9 +129,11 @@ export class UsersService {
         // user.lastLogin = null;
         // user.note = null;
         // user.createDate = null;
-        const object = {firstname: user.firstname, lastname: user.lastname, email: user.email,
-                        image: user.image, tel: user.tel, status: user.status, role: user.role,
-                        coach: user.coach, candidate: user.candidate}
+        const object = {
+            firstname: user.firstname, lastname: user.lastname, email: user.email,
+            image: user.image, tel: user.tel, status: user.status, role: user.role,
+            coach: user.coach, candidate: user.candidate
+        }
         return {
             message: 'OK',
             token: jwt.sign({ data: object, exp: Math.floor(Date.now() / 1000) + (3600 * 24 * 365) }, '9e14a20fd9e14a20fdcd049bba10340aa0de93ddc118c89e14a20'),

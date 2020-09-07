@@ -205,11 +205,16 @@ export class CoursesService {
     // ACCESS CRUDs
     async createAccess(access: any, user): Promise<any> {
         if(access.course) {
-            const course = await this.courseModel.findById(access.course).exec();
+          const course = await this.courseModel.findById(access.course).exec();
             const exists = await this.progressModel.findOne({candidate: user.id, 'course.id': access.course}).exec();
             if(!exists) {
-            const objectProgress = {candidate: user.id,type: 'course', course: {id: access.course, lastChapter: course.chapters[0], checkedChapters: []}};
-            await this.progressModel.create(objectProgress).catch(err => err);
+              if(access.existCourse) {
+                const objectProgress = {candidate: user.id,type: 'course', course: access.existCourse,progress: access.existCourse.progress};
+                await this.progressModel.create(objectProgress).catch(err => err);
+              } else {
+                const objectProgress = {candidate: user.id,type: 'course', course: {id: access.course, lastChapter: course.chapters[0], checkedChapters: []}};
+                await this.progressModel.create(objectProgress).catch(err => err);
+              }
             }
         } else if(access.level) {
             const exists = await this.progressModel.findOne({candidate: user.id, path: access.level}).exec();
@@ -379,7 +384,9 @@ async updateAdvancementModule(idBootcamp, user) {
 async updateAllCoursesAdvancements(user) {
     const allProgress = await this.progressModel.find({candidate: user.id, type: 'course'}).exec();
     allProgress.map(async progress => {
-            const res = await this.updateAdvancement(progress.course, user);
+      if(!progress.chapter) {
+        const res = await this.updateAdvancement(progress.course, user);
+      }    
     });
     return null;
 }
@@ -396,5 +403,22 @@ async updateAllBootcampsAdvancements(user) {
             const res = await this.updateAdvancementModule(progress.bootcamp, user);
     });
     return null;
+}
+
+async migrateData() {
+  await this.progressModel.deleteMany().catch(err => err);
+  await this.accessModel.deleteMany().catch(err => err);
+  // const allUsers = await this.userModel.find().exec();
+  // allUsers.map(async user => {
+  //   const allAccess = await this.accessModel.find({candidate: user._id}).exec();
+  //   allAccess.map(async access => {
+  //   if(user['checkpoints'] && access.course) {
+  //     const index = user['checkpoints'].findIndex(obj => ''+obj.idCourse === ''+access.course);
+  //      (index !== -1) ? access['existCourse'] = {id: access.course, lastChapter: user['checkpoints'][index].lastChapter, checkedChapters: user['checkpoints'][index].idChapters,progress: user['checkpoints'][index].progress}: null;
+  //   }
+  //     await this.createAccess(access, user);
+  //   })
+  // });
+  return null;
 }
 }

@@ -34,9 +34,9 @@ type User {
   email: String
   image: String
   tel: String
-  address: String
+  city: String
   country: String
-  postcode: String
+  zip: String
   note: String
   candidate: Candidate
   coach: Coach
@@ -71,9 +71,9 @@ input CreateUserInput {
   note: String
   role: String
   tel: String
-  address: String
+  city: String
   country: String
-  postcode: String
+  zip: String
   sendEmail: Boolean
 }
 

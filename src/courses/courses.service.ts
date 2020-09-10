@@ -208,13 +208,8 @@ export class CoursesService {
           const course = await this.courseModel.findById(access.course).exec();
             const exists = await this.progressModel.findOne({candidate: user.id, 'course.id': access.course}).exec();
             if(!exists) {
-              if(access.existCourse) {
-                const objectProgress = {candidate: user.id,type: 'course', course: access.existCourse,progress: access.existCourse.progress};
-                await this.progressModel.create(objectProgress).catch(err => err);
-              } else {
                 const objectProgress = {candidate: user.id,type: 'course', course: {id: access.course, lastChapter: course.chapters[0], checkedChapters: []}};
                 await this.progressModel.create(objectProgress).catch(err => err);
-              }
             }
         } else if(access.level) {
             const exists = await this.progressModel.findOne({candidate: user.id, path: access.level}).exec();

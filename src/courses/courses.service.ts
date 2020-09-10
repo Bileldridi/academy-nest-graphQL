@@ -403,6 +403,7 @@ async updateAllBootcampsAdvancements(user) {
 async migrateData() {
   await this.progressModel.deleteMany().catch(err => err);
   await this.accessModel.deleteMany().catch(err => err);
+  // await this.userModel.
   // const allUsers = await this.userModel.find().exec();
   // allUsers.map(async user => {
   //   const allAccess = await this.accessModel.find({candidate: user._id}).exec();

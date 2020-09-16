@@ -6,7 +6,7 @@ export const schema: Schema = new Schema({
     video: String,
     type: { type: String, default: 'text', enum: ['text', 'video', 'slides', 'quiz', 'project'] },
     comments: [{ type: Types.ObjectId, ref: 'Comment' }],
-    course: { default: null, type: Types.ObjectId, ref: 'Course' },
+    course: { type: Types.ObjectId, ref: 'Course' },
     createDate: { type: Number, default: Date.now },
     quiz: [
         { question: String, correctAnswer: Number, options: [{ option: String }] }

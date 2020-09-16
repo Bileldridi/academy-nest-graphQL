@@ -1,9 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from 'mongoose'
 // import { sendCertif } from '../common/mailer/mailer'
 import { idText } from 'typescript';
-import { sendCertificate } from '../common/mailer/mailer';
+import { sendCertificate, sendContactMail, receiveContactMail } from '../common/mailer/mailer'
+
+
+
 
 @Injectable()
 export class CertificateService {
@@ -43,13 +46,24 @@ export class CertificateService {
         sendCertificate(certificate)
         return certificate;
     }
+
+     async sendMailContact (email: string): Promise<any>  {
+        sendContactMail(email)
+        return 'send, success!';
+    }
+
+    async receiveMailContact (email, name, msg): Promise<any>  {
+        receiveContactMail(email, name, msg)
+        return 'send, success!';
+    }
     getCertificate = async (code) => {
         const certificate = await this.certificateModel.findOne({ code: code }).populate('candidate').populate('pathId').exec();
             if (certificate) {
                 return certificate;
             } else {
-                return null;
-            }   
+                throw new NotFoundException('Could not find certificate');
+            }
+        
     }
     
     getCertificateAdmin = async (idUser, idPath) => {
@@ -67,7 +81,6 @@ export class CertificateService {
         for (let i = 0; i < length; i++) {
             text += possible.charAt(Math.floor(Math.random() * possible.length));
         }
-    
         return text;
     }
 

@@ -29,6 +29,7 @@ type Level {
   status: String
   duration: Int
   price: Int
+  assistancePrice: Int
 }
 
 type PublicLevel {
@@ -42,6 +43,7 @@ type PublicLevel {
   shortDesc: String
   pic: String
   price: Int
+  assistancePrice: Int
 }
 
 input CreateLevelInput {
@@ -55,6 +57,7 @@ input CreateLevelInput {
   status: String
   duration: Int
   price: Int  
+  assistancePrice: Int
 }
 input UpdateLevelInput {
   id: String
@@ -68,4 +71,5 @@ input UpdateLevelInput {
   status: String
   duration: Int
   price: Int
+  assistancePrice: Int
 }

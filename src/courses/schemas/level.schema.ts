@@ -12,6 +12,7 @@ export const schema: Schema = new Schema({
     status: { type: String, default: 'private', enum: ['draft', 'private', 'published', 'deleted', 'coming soon'] },
     duration: { type: Number, default: -1 },
     createDate: { type: Number, default: Date.now },
+    assistancePrice: { type: Number, default: 0 },
 });
 
 export const LevelSchema = schema;

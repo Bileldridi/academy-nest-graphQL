@@ -29,6 +29,7 @@ type Module {
   status: String
   duration: Int
   price: Int
+  assistancePrice: Int
 }
 
 type PublicModule {
@@ -42,6 +43,7 @@ type PublicModule {
   shortDesc: String
   pic: String
   price: Int
+  assistancePrice: Int
 }
 
 input CreateModuleInput {
@@ -54,7 +56,8 @@ input CreateModuleInput {
   promotion: Int
   status: String
   duration: Int
-  price: Int  
+  price: Int 
+  assistancePrice: Int
 }
 input UpdateModuleInput {
   id: String
@@ -68,4 +71,5 @@ input UpdateModuleInput {
   status: String
   duration: Int
   price: Int
+  assistancePrice: Int
 }

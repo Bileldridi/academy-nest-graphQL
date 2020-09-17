@@ -93,6 +93,7 @@ export class CreateLevelInput {
     status?: string;
     duration?: number;
     price?: number;
+    assistancePrice?: number;
 }
 
 export class CreateModuleInput {
@@ -106,6 +107,7 @@ export class CreateModuleInput {
     status?: string;
     duration?: number;
     price?: number;
+    assistancePrice?: number;
 }
 
 export class CreateOrderInput {
@@ -151,9 +153,9 @@ export class CreateUserInput {
     note?: string;
     role?: string;
     tel?: string;
-    address?: string;
+    city?: string;
     country?: string;
-    postcode?: string;
+    zip?: string;
     sendEmail?: boolean;
 }
 
@@ -275,6 +277,7 @@ export class UpdateLevelInput {
     status?: string;
     duration?: number;
     price?: number;
+    assistancePrice?: number;
 }
 
 export class UpdateModuleInput {
@@ -289,6 +292,7 @@ export class UpdateModuleInput {
     status?: string;
     duration?: number;
     price?: number;
+    assistancePrice?: number;
 }
 
 export class UpdateOrderInput {
@@ -409,6 +413,14 @@ export class ChatMessage {
     createDate?: number;
 }
 
+export class Checkpoint {
+    idChapters?: string[];
+    status?: string;
+    idCourse?: string;
+    lastChapter?: string;
+    progress?: number;
+}
+
 export class Coach {
     tel?: string;
     image?: string;
@@ -476,6 +488,7 @@ export class Level {
     status?: string;
     duration?: number;
     price?: number;
+    assistancePrice?: number;
 }
 
 export class Message {
@@ -496,6 +509,7 @@ export class Module {
     status?: string;
     duration?: number;
     price?: number;
+    assistancePrice?: number;
 }
 
 export abstract class IMutation {
@@ -510,6 +524,10 @@ export abstract class IMutation {
     abstract updateCertificate(urlImg?: string, id?: string): Certificate | Promise<Certificate>;
 
     abstract updateCertificateAdmin(urlImg?: string, idPath?: string, idUser?: string): Certificate | Promise<Certificate>;
+
+    abstract sendMailContact(email?: string): UserContact | Promise<UserContact>;
+
+    abstract receiveMailContact(email?: string, name?: string, msg?: string): UserContact | Promise<UserContact>;
 
     abstract sendMessage(sendMessageInput?: SendMessageInput): Message | Promise<Message>;
 
@@ -683,6 +701,7 @@ export class PublicLevel {
     shortDesc?: string;
     pic?: string;
     price?: number;
+    assistancePrice?: number;
 }
 
 export class PublicModule {
@@ -696,6 +715,7 @@ export class PublicModule {
     shortDesc?: string;
     pic?: string;
     price?: number;
+    assistancePrice?: number;
 }
 
 export abstract class IQuery {
@@ -748,6 +768,8 @@ export abstract class IQuery {
     abstract getCurrentCandidateAccess(): Access[] | Promise<Access[]>;
 
     abstract removeAccess(id: string): Message | Promise<Message>;
+
+    abstract migrateData(): Access | Promise<Access>;
 
     abstract getChapters(): Chapter[] | Promise<Chapter[]>;
 
@@ -896,14 +918,19 @@ export class User {
     email?: string;
     image?: string;
     tel?: string;
-    address?: string;
+    city?: string;
     country?: string;
-    postcode?: string;
+    zip?: string;
     note?: string;
     candidate?: Candidate;
     coach?: Coach;
     role?: string;
     status?: string;
+    checkpoints?: Checkpoint[];
+}
+
+export class UserContact {
+    email?: string;
 }
 
 export class UserLogin {

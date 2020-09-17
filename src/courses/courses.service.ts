@@ -206,24 +206,24 @@ export class CoursesService {
     async createAccess(access: any, user): Promise<any> {
         if(access.course) {
           const course = await this.courseModel.findById(access.course).exec();
-            const exists = await this.progressModel.findOne({candidate: user.id, 'course.id': access.course}).exec();
+            const exists = await this.progressModel.findOne({candidate: access.candidate, 'course.id': access.course}).exec();
             if(!exists) {
-                const objectProgress = {candidate: user.id,type: 'course', course: {id: access.course, lastChapter: course.chapters[0], checkedChapters: []}};
+                const objectProgress = {candidate: access.candidate,type: 'course', course: {id: access.course, lastChapter: course.chapters[0], checkedChapters: []}};
                 await this.progressModel.create(objectProgress).catch(err => err);
             }
         } else if(access.level) {
-            const exists = await this.progressModel.findOne({candidate: user.id, path: access.level}).exec();
+            const exists = await this.progressModel.findOne({candidate: access.candidate, path: access.level}).exec();
             if(!exists) {
-                const objectProgress = {candidate: user.id,type: 'level', path: access.level};
+                const objectProgress = {candidate: access.candidate,type: 'level', path: access.level};
                 await this.progressModel.create(objectProgress).catch(err => err);
-                this.checkCourseInPath(access.level, user);
+                this.checkCourseInPath(access.level, access.candidate);
             }
         } else {
-            const exists = await this.progressModel.findOne({candidate: user.id, bootcamp: access.module}).exec();
+            const exists = await this.progressModel.findOne({candidate: access.candidate, bootcamp: access.module}).exec();
             if(!exists) {
-            const objectProgress = {candidate: user.id,type: 'module', bootcamp: access.module};
+            const objectProgress = {candidate: access.candidate, type: 'module', bootcamp: access.module};
             await this.progressModel.create(objectProgress).catch(err => err);
-            this.checkPathInBootcamp(access.module, user);
+            this.checkPathInBootcamp(access.module, access.candidate);
             }
         }
         return await this.accessModel.create(access).catch(err => err);
@@ -231,9 +231,9 @@ export class CoursesService {
     async checkCourseInPath(level, user) {
         const path = await this.levelModel.findById(level).populate('courses').exec();
         path.courses.map(async course => {
-            const alreadyExist = await this.progressModel.findOne({candidate: user.id,'course.id': course._id}).exec();
+            const alreadyExist = await this.progressModel.findOne({candidate: user,'course.id': course._id}).exec();
             if(!alreadyExist) {
-            const objectProgress = {candidate: user.id,type: 'course', course: {id: course._id, lastChapter: course.chapters[0], checkedChapters: []}};
+            const objectProgress = {candidate: user,type: 'course', course: {id: course._id, lastChapter: course.chapters[0], checkedChapters: []}};
             await this.progressModel.create(objectProgress).catch(err => err);
             }
         });
@@ -241,9 +241,9 @@ export class CoursesService {
     async checkPathInBootcamp(module, user) {
         const bootcamp = await this.moduleModel.findById(module).populate('levels').exec();
         bootcamp.levels.map(async level => {
-            const alreadyExist = await this.progressModel.findOne({candidate: user.id, path: level._id}).exec();
+            const alreadyExist = await this.progressModel.findOne({candidate: user, path: level._id}).exec();
             if(!alreadyExist) {
-                const objectProgress = {candidate: user.id,type: 'level', path: level._id};
+                const objectProgress = {candidate: user,type: 'level', path: level._id};
                 await this.progressModel.create(objectProgress).catch(err => err);
                 this.checkCourseInPath(level._id, user);
             }

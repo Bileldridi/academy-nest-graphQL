@@ -1625,10 +1625,10 @@ export const sendEmailInvoice = async (email, orderId, orderDate, name, courseTi
 
 export const sendOrderCreation = async (order, orderId, product): Promise<any> => {
     let title = '';
-    if(order.course) {
+    if (order.course) {
         title = product.title;
     }
-    if(order.level) {
+    if (order.level) {
         title = product.title;
     }
     const htmlMsg = `
@@ -1742,7 +1742,7 @@ Pour rappel, vous avez sélectionné le mode de paiement par ${order.payment.mod
 }
 
 export const sendCertif = async (user, pathName, certifImg): Promise<any> => {
-    
+
     const htmlMsg = ` <div class="">
     <div class="wide-content-host">
         <div class="_1_uypmLpuvFfZLEG0VSc1I">
@@ -1975,8 +1975,8 @@ export const sendCertificate = async (certificate): Promise<any> => {
         </div>
     </div>
 </div>`;
-console.log(certificate.candidate.email);    
-const message = {
+    console.log(certificate.candidate.email);
+    const message = {
         from: 'FivePoints <contact@mailing.fivepoints.fr>',
         to: certificate.candidate.email,
         subject: 'FivePoints Academy - Congratulation',
@@ -2079,10 +2079,10 @@ export const sendContactMail = async (email): Promise<any> => {
         </div>
     </div>
 </div>`;
-   
-const message = {
+
+    const message = {
         from: `FivePoints <contact@mailing.fivepoints.fr>`,
-        to: email ,
+        to: email,
         subject: 'FivePoints Academy - Contact',
         html: htmlMsg,
     };
@@ -2178,10 +2178,10 @@ export const receiveContactMail = async (email, name, msg): Promise<any> => {
         </div>
     </div>
 </div>`;
-   
-const message = {
+
+    const message = {
         from: `FivePoints <contact@mailing.fivepoints.fr>`,
-        to:`FivePoints <support@fivepoints.fr>` ,
+        to: `FivePoints <support@fivepoints.fr>`,
         subject: 'FivePoints Academy - Contact',
         html: htmlMsg,
         replyTo: email

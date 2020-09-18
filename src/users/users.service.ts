@@ -5,6 +5,7 @@ import * as jwt from 'jsonwebtoken';
 import * as crypto from 'crypto-js';
 import { sendEmailRecover, sendEmailAccess } from '../common/mailer/mailer';
 import { sendOneTimeAccess } from '../common/mailer/singleLinkMailer'
+import { updateProfileMail } from '../common/mailer/updateProfileMailer'
 
 @Injectable()
 export class UsersService {
@@ -44,13 +45,29 @@ export class UsersService {
             randomPass = Math.random().toString(36).slice(-8);
             user['password'] = crypto.SHA256(randomPass).toString();
         } else {
+            randomPass = user.password;
             user.password = crypto.SHA256(user.password).toString();
-            randomPass = '[YOUR OWN PASSWORD]';
         }
+        const newUser = await this.userModel.create(user).catch(err => err)
+
         if (user.sendEmail) {
-            await sendEmailAccess(user.email, randomPass)
+            // await sendEmailAccess(user.email, randomPass)
+            let code = "";
+            const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            for (let i = 0; i < 16; i++) {
+                code += possible.charAt(Math.floor(Math.random() * possible.length));
+            }
+            const settings = await this.settingsModel.create({ code })
+            await this.userModel.findByIdAndUpdate(newUser._id, { status: 'blocked' })
+            // user.status = 'blocked'
+            await this.settingsModel.findByIdAndUpdate(settings._id, { user: newUser._id })
+
+            const link = `https://app.academy.fivepoints.fr/auth/login/${code}`
+            // const link = `http://localhost:4200/auth/login/${code}`
+            await sendOneTimeAccess(user.email, randomPass, link)
         }
-        return await this.userModel.create(user).catch(err => err)
+
+        return newUser;
     }
 
     async register(user) {
@@ -60,7 +77,7 @@ export class UsersService {
         let code = "";
         const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-        for (let i = 0; i <= 16; i++) {
+        for (let i = 0; i < 16; i++) {
             code += possible.charAt(Math.floor(Math.random() * possible.length));
         }
 
@@ -74,7 +91,7 @@ export class UsersService {
         await this.settingsModel.findByIdAndUpdate(settings._id, { user: newUser._id })
 
         const link = `https://app.academy.fivepoints.fr/auth/login/${code}`
-        // const link = `http://localhost:4400/auth/login/${code}`
+        // const link = `http://localhost:4200/auth/login/${code}`
         await sendOneTimeAccess(user.email, pass, link)
 
         return { message: 'user created successfully' }
@@ -118,8 +135,9 @@ export class UsersService {
     }
     async validateUser(payload: any): Promise<any> {
         // 
+        console.log(payload);
 
-        return await this.userModel.findOne({ email: payload.data.email }).exec();
+        return await this.userModel.findOne({ _id: payload.data.id }).exec();
     }
     async createToken(user: any) {
         const expiresIn = 3600;
@@ -130,6 +148,7 @@ export class UsersService {
         // user.note = null;
         // user.createDate = null;
         const object = {
+            id: user._id,
             firstname: user.firstname, lastname: user.lastname, email: user.email,
             image: user.image, tel: user.tel, status: user.status, role: user.role,
             coach: user.coach, candidate: user.candidate
@@ -139,34 +158,31 @@ export class UsersService {
             token: jwt.sign({ data: object, exp: Math.floor(Date.now() / 1000) + (3600 * 24 * 365) }, '9e14a20fd9e14a20fdcd049bba10340aa0de93ddc118c89e14a20'),
         };
     }
+
     async updateUser(user, _id) {
         const oldUser = await this.userModel.findOne({ _id }).exec();
         let pass = '';
         if (user.password === '') {
             user.password = oldUser.password;
         } else {
+            pass = user.password
             user.password = crypto.SHA256(user.password).toString();
         }
-        if (user.generate) {
-            const randomPass = Math.random().toString(36).slice(-8);
-            user.password = crypto.SHA256(randomPass).toString();
-            // console.log(randomPass);
-            pass = randomPass
-        }
 
-        console.log('Image', user.image);
         if (!user.image) {
             user.image = oldUser.image
-            console.log('oldImage', oldUser.image);
         }
         const userResult = await this.userModel.findByIdAndUpdate({ _id }, user).catch(err => err);
-        const coachResult = await this.coachModel.findByIdAndUpdate({ _id: userResult.coach }, user).catch(err => err);
-        const result = await this.userModel.findOne({ _id }).exec();
+        await this.coachModel.findByIdAndUpdate({ _id: userResult.coach }, user).catch(err => err);
+
+        const updatedUser = await this.userModel.findOne({ _id }).exec();
+        const newToken = this.createToken(updatedUser);
         if (user.sendEmail) {
-            await sendEmailAccess(user.email, pass)
+            await updateProfileMail(user.email, pass)
         }
-        return result;
+        return { updatedUser, newToken };
     }
+
     async validate({ _id }): Promise<any> {
         const user = await this.userModel.findOne({ _id });
         if (!user) {

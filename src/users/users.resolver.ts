@@ -34,6 +34,16 @@ export class UsersResolver {
     async findOneById(@Args('id') id: string): Promise<any> {
         return await this.usersService.findOneById(id);
     }
+
+    @Query('Ban')
+    async findBan(@Args('id') id: String): Promise<any> {
+        return await this.usersService.getBan(id)
+    }
+    @Query('getBans')
+    async findAllBans(): Promise<any> {
+        return await this.usersService.getAllBans();
+    }
+
     @SetMetadata('roles', ['admin'])
     @UseGuards(GraphqlAuthGuard, RolesGuard)
     @Roles('admin')
@@ -75,5 +85,9 @@ export class UsersResolver {
     @Mutation('firstLogin')
     async firstLogin(@Args('verifCode') args: string): Promise<any> {
         return await this.usersService.firstLogin(args)
+    }
+    @Mutation('userStatus')
+    async userStatus(@Args('banStatus') id: any): Promise<any> {
+        return await this.usersService.userStatus(id);
     }
 }

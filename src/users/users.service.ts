@@ -16,13 +16,14 @@ export class UsersService {
         @InjectModel('Candidate') private readonly candidateModel: Model<any>,
         @InjectModel('Cemetery') private readonly cemeteryModel: Model<any>,
         @InjectModel('Settings') private readonly settingsModel: Model<any>,
+        @InjectModel('Ban') private readonly banModel: Model<any>,
     ) { }
 
     findAll() {
-        return this.userModel.find().populate('candidate');
+        return this.userModel.find().populate('candidate').populate('banHistory');
     }
     async findOneById(id: string): Promise<any> {
-        const user = await this.userModel.findById(id).exec();
+        const user = await this.userModel.findById(id).populate('banHistory').exec();
 
         return user;
     }
@@ -135,7 +136,6 @@ export class UsersService {
     }
     async validateUser(payload: any): Promise<any> {
         // 
-        console.log(payload);
 
         return await this.userModel.findOne({ _id: payload.data.id }).exec();
     }
@@ -216,5 +216,29 @@ export class UsersService {
         password = crypto.SHA256(password).toString();
         await this.userModel.updateOne({ email }, { $set: { password, recoveryToken: null } }).exec();
         return { message: 'OK' };
+    }
+
+    async userStatus(obj) {
+        const user = await this.userModel.findOne({ _id: obj.id })
+
+        if (user.status === 'active') {
+            const ban = await this.banModel.create({ user: obj.id })
+            await this.userModel.findByIdAndUpdate(obj.id, { status: 'banned', $push: { banHistory: ban._id } }, { new: true })
+            return { message: `user Banned` }
+        } else if (user.status === 'banned') {
+            const ban = await this.banModel.find({ user: obj.id }).sort({ _id: -1 }).limit(1)
+            const date = new Date()
+            await this.banModel.findByIdAndUpdate(ban[0]._id, { unBanned: { status: true, unbanDate: new Date() } })
+            await this.userModel.findByIdAndUpdate(obj.id, { status: 'active' })
+            return { message: `user Unbanned` }
+        }
+    }
+
+    async getBan(_id) {
+        return await this.banModel.findById(_id);
+    }
+
+    async getAllBans() {
+        return await this.banModel.find();
     }
 }

@@ -2,6 +2,9 @@ type Query {
   getUsers: [User]
   getCurrentUser: User
 
+  getBans: [Ban]
+  Ban(id: String!): Ban
+
   User(id: String!): User
   deleteUser(id: ID!): Message
   recover(email: String!): Message
@@ -14,6 +17,7 @@ type Mutation {
   updateUser(userInput: UserInput): ModifiedUser
   login(loginInput: LoginInput): UserLogin
   firstLogin(verifCode: VerifCode): UserLogin
+  userStatus(banStatus: BanStatus): BanMessage
 }
 
 type Subscription {
@@ -22,6 +26,10 @@ type Subscription {
 type Message {
   message: String
   accessToken: String
+}
+
+type BanMessage{
+  message: String
 }
 
 type ModifiedUser{
@@ -48,7 +56,21 @@ type User {
   role: String
   status: String
   checkpoints: [Checkpoint]
+  banHistory: [Ban]
 }
+
+type Ban {
+  # id: String
+  banDate: Float
+  user: String
+  unBanned: Unbanned
+}
+
+type Unbanned{
+  status: Boolean
+  unbanDate: Float
+}
+
 type Checkpoint {
   idChapters: [String]
   status: String
@@ -89,6 +111,11 @@ input LoginInput {
 
 input VerifCode {
   code: String
+}
+
+input BanStatus{
+  # status: String
+  id: String
 }
 
 input UserInput {

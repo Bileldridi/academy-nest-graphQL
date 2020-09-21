@@ -2,7 +2,6 @@ import { Injectable, Logger } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { Cron, CronExpression } from "@nestjs/schedule";
-import { ProgressSchema } from "./schemas/progress.schema";
 
 @Injectable()
 export class CoursesService {
@@ -153,7 +152,7 @@ export class CoursesService {
   // CRUD Progress
   async getPathProgress(user, pathId) {
     return await this.progressModel
-      .findOne({ candidate: user.id, path: pathId })
+      .findOne({ candidate: user.id, path: pathId }).populate('path')
       .exec();
   }
     async findOneChapterById(id: string): Promise<any> {
@@ -315,7 +314,7 @@ export class CoursesService {
     }
 // CRUD Progress
 async getAllAdvancements(user) {
-    return await this.progressModel.find({candidate: user.id}).populate('candidate').exec();
+    return await this.progressModel.find({candidate: user.id}).populate('candidate').populate('path').populate('bootcamp').exec();
 } 
 async updateProgress(progress, user) {
     progress.candidate = user.id;
@@ -329,7 +328,7 @@ async updateProgress(progress, user) {
     }
 }
 async getCurrentProgress(idCourse, user) {
-    return await this.progressModel.findOne({'course.id': idCourse, candidate: user.id}).populate('candidate').exec();
+    return await this.progressModel.findOne({'course.id': idCourse, candidate: user.id}).populate('candidate').populate('path').populate('bootcamp').exec();
 }
 async updateAdvancement(advance, user) {
     const globalCourse = await this.courseModel.findById(advance.id).exec();
@@ -342,7 +341,7 @@ async updateAdvancement(advance, user) {
     }
     const updatedProgress = await this.progressModel.findOneAndUpdate({ 'course.id': advance.id, candidate: user.id }, { $set: { course: advance}}, {new: true, upsert: false}).catch(err => err);
     const averageProgress = Math.round((updatedProgress.course.checkedChapters.length * 100) / globalCourse.chapters.length);
-    const res = await this.progressModel.findByIdAndUpdate(progressCourse._id, { $set: { progress: averageProgress} }, {new: true}).populate('candidate').catch(err => err);
+    const res = await this.progressModel.findByIdAndUpdate(progressCourse._id, { $set: { progress: averageProgress} }, {new: true}).populate('candidate').populate('path').populate('bootcamp').catch(err => err);
     return res;
 }
 async updateAdvancementPath(idPath, user) {
@@ -357,7 +356,7 @@ async updateAdvancementPath(idPath, user) {
         });
         
         const averageProgress = Math.round(progress / progressPath.path.courses.length);
-        const updatedProgress = await this.progressModel.findOneAndUpdate({ 'path': idPath, candidate: user.id }, { $set: { progress: averageProgress}}, {new: true, upsert: false}).populate('candidate').catch(err => err);
+        const updatedProgress = await this.progressModel.findOneAndUpdate({ 'path': idPath, candidate: user.id }, { $set: { progress: averageProgress}}, {new: true, upsert: false}).populate('candidate').populate('path').populate('bootcamp').catch(err => err);
         return updatedProgress;
     }
     return null;
@@ -373,7 +372,7 @@ async updateAdvancementModule(idBootcamp, user) {
     });
     
     const averageProgress = Math.round(progress / progressBootcamp.bootcamp.levels.length);
-    const updatedProgress = await this.progressModel.findOneAndUpdate({ bootcamp: idBootcamp, candidate: user.id }, { $set: { progress: averageProgress}}, {new: true, upsert: false}).populate('candidate').catch(err => err);
+    const updatedProgress = await this.progressModel.findOneAndUpdate({ bootcamp: idBootcamp, candidate: user.id }, { $set: { progress: averageProgress}}, {new: true, upsert: false}).populate('candidate').populate('path').populate('bootcamp').catch(err => err);
     return updatedProgress;
 }
 async updateAllCoursesAdvancements(user) {

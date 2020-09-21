@@ -34,8 +34,8 @@ type Progress {
   desc: String
   createDate: Float
   course: CourseProgress
-  path: String
-  bootcamp: String
+  path: Level
+  bootcamp: Module
   progress: Int
 }
 type CourseProgress {

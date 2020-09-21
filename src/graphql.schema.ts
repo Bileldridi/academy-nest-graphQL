@@ -676,8 +676,8 @@ export class Progress {
     desc?: string;
     createDate?: number;
     course?: CourseProgress;
-    path?: string;
-    bootcamp?: string;
+    path?: Level;
+    bootcamp?: Module;
     progress?: number;
 }
 

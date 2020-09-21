@@ -11,7 +11,7 @@ type Query {
 type Mutation {
   register(createUserInput: CreateUserInput): UserRegister
   createUser(createUserInput: CreateUserInput): User
-  updateUser(userInput: UserInput): User
+  updateUser(userInput: UserInput): ModifiedUser
   login(loginInput: LoginInput): UserLogin
   firstLogin(verifCode: VerifCode): UserLogin
 }
@@ -22,6 +22,11 @@ type Subscription {
 type Message {
   message: String
   accessToken: String
+}
+
+type ModifiedUser{
+  updatedUser: User
+  newToken: UserLogin
 }
 
 type User {

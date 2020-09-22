@@ -6,6 +6,7 @@ import * as crypto from 'crypto-js';
 import { sendEmailRecover, sendEmailAccess } from '../common/mailer/mailer';
 import { sendOneTimeAccess } from '../common/mailer/singleLinkMailer'
 import { updateProfileMail } from '../common/mailer/updateProfileMailer'
+import { banProfileMailer } from '../common/mailer/banProfileMailer'
 
 @Injectable()
 export class UsersService {
@@ -16,13 +17,14 @@ export class UsersService {
         @InjectModel('Candidate') private readonly candidateModel: Model<any>,
         @InjectModel('Cemetery') private readonly cemeteryModel: Model<any>,
         @InjectModel('Settings') private readonly settingsModel: Model<any>,
+        @InjectModel('Ban') private readonly banModel: Model<any>,
     ) { }
 
     findAll() {
-        return this.userModel.find().populate('candidate');
+        return this.userModel.find().populate('candidate').populate('banHistory');
     }
     async findOneById(id: string): Promise<any> {
-        const user = await this.userModel.findById(id).exec();
+        const user = await this.userModel.findById(id).populate('banHistory').exec();
 
         return user;
     }
@@ -126,6 +128,9 @@ export class UsersService {
         if (res.status === 'blocked') {
             return { message: 'Your account needs to be activated' };
         }
+        if (res.status === 'banned') {
+            return { message: 'Your account is banned' };
+        }
 
         await this.userModel.updateOne({ email: user.email }, { $set: { lastLogin: Date.now() } }).exec()
 
@@ -135,7 +140,6 @@ export class UsersService {
     }
     async validateUser(payload: any): Promise<any> {
         // 
-        console.log(payload);
 
         return await this.userModel.findOne({ _id: payload.data.id }).exec();
     }
@@ -217,4 +221,28 @@ export class UsersService {
         await this.userModel.updateOne({ email }, { $set: { password, recoveryToken: null } }).exec();
         return { message: 'OK' };
     }
+
+    async userStatus(id, reason?) {
+        const user = await this.userModel.findOne({ _id: id })
+
+        if (user.status === 'active') {
+            const ban = await this.banModel.create({ user: id, banReason: reason })
+            await this.userModel.findByIdAndUpdate(id, { status: 'banned', $push: { banHistory: ban._id } }, { new: true })
+            await banProfileMailer(reason, user.email)
+            return { message: `user Banned` }
+        } else if (user.status === 'banned') {
+            const ban = await this.banModel.find({ user: id }).sort({ _id: -1 }).limit(1)
+            await this.banModel.findByIdAndUpdate(ban[0]._id, { unBanned: { status: true, unbanDate: new Date() } })
+            await this.userModel.findByIdAndUpdate(id, { status: 'active' })
+            return { message: `user Unbanned` }
+        }
+    }
+
+    // async getBan(_id) {
+    //     return await this.banModel.findById(_id);
+    // }
+
+    // async getAllBans() {
+    //     return await this.banModel.find();
+    // }
 }

@@ -10,6 +10,7 @@ import { CemeterySchema } from '../common/schemas/cemetery.schema';
 import { CourseSchema } from '../courses/schemas/course.schema';
 import { ChapterSchema } from '../courses/schemas/chapter.schema';
 import { SettingsSchema } from '../common/settings/settings.schema';
+import { BanSchema } from './schemas/ban.schema';
 // import { PassportModule } from '@nestjs/passport';
 // import { JwtService, JwtModule } from '@nestjs/jwt';
 @Module({
@@ -21,6 +22,7 @@ import { SettingsSchema } from '../common/settings/settings.schema';
     MongooseModule.forFeature([{ name: 'Candidate', schema: CandidateSchema }]),
     MongooseModule.forFeature([{ name: 'Cemetery', schema: CemeterySchema }]),
     MongooseModule.forFeature([{ name: 'Settings', schema: SettingsSchema }]),
+    MongooseModule.forFeature([{ name: 'Ban', schema: BanSchema }]),
     // PassportModule.register({
     //   defaultStrategy: 'jwt',
     // }),

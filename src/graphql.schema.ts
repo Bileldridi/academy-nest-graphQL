@@ -6,6 +6,11 @@
 
 /* tslint:disable */
 /* eslint-disable */
+export class BanStatus {
+    status?: string;
+    id?: string;
+}
+
 export class CreateAccessInput {
     candidate?: string;
     course?: string;
@@ -359,6 +364,15 @@ export class Access {
     timeLeft?: number;
 }
 
+export class Ban {
+    banDate?: number;
+    user?: string;
+}
+
+export class BanMessage {
+    message?: string;
+}
+
 export class Candidate {
     tel?: string;
     createDate?: number;
@@ -496,6 +510,11 @@ export class Message {
     accessToken?: string;
 }
 
+export class ModifiedUser {
+    updatedUser?: User;
+    newToken?: UserLogin;
+}
+
 export class Module {
     id?: string;
     title?: string;
@@ -585,11 +604,13 @@ export abstract class IMutation {
 
     abstract createUser(createUserInput?: CreateUserInput): User | Promise<User>;
 
-    abstract updateUser(userInput?: UserInput): User | Promise<User>;
+    abstract updateUser(userInput?: UserInput): ModifiedUser | Promise<ModifiedUser>;
 
     abstract login(loginInput?: LoginInput): UserLogin | Promise<UserLogin>;
 
     abstract firstLogin(verifCode?: VerifCode): UserLogin | Promise<UserLogin>;
+
+    abstract userStatus(banStatus?: BanStatus): BanMessage | Promise<BanMessage>;
 }
 
 export class MyCandidate {
@@ -851,6 +872,10 @@ export abstract class IQuery {
 
     abstract getCurrentUser(): User | Promise<User>;
 
+    abstract getBans(): Ban[] | Promise<Ban[]>;
+
+    abstract Ban(id: string): Ban | Promise<Ban>;
+
     abstract User(id: string): User | Promise<User>;
 
     abstract deleteUser(id: string): Message | Promise<Message>;
@@ -909,6 +934,11 @@ export abstract class ISubscription {
     abstract UserCreated(): User | Promise<User>;
 }
 
+export class Unbanned {
+    status?: boolean;
+    date?: number;
+}
+
 export class User {
     id?: string;
     firstname?: string;
@@ -927,6 +957,7 @@ export class User {
     role?: string;
     status?: string;
     checkpoints?: Checkpoint[];
+    banHistory?: Ban[];
 }
 
 export class UserContact {

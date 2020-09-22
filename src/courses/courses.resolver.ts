@@ -126,6 +126,12 @@ export class CoursesResolver {
     async submitQuiz(@Args('quizAnswerInput') args: any, @User() user): Promise<any> {
         return await this.coursesService.submitQuiz(args, user.id);
     }
+    @UseGuards(GraphqlAuthGuard)
+    @Mutation('removeQuizChapter')
+    async removeQuizChapter(@Args('removeQuizInput') args: any, @User() user): Promise<any> {
+        return await this.coursesService.removeQuizChapter(args, user);
+    }
+    
     // COMMENTS CRUDs
     @Roles('admin')
     @UseGuards(GraphqlAuthGuard, RolesGuard)

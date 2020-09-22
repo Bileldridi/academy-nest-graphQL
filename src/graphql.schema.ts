@@ -7,7 +7,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export class BanStatus {
-    status?: string;
+    reason?: string;
     id?: string;
 }
 
@@ -182,6 +182,11 @@ export class QuizInput {
     question?: string;
     correctAnswer?: number;
     options?: OptionInput[];
+}
+
+export class RemoveQuizInput {
+    idCourse?: string;
+    idChapter?: string;
 }
 
 export class SendMessageInput {
@@ -366,7 +371,9 @@ export class Access {
 
 export class Ban {
     banDate?: number;
+    banReason?: string;
     user?: string;
+    unBanned?: Unbanned;
 }
 
 export class BanMessage {
@@ -589,6 +596,8 @@ export abstract class IMutation {
     abstract updateAdvancementPath(updateAdvanceInput?: UpdateAdvanceInput): Progress | Promise<Progress>;
 
     abstract updateAdvancementModule(updateAdvanceInput?: UpdateAdvanceInput): Progress | Promise<Progress>;
+
+    abstract removeQuizChapter(removeQuizInput?: RemoveQuizInput): Progress | Promise<Progress>;
 
     abstract updateProgress(updateProgressInput?: UpdateProgressInput): Progress | Promise<Progress>;
 
@@ -872,10 +881,6 @@ export abstract class IQuery {
 
     abstract getCurrentUser(): User | Promise<User>;
 
-    abstract getBans(): Ban[] | Promise<Ban[]>;
-
-    abstract Ban(id: string): Ban | Promise<Ban>;
-
     abstract User(id: string): User | Promise<User>;
 
     abstract deleteUser(id: string): Message | Promise<Message>;
@@ -936,7 +941,7 @@ export abstract class ISubscription {
 
 export class Unbanned {
     status?: boolean;
-    date?: number;
+    unbanDate?: number;
 }
 
 export class User {

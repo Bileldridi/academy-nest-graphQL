@@ -15,6 +15,9 @@ type Mutation {
   updateAdvancement(updateAdvanceInput: UpdateAdvanceInput): Progress
   updateAdvancementPath(updateAdvanceInput: UpdateAdvanceInput): Progress
   updateAdvancementModule(updateAdvanceInput: UpdateAdvanceInput): Progress
+  removeQuizChapter(removeQuizInput:RemoveQuizInput): Progress
+  updateFinishedCourse(id: String!): Progress
+  updateFinishedPath(id: String!): Progress
 }
 
 type Mutation {
@@ -37,6 +40,7 @@ type Progress {
   path: Level
   bootcamp: Module
   progress: Int
+  finished: Boolean
 }
 type CourseProgress {
   id: String
@@ -74,4 +78,8 @@ input UpdateProgressInput {
   type: String
   score: Int
   desc: String
+}
+input RemoveQuizInput {
+  idCourse: String
+  idChapter: String
 }

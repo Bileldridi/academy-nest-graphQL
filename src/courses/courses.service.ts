@@ -180,6 +180,13 @@ export class CoursesService {
         }
         return { message: score.toString() };
     }
+    async removeQuizChapter(object, user) {
+      const courseProgress = await this.progressModel.findOneAndUpdate({ candidate: user.id, 'course.id': object.idCourse}, {$pull: {'course.checkedChapters': object.idChapter}}, {new: true} ).catch(err => err);
+      const course = await this.courseModel.findById(object.idCourse).exec();
+    const averageProgress = Math.round((courseProgress.course.checkedChapters.length * 100) / course.chapters.length);
+    const res = await this.progressModel.findByIdAndUpdate(courseProgress._id, { $set: { progress: averageProgress} }, {new: true}).populate('candidate').populate('path').populate('bootcamp').catch(err => err);
+    return res;
+    }
     async checkQuiz(idQuiz, userId) {
         const chapter = await this.progressModel.findOne({ candidate: userId, chapter: idQuiz, type:'quiz' });
         return { message: chapter ? chapter.score : 'null' };
@@ -398,7 +405,12 @@ async updateAllBootcampsAdvancements(user) {
     });
     return null;
 }
-
+async updateFinishedCourse(id) {
+    return await this.progressModel.findByIdAndUpdate(id, {$set: {finished: true}}, {new: true}).catch(err => err);
+}
+async updateFinishedPath(id) {
+  return await this.progressModel.findByIdAndUpdate(id, {$set: {finished: true}}, {new: true}).catch(err => err);
+}
 async migrateData() {
   await this.progressModel.deleteMany().catch(err => err);
   await this.accessModel.deleteMany().catch(err => err);

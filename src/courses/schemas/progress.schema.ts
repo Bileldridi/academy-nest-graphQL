@@ -10,7 +10,8 @@ export const schema: Schema = new Schema({
     course: { id: {type: Types.ObjectId, ref: 'Course'}, lastChapter: { type: Types.ObjectId, ref: 'Chapter' }, checkedChapters: [{ type: Types.ObjectId, ref: 'Chapter' }] },
     path: { type: Types.ObjectId, ref: 'Level' },
     bootcamp: { type: Types.ObjectId, ref: 'Module' },
-    progress: { type: Number, default: 0 }
+    progress: { type: Number, default: 0 },
+    finished: {type: Boolean, default: false}
 });
 
 export const ProgressSchema = schema;

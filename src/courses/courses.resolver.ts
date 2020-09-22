@@ -126,6 +126,21 @@ export class CoursesResolver {
     async submitQuiz(@Args('quizAnswerInput') args: any, @User() user): Promise<any> {
         return await this.coursesService.submitQuiz(args, user.id);
     }
+    @UseGuards(GraphqlAuthGuard)
+    @Mutation('removeQuizChapter')
+    async removeQuizChapter(@Args('removeQuizInput') args: any, @User() user): Promise<any> {
+        return await this.coursesService.removeQuizChapter(args, user);
+    }
+    @UseGuards(GraphqlAuthGuard)
+    @Mutation('updateFinishedCourse')
+    async updateFinishedCourse(@Args('id') id: String): Promise<any> {
+        return await this.coursesService.updateFinishedCourse(id);
+    }
+    @UseGuards(GraphqlAuthGuard)
+    @Mutation('updateFinishedPath')
+    async updateFinishedPath(@Args('id') id: String): Promise<any> {
+        return await this.coursesService.updateFinishedPath(id);
+    }
     // COMMENTS CRUDs
     @Roles('admin')
     @UseGuards(GraphqlAuthGuard, RolesGuard)

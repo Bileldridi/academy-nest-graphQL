@@ -688,6 +688,7 @@ export class Progress {
     path?: Level;
     bootcamp?: Module;
     progress?: number;
+    finished?: boolean;
 }
 
 export class ProgressUpdate {

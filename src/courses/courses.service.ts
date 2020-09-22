@@ -405,7 +405,12 @@ async updateAllBootcampsAdvancements(user) {
     });
     return null;
 }
-
+async updateFinishedCourse(id) {
+    return await this.progressModel.findByIdAndUpdate(id, {$set: {finished: true}}, {new: true}).catch(err => err);
+}
+async updateFinishedPath(id) {
+  return await this.progressModel.findByIdAndUpdate(id, {$set: {finished: true}}, {new: true}).catch(err => err);
+}
 async migrateData() {
   await this.progressModel.deleteMany().catch(err => err);
   await this.accessModel.deleteMany().catch(err => err);

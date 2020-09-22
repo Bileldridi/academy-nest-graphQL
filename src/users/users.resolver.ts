@@ -87,7 +87,8 @@ export class UsersResolver {
         return await this.usersService.firstLogin(args)
     }
     @Mutation('userStatus')
-    async userStatus(@Args('banStatus') id: any): Promise<any> {
-        return await this.usersService.userStatus(id);
+    async userStatus(@Args('banStatus') args: any): Promise<any> {
+        const { id, reason } = args;
+        return await this.usersService.userStatus(id, reason);
     }
 }

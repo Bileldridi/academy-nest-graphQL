@@ -62,6 +62,7 @@ type User {
 type Ban {
   # id: String
   banDate: Float
+  banReason: String
   user: String
   unBanned: Unbanned
 }
@@ -114,7 +115,7 @@ input VerifCode {
 }
 
 input BanStatus{
-  # status: String
+  reason: String
   id: String
 }
 

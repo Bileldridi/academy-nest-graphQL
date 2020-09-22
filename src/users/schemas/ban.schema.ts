@@ -2,6 +2,7 @@ import { Schema, Types } from 'mongoose';
 
 export const schema: Schema = new Schema({
     banDate: { type: Number, default: Date.now },
+    banReason: String,
     user: { type: Types.ObjectId, ref: 'User' },
     unBanned: {
         status: { type: Boolean, default: false },

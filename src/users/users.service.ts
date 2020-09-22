@@ -6,6 +6,7 @@ import * as crypto from 'crypto-js';
 import { sendEmailRecover, sendEmailAccess } from '../common/mailer/mailer';
 import { sendOneTimeAccess } from '../common/mailer/singleLinkMailer'
 import { updateProfileMail } from '../common/mailer/updateProfileMailer'
+import { banProfileMailer } from '../common/mailer/banProfileMailer'
 
 @Injectable()
 export class UsersService {
@@ -127,6 +128,9 @@ export class UsersService {
         if (res.status === 'blocked') {
             return { message: 'Your account needs to be activated' };
         }
+        if (res.status === 'banned') {
+            return { message: 'Your account is banned' };
+        }
 
         await this.userModel.updateOne({ email: user.email }, { $set: { lastLogin: Date.now() } }).exec()
 
@@ -218,18 +222,18 @@ export class UsersService {
         return { message: 'OK' };
     }
 
-    async userStatus(obj) {
-        const user = await this.userModel.findOne({ _id: obj.id })
+    async userStatus(id, reason?) {
+        const user = await this.userModel.findOne({ _id: id })
 
         if (user.status === 'active') {
-            const ban = await this.banModel.create({ user: obj.id })
-            await this.userModel.findByIdAndUpdate(obj.id, { status: 'banned', $push: { banHistory: ban._id } }, { new: true })
+            const ban = await this.banModel.create({ user: id, banReason: reason })
+            await this.userModel.findByIdAndUpdate(id, { status: 'banned', $push: { banHistory: ban._id } }, { new: true })
+            await banProfileMailer(reason, user.email)
             return { message: `user Banned` }
         } else if (user.status === 'banned') {
-            const ban = await this.banModel.find({ user: obj.id }).sort({ _id: -1 }).limit(1)
-            const date = new Date()
+            const ban = await this.banModel.find({ user: id }).sort({ _id: -1 }).limit(1)
             await this.banModel.findByIdAndUpdate(ban[0]._id, { unBanned: { status: true, unbanDate: new Date() } })
-            await this.userModel.findByIdAndUpdate(obj.id, { status: 'active' })
+            await this.userModel.findByIdAndUpdate(id, { status: 'active' })
             return { message: `user Unbanned` }
         }
     }

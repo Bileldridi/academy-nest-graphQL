@@ -35,14 +35,14 @@ export class UsersResolver {
         return await this.usersService.findOneById(id);
     }
 
-    @Query('Ban')
-    async findBan(@Args('id') id: String): Promise<any> {
-        return await this.usersService.getBan(id)
-    }
-    @Query('getBans')
-    async findAllBans(): Promise<any> {
-        return await this.usersService.getAllBans();
-    }
+    // @Query('Ban')
+    // async findBan(@Args('id') id: String): Promise<any> {
+    //     return await this.usersService.getBan(id)
+    // }
+    // @Query('getBans')
+    // async findAllBans(): Promise<any> {
+    //     return await this.usersService.getAllBans();
+    // }
 
     @SetMetadata('roles', ['admin'])
     @UseGuards(GraphqlAuthGuard, RolesGuard)

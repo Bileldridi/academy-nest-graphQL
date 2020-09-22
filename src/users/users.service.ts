@@ -234,11 +234,11 @@ export class UsersService {
         }
     }
 
-    async getBan(_id) {
-        return await this.banModel.findById(_id);
-    }
+    // async getBan(_id) {
+    //     return await this.banModel.findById(_id);
+    // }
 
-    async getAllBans() {
-        return await this.banModel.find();
-    }
+    // async getAllBans() {
+    //     return await this.banModel.find();
+    // }
 }

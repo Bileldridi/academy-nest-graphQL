@@ -2,8 +2,8 @@ type Query {
   getUsers: [User]
   getCurrentUser: User
 
-  getBans: [Ban]
-  Ban(id: String!): Ban
+  # getBans: [Ban]
+  # Ban(id: String!): Ban
 
   User(id: String!): User
   deleteUser(id: ID!): Message

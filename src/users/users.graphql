@@ -18,6 +18,7 @@ type Mutation {
   login(loginInput: LoginInput): UserLogin
   firstLogin(verifCode: VerifCode): UserLogin
   userStatus(banStatus: BanStatus): BanMessage
+  usersStatus(banStatus: [BanStatus]): BanMessage
 }
 
 type Subscription {

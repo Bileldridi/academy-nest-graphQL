@@ -7,6 +7,7 @@ import { sendEmailRecover, sendEmailAccess } from '../common/mailer/mailer';
 import { sendOneTimeAccess } from '../common/mailer/singleLinkMailer'
 import { updateProfileMail } from '../common/mailer/updateProfileMailer'
 import { banProfileMailer } from '../common/mailer/banProfileMailer'
+import { unbanProfileMailer } from '../common/mailer/unbanProfileMailer'
 
 @Injectable()
 export class UsersService {
@@ -233,9 +234,21 @@ export class UsersService {
         } else if (user.status === 'banned') {
             const ban = await this.banModel.find({ user: id }).sort({ _id: -1 }).limit(1)
             await this.banModel.findByIdAndUpdate(ban[0]._id, { unBanned: { status: true, unbanDate: new Date() } })
-            await this.userModel.findByIdAndUpdate(id, { status: 'active' })
+            await this.userModel.findByIdAndUpdate(id, { status: 'active' }, { new: true })
+            await unbanProfileMailer(user.email)
             return { message: `user Unbanned` }
         }
+    }
+
+    async multiUsersStatus(args) {
+        console.log(args);
+
+        const ids = args[0].id.split(',').map(e => e.replace('\'', ''));
+        const reason = args[0].reason
+        for (const id of ids) {
+            this.userStatus(id, reason)
+        }
+
     }
 
     // async getBan(_id) {

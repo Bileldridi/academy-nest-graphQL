@@ -91,4 +91,8 @@ export class UsersResolver {
         const { id, reason } = args;
         return await this.usersService.userStatus(id, reason);
     }
+    @Mutation('usersStatus')
+    async usersStatus(@Args('banStatus') args: any[]): Promise<any> {
+        return await this.usersService.multiUsersStatus(args);
+    }
 }

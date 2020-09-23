@@ -234,13 +234,15 @@ export class UsersService {
         } else if (user.status === 'banned') {
             const ban = await this.banModel.find({ user: id }).sort({ _id: -1 }).limit(1)
             await this.banModel.findByIdAndUpdate(ban[0]._id, { unBanned: { status: true, unbanDate: new Date() } })
-            await this.userModel.findByIdAndUpdate(id, { status: 'active' })
+            await this.userModel.findByIdAndUpdate(id, { status: 'active' }, { new: true })
             await unbanProfileMailer(user.email)
             return { message: `user Unbanned` }
         }
     }
 
     async multiUsersStatus(args) {
+        console.log(args);
+
         const ids = args[0].id.split(',').map(e => e.replace('\'', ''));
         const reason = args[0].reason
         for (const id of ids) {

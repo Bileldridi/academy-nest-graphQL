@@ -18,17 +18,23 @@ export class UsersResolver {
     @UseGuards(GraphqlAuthGuard, RolesGuard)
     @Roles('admin')
     @Query('getUsers')
-    async getUsers(@User() user) {
+    async getUsers(@Args('scroll') scroll): Promise<any> {
+        return await this.usersService.findAll(scroll);
+    }
 
-
-        return await this.usersService.findAll();
+    @SetMetadata('roles', ['admin'])
+    @UseGuards(GraphqlAuthGuard, RolesGuard)
+    @Roles('admin')
+    @Query('filteredUsers')
+    async filterdUsers(@Args('search') search) {
+        return await this.usersService.filterUsers(search)
     }
 
     // @Roles('admin')
     @UseGuards(GraphqlAuthGuard)
     @Query('getCurrentUser')
-    async getCurrentUser(@User() user) {
-        return user;
+    async getCurrentUser(@User() user): Promise<any> {
+        return await this.usersService.findOneById(user.id);
     }
     @Query('User')
     async findOneById(@Args('id') id: string): Promise<any> {

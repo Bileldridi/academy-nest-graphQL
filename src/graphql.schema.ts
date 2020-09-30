@@ -189,6 +189,15 @@ export class RemoveQuizInput {
     idChapter?: string;
 }
 
+export class Scroll {
+    scroll?: number;
+}
+
+export class Search {
+    searchText?: string;
+    role?: string;
+}
+
 export class SendMessageInput {
     content?: string;
     type?: string;
@@ -599,6 +608,10 @@ export abstract class IMutation {
 
     abstract removeQuizChapter(removeQuizInput?: RemoveQuizInput): Progress | Promise<Progress>;
 
+    abstract updateFinishedCourse(id: string): Progress | Promise<Progress>;
+
+    abstract updateFinishedPath(id: string): Progress | Promise<Progress>;
+
     abstract updateProgress(updateProgressInput?: UpdateProgressInput): Progress | Promise<Progress>;
 
     abstract createOrder(createOrderInput?: CreateOrderInput): Message | Promise<Message>;
@@ -620,6 +633,8 @@ export abstract class IMutation {
     abstract firstLogin(verifCode?: VerifCode): UserLogin | Promise<UserLogin>;
 
     abstract userStatus(banStatus?: BanStatus): BanMessage | Promise<BanMessage>;
+
+    abstract usersStatus(banStatus?: BanStatus[]): BanMessage | Promise<BanMessage>;
 }
 
 export class MyCandidate {
@@ -878,9 +893,11 @@ export abstract class IQuery {
 
     abstract removeCoach(email: string, id: string): Session | Promise<Session>;
 
-    abstract getUsers(): User[] | Promise<User[]>;
+    abstract getUsers(scroll?: number): User[] | Promise<User[]>;
 
     abstract getCurrentUser(): User | Promise<User>;
+
+    abstract filteredUsers(search?: Search): User[] | Promise<User[]>;
 
     abstract User(id: string): User | Promise<User>;
 

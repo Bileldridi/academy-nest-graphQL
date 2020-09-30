@@ -21,14 +21,18 @@ export class UsersService {
         @InjectModel('Ban') private readonly banModel: Model<any>,
     ) { }
 
-    async findAll(obj) {
-        // console.log(obj);
-        const { scroll, role } = obj
-        const count = await this.userModel.countDocuments({ role })
-        const users = await this.userModel.find({ role }).limit(scroll).populate('candidate').populate('banHistory').exec();
-        return { users, count }
+    async findAll() {
+        return await this.userModel.find().populate('candidate').populate('banHistory').exec();
 
     }
+    // async findAll(obj) {
+    //     // console.log(obj);
+    //     const { scroll, role } = obj
+    //     const count = await this.userModel.countDocuments({ role })
+    //     const users = await this.userModel.find({ role }).limit(scroll).populate('candidate').populate('banHistory').exec();
+    //     return { users, count }
+
+    // }
 
     async filterUsers(search) {
         const { searchText, role } = search

@@ -353,8 +353,8 @@ async updateAdvancement(advance, user) {
 }
 async updateAdvancementPath(idPath, user) {
     let progress = 0;
-    const progressPath = await this.progressModel.findOne({path: idPath}).populate('path').exec();
-    const coursesPath = await this.progressModel.find({type: 'course'}).exec();
+    const progressPath = await this.progressModel.findOne({path: idPath, candidate: user.id}).populate('path').exec();
+    const coursesPath = await this.progressModel.find({type: 'course', candidate: user.id}).exec();
     if(progressPath) {
         coursesPath.map(course => {
             if(progressPath.path.courses.includes(course.course.id)) {
@@ -370,8 +370,8 @@ async updateAdvancementPath(idPath, user) {
 }
 async updateAdvancementModule(idBootcamp, user) {
     let progress = 0;
-    const progressBootcamp = await this.progressModel.findOne({bootcamp: idBootcamp}).populate('bootcamp').exec();
-    const PathsBootcamp = await this.progressModel.find({type: 'level'}).exec();
+    const progressBootcamp = await this.progressModel.findOne({bootcamp: idBootcamp, candidate: user.id}).populate('bootcamp').exec();
+    const PathsBootcamp = await this.progressModel.find({type: 'level', candidate: user.id}).exec();
     PathsBootcamp.map(path => {
         if(progressBootcamp.bootcamp.levels.includes(path.path)) {
             progress += path.progress;

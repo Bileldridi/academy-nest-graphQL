@@ -21,9 +21,29 @@ export class UsersService {
         @InjectModel('Ban') private readonly banModel: Model<any>,
     ) { }
 
-    findAll() {
-        return this.userModel.find().populate('candidate').populate('banHistory');
+    async findAll(obj) {
+        // console.log(obj);
+        const { scroll, role } = obj
+        const count = await this.userModel.countDocuments({ role })
+        const users = await this.userModel.find({ role }).limit(scroll).populate('candidate').populate('banHistory').exec();
+        return { users, count }
+
     }
+
+    async filterUsers(search) {
+        const { searchText, role } = search
+        let allUsers = await this.userModel.find({ role })
+        // console.log(search);
+
+        // allUsers = allUsers.filter(user => user.role === role)
+
+        if (searchText) {
+            allUsers = allUsers.filter(user => user.email.toLowerCase().includes(searchText.toLowerCase()) || user.firstname.toLowerCase().includes(searchText.toLowerCase()) || user.lastname.toLowerCase().includes(searchText.toLowerCase()))
+
+        }
+        return allUsers;
+    }
+
     async findOneById(id: string): Promise<any> {
         const user = await this.userModel.findById(id).populate('banHistory').exec();
 
@@ -249,6 +269,17 @@ export class UsersService {
             this.userStatus(id, reason)
         }
 
+    }
+
+    async createBanToken(user: any) {
+        const object = {
+            id: user._id,
+            status: user.status,
+        }
+        return {
+            message: 'OK',
+            token: jwt.sign({ data: object, exp: Math.floor(Date.now() / 1000) + 300 }, '9e14a20fd9e14a20fdcd049bba10340aa0de93ddc118c89e14a20'),
+        };
     }
 
     // async getBan(_id) {

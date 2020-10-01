@@ -1,3 +1,4 @@
+import { CoursesService } from './../courses/courses.service';
 import { Injectable, HttpService } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -13,7 +14,8 @@ export class PurchaseService {
         @InjectModel('Access') private readonly accessModel: Model<any>,
         @InjectModel('Course') private readonly courseModel: Model<any>,
         @InjectModel('Level') private readonly levelModel: Model<any>,
-        private httpService: HttpService
+        private httpService: HttpService,
+        private coursesService: CoursesService,
     ) { }
 
     async findAllOrders() {
@@ -70,17 +72,21 @@ export class PurchaseService {
         }
         if (order.status === 'payed') {
             if (result.course) {
-                await this.accessModel.create({
-                    candidate: user.id, course: result.course.id, duration: -1 //result.course.duration
-                }).catch(err => err);
+                await this.coursesService.createAccess({
+                    candidate: user.id, course: result.course.id, duration: -1 },user);
+                // await this.accessModel.create({
+                //     candidate: user.id, course: result.course.id, duration: -1}).catch(err => err);
             } else if (result.level) {
-                await this.accessModel.create({
-                    candidate: user.id, level: result.level.id, duration: -1 //result.course.duration
-                }).catch(err => err);
+                await this.coursesService.createAccess({
+                    candidate: user.id, level: result.level.id, duration: -1}, user);
+                // await this.accessModel.create({
+                //     candidate: user.id, level: result.level.id, duration: -1 //result.course.duration
+                // }).catch(err => err);
             } else {
-                await this.accessModel.create({
-                    candidate: user.id, module: result.module.id, duration: -1 //result.course.duration
-                }).catch(err => err);
+                await this.coursesService.createAccess({candidate: user.id, module: result.module.id, duration: -1},user);
+                // await this.accessModel.create({
+                //     candidate: user.id, module: result.module.id, duration: -1 //result.course.duration
+                // }).catch(err => err);
             }
             // await sendEmailInvoice(user.email,
             //     result.orderId,

@@ -1,6 +1,7 @@
 type Query {
   getCertificate(code:String!): Certificate
   getCertificateAdmin(idUser:String!, idPath: String!): Certificate
+  getProfileCertifications(id: String!): [Certificate]
 }
 
 type Mutation {

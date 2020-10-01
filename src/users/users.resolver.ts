@@ -21,21 +21,21 @@ export class UsersResolver {
     async getUsers(@User() user): Promise<any> {
         return await this.usersService.findAll();
     }
-    // @SetMetadata('roles', ['admin'])
-    // @UseGuards(GraphqlAuthGuard, RolesGuard)
-    // @Roles('admin')
-    // @Query('getUsers')
-    // async getUsers(@Args('scroll') scroll): Promise<any> {
-    //     return await this.usersService.findAll(scroll);
-    // }
-
     @SetMetadata('roles', ['admin'])
     @UseGuards(GraphqlAuthGuard, RolesGuard)
     @Roles('admin')
-    @Query('filteredUsers')
-    async filterdUsers(@Args('search') search) {
-        return await this.usersService.filterUsers(search)
+    @Query('scrollUsers')
+    async scrollUsers(@Args('scroll') scroll): Promise<any> {
+        return await this.usersService.findAllUsers(scroll);
     }
+
+    // @SetMetadata('roles', ['admin'])
+    // @UseGuards(GraphqlAuthGuard, RolesGuard)
+    // @Roles('admin')
+    // @Query('filteredUsers')
+    // async filterdUsers(@Args('search') search) {
+    //     return await this.usersService.filterUsers(search)
+    // }
 
     // @Roles('admin')
     @UseGuards(GraphqlAuthGuard)

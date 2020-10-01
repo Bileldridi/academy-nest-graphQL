@@ -25,28 +25,30 @@ export class UsersService {
         return await this.userModel.find().populate('candidate').populate('banHistory').exec();
 
     }
-    // async findAll(obj) {
-    //     // console.log(obj);
-    //     const { scroll, role } = obj
-    //     const count = await this.userModel.countDocuments({ role })
-    //     const users = await this.userModel.find({ role }).limit(scroll).populate('candidate').populate('banHistory').exec();
-    //     return { users, count }
+    async findAllUsers(obj) {
+        const { scroll, role, searchText } = obj
+        let count = await this.userModel.countDocuments({ role })
+        let users = await this.userModel.find({ role }).limit(scroll).populate('candidate').populate('banHistory').exec();
+        if (searchText !== '') {
+            users = await this.userModel.find({
+                role,
+                $or: [{ email: { $regex: searchText, $options: 'i' } },
+                { firstname: { $regex: searchText, $options: 'i' } }, { lastname: { $regex: searchText, $options: 'i' } }]
 
-    // }
-
-    async filterUsers(search) {
-        const { searchText, role } = search
-        let allUsers = await this.userModel.find({ role })
-        // console.log(search);
-
-        // allUsers = allUsers.filter(user => user.role === role)
-
-        if (searchText) {
-            allUsers = allUsers.filter(user => user.email.toLowerCase().includes(searchText.toLowerCase()) || user.firstname.toLowerCase().includes(searchText.toLowerCase()) || user.lastname.toLowerCase().includes(searchText.toLowerCase()))
-
+            }).limit(scroll).populate('candidate').populate('banHistory').exec();
+            count = users.length
         }
-        return allUsers;
+        return { users, count }
+
     }
+
+    // async filterUsers(search) {
+    //     const { searchText, role } = search
+    //     let allUsers = await this.userModel.find({ role })
+
+
+    //     return allUsers;
+    // }
 
     async findOneById(id: string): Promise<any> {
         const user = await this.userModel.findById(id).populate('banHistory').exec();

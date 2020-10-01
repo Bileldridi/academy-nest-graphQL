@@ -1,6 +1,6 @@
 type Query {
   getUsers: [User]
-  # getUsers(scroll: Scroll): CountUser
+  scrollUsers(scroll: Scroll): CountUser
   getCurrentUser: User
   filteredUsers(search: Search): [User]
 
@@ -104,6 +104,7 @@ input Search{
 input Scroll{
   scroll: Int
   role: String
+  searchText: String
 }
 
 input CreateUserInput {

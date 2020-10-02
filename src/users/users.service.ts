@@ -27,18 +27,46 @@ export class UsersService {
     }
     async findAllUsers(obj) {
         const { scroll, role, searchText } = obj
+        let init = 10;
+        let skipped = 0
         let count = await this.userModel.countDocuments({ role })
-        let users = await this.userModel.find({ role }).limit(scroll).populate('candidate').populate('banHistory').exec();
+        let users = await this.userModel.find({ role }).limit(init).populate('candidate').populate('banHistory').exec();
         if (searchText !== '') {
             users = await this.userModel.find({
                 role,
                 $or: [{ email: { $regex: searchText, $options: 'i' } },
                 { firstname: { $regex: searchText, $options: 'i' } }, { lastname: { $regex: searchText, $options: 'i' } }]
 
-            }).limit(scroll).populate('candidate').populate('banHistory').exec();
-            count = users.length
+            }).limit(init).populate('candidate').populate('banHistory').exec();
+
+            count = await this.userModel.find({
+                role,
+                $or: [{ email: { $regex: searchText, $options: 'i' } },
+                { firstname: { $regex: searchText, $options: 'i' } }, { lastname: { $regex: searchText, $options: 'i' } }]
+
+            }).countDocuments()
+            skipped = 0
         }
-        return { users, count }
+        if (scroll > init) {
+            users = await this.userModel.find({ role }).skip(scroll - 10).limit(init).populate('candidate').populate('banHistory').exec();
+            if (searchText !== '') {
+                users = await this.userModel.find({
+                    role,
+                    $or: [{ email: { $regex: searchText, $options: 'i' } },
+                    { firstname: { $regex: searchText, $options: 'i' } }, { lastname: { $regex: searchText, $options: 'i' } }]
+
+                }).skip(scroll - 10).limit(init).populate('candidate').populate('banHistory').exec();
+
+                count = await this.userModel.find({
+                    role,
+                    $or: [{ email: { $regex: searchText, $options: 'i' } },
+                    { firstname: { $regex: searchText, $options: 'i' } }, { lastname: { $regex: searchText, $options: 'i' } }]
+
+                }).countDocuments()
+            }
+            skipped = scroll - 10
+        }
+        return { users, count, skipped }
 
     }
 
@@ -59,7 +87,7 @@ export class UsersService {
         const result = await this.userModel.findOne({ _id }).exec();
         this.cemeteryModel.create({ object: result, type: 'Chapter' }).catch(err => err);
         await this.userModel.findByIdAndDelete(_id).exec();
-        return result.id ? { message: 'OK' } : { message: 'NOT OK' }
+        return result.id ? { message: 'OK', id: result.id } : { message: 'NOT OK' }
     }
     async findUserByEmail(email: string): Promise<any> {
         return await this.userModel.findOne({ email }).exec();

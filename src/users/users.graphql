@@ -29,6 +29,7 @@ type Subscription {
 type Message {
   message: String
   accessToken: String
+  id: String
 }
 
 type BanMessage{
@@ -65,6 +66,7 @@ type User {
 type CountUser{
   users: [User]
   count: Int
+  skipped: Int
 }
 
 type Ban {

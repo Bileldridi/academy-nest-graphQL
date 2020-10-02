@@ -61,6 +61,7 @@ type User {
   status: String
   checkpoints: [Checkpoint]
   banHistory: [Ban]
+  message: String
 }
 
 type CountUser{
@@ -151,6 +152,9 @@ input UserInput {
   tel: String
   note: String
   coach: String
+  city: String
+  country: String
+  zip: String
   sendEmail: Boolean
   generate: Boolean
 }

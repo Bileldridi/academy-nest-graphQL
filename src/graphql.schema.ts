@@ -191,6 +191,8 @@ export class RemoveQuizInput {
 
 export class Scroll {
     scroll?: number;
+    role?: string;
+    searchText?: string;
 }
 
 export class Search {
@@ -358,6 +360,9 @@ export class UserInput {
     coach?: string;
     sendEmail?: boolean;
     generate?: boolean;
+    city?: string;
+    country?: string;
+    zip?: string;
 }
 
 export class VerifCode {
@@ -479,6 +484,12 @@ export class Contact {
     image?: string;
 }
 
+export class CountUser {
+    users?: User[];
+    count?: number;
+    skipped?: number;
+}
+
 export class Course {
     id?: string;
     title?: string;
@@ -524,6 +535,7 @@ export class Level {
 export class Message {
     message?: string;
     accessToken?: string;
+    id?: string;
 }
 
 export class ModifiedUser {
@@ -783,6 +795,8 @@ export abstract class IQuery {
 
     abstract getCertificateAdmin(idUser: string, idPath: string): Certificate | Promise<Certificate>;
 
+    abstract getProfileCertifications(id: string): Certificate[] | Promise<Certificate[]>;
+
     abstract getChats(): Chat[] | Promise<Chat[]>;
 
     abstract Chat(id: string): Chat | Promise<Chat>;
@@ -893,7 +907,9 @@ export abstract class IQuery {
 
     abstract removeCoach(email: string, id: string): Session | Promise<Session>;
 
-    abstract getUsers(scroll?: number): User[] | Promise<User[]>;
+    abstract getUsers(): User[] | Promise<User[]>;
+
+    abstract scrollUsers(scroll?: Scroll): CountUser | Promise<CountUser>;
 
     abstract getCurrentUser(): User | Promise<User>;
 
@@ -981,6 +997,7 @@ export class User {
     status?: string;
     checkpoints?: Checkpoint[];
     banHistory?: Ban[];
+    message?: string;
 }
 
 export class UserContact {

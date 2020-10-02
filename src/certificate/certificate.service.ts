@@ -54,6 +54,9 @@ export class CertificateService {
         receiveContactMail(email, name, msg)
         return 'send, success!';
     }
+    async getProfileCertifications(id) {
+        return await this.certificateModel.find({candidate: id}).exec();
+    }
     getCertificate = async (code) => {
         const certificate = await this.certificateModel.findOne({ code: code }).populate('candidate').populate('pathId').exec();
             if (certificate) {

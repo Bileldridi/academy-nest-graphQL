@@ -1,5 +1,6 @@
 type Query {
   getUsers: [User]
+  getAllEmails: [Email]
   scrollUsers(scroll: Scroll): CountUser
   getCurrentUser: User
   filteredUsers(search: Search): [User]
@@ -22,7 +23,9 @@ type Mutation {
   userStatus(banStatus: BanStatus): BanMessage
   usersStatus(banStatus: [BanStatus]): BanMessage
 }
-
+type Email {
+  email: String
+}
 type Subscription {
   UserCreated: User
 }

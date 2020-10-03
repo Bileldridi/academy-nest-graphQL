@@ -315,7 +315,9 @@ export class UsersService {
             token: jwt.sign({ data: object, exp: Math.floor(Date.now() / 1000) + 300 }, '9e14a20fd9e14a20fdcd049bba10340aa0de93ddc118c89e14a20'),
         };
     }
-
+    async getAllEmails() {
+        return await this.userModel.find().select({ "email": 1, "_id": 0}).exec();
+    }
     // async getBan(_id) {
     //     return await this.banModel.findById(_id);
     // }

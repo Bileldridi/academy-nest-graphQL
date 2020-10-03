@@ -516,6 +516,10 @@ export class CourseProgress {
     checkedChapters?: string[];
 }
 
+export class Email {
+    email?: string;
+}
+
 export class Level {
     id?: string;
     title?: string;
@@ -908,6 +912,8 @@ export abstract class IQuery {
     abstract removeCoach(email: string, id: string): Session | Promise<Session>;
 
     abstract getUsers(): User[] | Promise<User[]>;
+
+    abstract getAllEmails(): Email[] | Promise<Email[]>;
 
     abstract scrollUsers(scroll?: Scroll): CountUser | Promise<CountUser>;
 

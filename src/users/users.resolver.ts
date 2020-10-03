@@ -72,6 +72,12 @@ export class UsersResolver {
     async recoverAccountRequest(@Args('email') email: string): Promise<any> {
         return await this.usersService.recoverAccountRequest(email);
     }
+    @UseGuards(GraphqlAuthGuard)
+    @Query('getAllEmails')
+    async getAllEmails(): Promise<any> {
+        return await this.usersService.getAllEmails();
+    }
+    
 
     @SetMetadata('roles', ['admin'])
     @UseGuards(GraphqlAuthGuard, RolesGuard)

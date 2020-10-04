@@ -3,6 +3,7 @@ type Query {
   Module(id: String!): Module
   getHomeModules: [PublicModule]
   removeModule(id: String!): Message
+  removeBootcamp(id: String!): Message
 }
 
 type Mutation {

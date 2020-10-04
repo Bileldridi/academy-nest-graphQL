@@ -140,13 +140,25 @@ export class CoursesService {
     return result;
   }
   async deleteChapter(_id) {
-    const result = await this.chapterModel.findOne({ _id }).exec();
-    await this.cemeteryModel.create({ object: result, type: "Chapter" }).catch((err) => err);
+    const result = await this.chapterModel.findByIdAndUpdate(_id , {$set: {status: 'deleted'}}).exec();
+    // await this.cemeteryModel.create({ object: result, type: "Chapter" }).catch((err) => err);
     // pull the chapter from course array and then delete it
-    await this.courseModel.findByIdAndUpdate(result.course, {
-      $pull: { chapters: result._id },
-    });
-    await this.chapterModel.findByIdAndDelete(_id).exec();
+    // await this.courseModel.findByIdAndUpdate(result.course, {
+    //   $pull: { chapters: result._id },
+    // });
+    // await this.chapterModel.findByIdAndDelete(_id).exec();
+    return result.id ? { message: "OK" } : { message: "NOT OK" };
+  }
+  async removeBootcamp(_id) {
+    const result = await this.moduleModel.findByIdAndUpdate(_id , {$set: {status: 'deleted'}}).exec();
+    return result.id ? { message: "OK" } : { message: "NOT OK" };
+  }
+  async removeCourse(_id) {
+    const result = await this.courseModel.findByIdAndUpdate(_id , {$set: {status: 'deleted'}}).exec();
+    return result.id ? { message: "OK" } : { message: "NOT OK" };
+  }
+  async removePath(_id) {
+    const result = await this.levelModel.findByIdAndUpdate(_id , {$set: {status: 'deleted'}}).exec();
     return result.id ? { message: "OK" } : { message: "NOT OK" };
   }
   // CRUD Progress

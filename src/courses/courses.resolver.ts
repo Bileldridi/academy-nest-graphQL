@@ -104,6 +104,24 @@ export class CoursesResolver {
     async deleteOneChapter(@Args('id') id: string): Promise<any> {
         return await this.coursesService.deleteChapter(id);
     }
+    @Roles('admin')
+    @UseGuards(GraphqlAuthGuard, RolesGuard)
+    @Query('removeBootcamp')
+    async removeBootcamp(@Args('id') id: string): Promise<any> {
+        return await this.coursesService.removeBootcamp(id);
+    }
+    @Roles('admin')
+    @UseGuards(GraphqlAuthGuard, RolesGuard)
+    @Query('removePath')
+    async removePath(@Args('id') id: string): Promise<any> {
+        return await this.coursesService.removePath(id);
+    }
+    @Roles('admin')
+    @UseGuards(GraphqlAuthGuard, RolesGuard)
+    @Query('removeCourse')
+    async removeCourse(@Args('id') id: string): Promise<any> {
+        return await this.coursesService.removeCourse(id);
+    }
     @UseGuards(GraphqlAuthGuard)
     @Query('checkQuiz')
     async checkQuiz(@Args('id') id: string, @User() user): Promise<any> {

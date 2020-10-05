@@ -1,17 +1,20 @@
-import { Resolver, Query, Args, Mutation, GqlExecutionContext } from '@nestjs/graphql';
+import { Resolver, Query, Args, Mutation, GqlExecutionContext, Subscription } from '@nestjs/graphql';
 import { UsersService } from './users.service';
-import { Controller, Request, Post, UseGuards, createParamDecorator, ExecutionContext, SetMetadata } from '@nestjs/common';
+import { Controller, Request, Post, UseGuards, createParamDecorator, ExecutionContext, SetMetadata, Inject } from '@nestjs/common';
 import { AuthGuard } from '../common/passport/auth.guard';
 import { GraphqlAuthGuard } from '../common/guards/gql.auth.guard';
 import { User } from '../common/decorators/current-user.decorator';
 import { Roles } from '../common/decorators/roles.decorator';
 import { RolesGuard } from '../common/guards/roles.guard';
+import { PubSubEngine } from 'graphql-subscriptions';
+import { truncateSync } from 'fs';
 
 
 @Resolver('Users')
 export class UsersResolver {
 
-    constructor(private readonly usersService: UsersService) { }
+    constructor(private readonly usersService: UsersService,
+               @Inject('PUB_SUB') private pubSub: PubSubEngine) { }
 
     // @UseGuards(AuthGuard('jwt'))
     @SetMetadata('roles', ['admin'])
@@ -105,13 +108,24 @@ export class UsersResolver {
     async firstLogin(@Args('verifCode') args: string): Promise<any> {
         return await this.usersService.firstLogin(args)
     }
+    @UseGuards(GraphqlAuthGuard)
     @Mutation('userStatus')
     async userStatus(@Args('banStatus') args: any): Promise<any> {
         const { id, reason } = args;
-        return await this.usersService.userStatus(id, reason);
+        const result =  await this.usersService.userStatus(id, reason);
+        if (result.message === 'user Banned')
+        { await this.pubSub.publish('bannedUser', { bannedUser: {id: id} }); }
+        console.log(id);
+        
+        return result;
     }
     @Mutation('usersStatus')
     async usersStatus(@Args('banStatus') args: any[]): Promise<any> {
         return await this.usersService.multiUsersStatus(args);
+    }
+    @Subscription('bannedUser')
+    bannedUser(@Args('id') id) {
+        console.log('aaaaaaaaaaaaaaaaaaaaa',id);
+        return this.pubSub.asyncIterator('bannedUser');
     }
 }

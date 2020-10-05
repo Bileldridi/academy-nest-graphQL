@@ -11,8 +11,12 @@ import { CourseSchema } from '../courses/schemas/course.schema';
 import { ChapterSchema } from '../courses/schemas/chapter.schema';
 import { SettingsSchema } from '../common/settings/settings.schema';
 import { BanSchema } from './schemas/ban.schema';
+import { RedisPubSub } from 'graphql-redis-subscriptions';
+import * as Redis from 'ioredis';
 // import { PassportModule } from '@nestjs/passport';
 // import { JwtService, JwtModule } from '@nestjs/jwt';
+const redishost = process.env.redishost || 'localhost';
+
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
@@ -34,7 +38,21 @@ import { BanSchema } from './schemas/ban.schema';
     // }),
   ],
 
-  providers: [UsersResolver, UsersService, JwtStrategy],
+  providers: [UsersResolver, UsersService, JwtStrategy,
+    {
+    provide: 'PUB_SUB',
+    useFactory: () => {
+      const options = {
+        host: redishost,
+        port: 6379
+      };
+
+      return new RedisPubSub({
+        publisher: new Redis(options),
+        subscriber: new Redis(options),
+      });
+    }
+  }],
   controllers: [],
 })
 export class UsersModule { }

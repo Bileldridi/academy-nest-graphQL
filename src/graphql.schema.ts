@@ -867,6 +867,8 @@ export abstract class IQuery {
 
     abstract removeLevel(id: string): Message | Promise<Message>;
 
+    abstract removePath(id: string): Message | Promise<Message>;
+
     abstract getModules(): Module[] | Promise<Module[]>;
 
     abstract Module(id: string): Module | Promise<Module>;
@@ -874,6 +876,8 @@ export abstract class IQuery {
     abstract getHomeModules(): PublicModule[] | Promise<PublicModule[]>;
 
     abstract removeModule(id: string): Message | Promise<Message>;
+
+    abstract removeBootcamp(id: string): Message | Promise<Message>;
 
     abstract getAllProgress(): Progress[] | Promise<Progress[]>;
 
@@ -977,6 +981,8 @@ export abstract class ISubscription {
     abstract SessionCreated(): Session | Promise<Session>;
 
     abstract UserCreated(): User | Promise<User>;
+
+    abstract bannedUser(id: string): Message | Promise<Message>;
 }
 
 export class Unbanned {

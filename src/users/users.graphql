@@ -28,6 +28,7 @@ type Email {
 }
 type Subscription {
   UserCreated: User
+  bannedUser(id: String!): Message
 }
 type Message {
   message: String

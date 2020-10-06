@@ -29,13 +29,18 @@ type Email {
 type Subscription {
   UserCreated: User
   bannedUser(id: String!): Message
+  bannedMultipleUser(id: String!): MessageMulti
+
 }
 type Message {
   message: String
   accessToken: String
   id: String
 }
-
+type MessageMulti {
+  message: String
+  ids: [String]
+}
 type BanMessage{
   message: String
 }

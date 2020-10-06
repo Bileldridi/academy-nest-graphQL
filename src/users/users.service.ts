@@ -296,13 +296,13 @@ export class UsersService {
 
     async multiUsersStatus(args) {
         console.log(args);
-
+        let message;
         const ids = args[0].id.split(',').map(e => e.replace('\'', ''));
         const reason = args[0].reason
         for (const id of ids) {
-            this.userStatus(id, reason)
+            message = await this.userStatus(id, reason)
         }
-
+        return {message: message.message, ids: ids };
     }
 
     async createBanToken(user: any) {

@@ -542,6 +542,11 @@ export class Message {
     id?: string;
 }
 
+export class MessageMulti {
+    message?: string;
+    ids?: string[];
+}
+
 export class ModifiedUser {
     updatedUser?: User;
     newToken?: UserLogin;
@@ -983,6 +988,8 @@ export abstract class ISubscription {
     abstract UserCreated(): User | Promise<User>;
 
     abstract bannedUser(id: string): Message | Promise<Message>;
+
+    abstract bannedMultipleUser(id: string): MessageMulti | Promise<MessageMulti>;
 }
 
 export class Unbanned {

@@ -121,11 +121,23 @@ export class UsersResolver {
     }
     @Mutation('usersStatus')
     async usersStatus(@Args('banStatus') args: any[]): Promise<any> {
-        return await this.usersService.multiUsersStatus(args);
+        const result =  await this.usersService.multiUsersStatus(args);
+        console.log(result);
+        if (result.message === 'user Banned')
+        { await this.pubSub.publish('bannedMultipleUser', { bannedMultipleUser: {ids: result.ids} });}
+        return result;
     }
     @Subscription('bannedUser')
     bannedUser(@Args('id') id) {
         console.log('aaaaaaaaaaaaaaaaaaaaa',id);
         return this.pubSub.asyncIterator('bannedUser');
     }
+    @Subscription('bannedMultipleUser', {
+        filter: (payload, variables) => payload.bannedMultipleUser.ids.includes(variables.id)
+    })
+    bannedMultipleUser(@Args('id') id) {
+        console.log('bbbbbbbbbbbbbbb',id);
+        return this.pubSub.asyncIterator('bannedMultipleUser');
+    }
+    
 }

@@ -1,8 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from 'mongoose'
-// import { sendCertif } from '../common/mailer/mailer'
-import { idText } from 'typescript';
 import { sendCertificate, sendContactMail, receiveContactMail } from '../common/mailer/mailer'
 
 
@@ -55,6 +53,9 @@ export class CertificateService {
     async receiveMailContact (email, name, msg): Promise<any>  {
         receiveContactMail(email, name, msg)
         return 'send, success!';
+    }
+    async getProfileCertifications(id) {
+        return await this.certificateModel.find({candidate: id}).exec();
     }
     getCertificate = async (code) => {
         const certificate = await this.certificateModel.findOne({ code: code }).populate('candidate').populate('pathId').exec();

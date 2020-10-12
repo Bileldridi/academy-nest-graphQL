@@ -5,6 +5,9 @@ import * as jwt from 'jsonwebtoken';
 import * as crypto from 'crypto-js';
 import { sendEmailRecover, sendEmailAccess } from '../common/mailer/mailer';
 import { sendOneTimeAccess } from '../common/mailer/singleLinkMailer'
+import { updateProfileMail } from '../common/mailer/updateProfileMailer'
+import { banProfileMailer } from '../common/mailer/banProfileMailer'
+import { unbanProfileMailer } from '../common/mailer/unbanProfileMailer'
 
 @Injectable()
 export class UsersService {
@@ -15,13 +18,68 @@ export class UsersService {
         @InjectModel('Candidate') private readonly candidateModel: Model<any>,
         @InjectModel('Cemetery') private readonly cemeteryModel: Model<any>,
         @InjectModel('Settings') private readonly settingsModel: Model<any>,
+        @InjectModel('Ban') private readonly banModel: Model<any>,
     ) { }
 
-    findAll() {
-        return this.userModel.find().populate('candidate');
+    async findAll() {
+        return await this.userModel.find().populate('candidate').populate('banHistory').exec();
+
     }
+    async findAllUsers(obj) {
+        const { scroll, role, searchText } = obj
+        let init = 10;
+        let skipped = 0
+        let count = await this.userModel.countDocuments({ role })
+        let users = await this.userModel.find({ role }).limit(init).populate('candidate').populate('banHistory').exec();
+        if (searchText !== '') {
+            users = await this.userModel.find({
+                role,
+                $or: [{ email: { $regex: searchText, $options: 'i' } },
+                { firstname: { $regex: searchText, $options: 'i' } }, { lastname: { $regex: searchText, $options: 'i' } }]
+
+            }).limit(init).populate('candidate').populate('banHistory').exec();
+
+            count = await this.userModel.find({
+                role,
+                $or: [{ email: { $regex: searchText, $options: 'i' } },
+                { firstname: { $regex: searchText, $options: 'i' } }, { lastname: { $regex: searchText, $options: 'i' } }]
+
+            }).countDocuments()
+            skipped = 0
+        }
+        if (scroll > init) {
+            users = await this.userModel.find({ role }).skip(scroll - 10).limit(init).populate('candidate').populate('banHistory').exec();
+            if (searchText !== '') {
+                users = await this.userModel.find({
+                    role,
+                    $or: [{ email: { $regex: searchText, $options: 'i' } },
+                    { firstname: { $regex: searchText, $options: 'i' } }, { lastname: { $regex: searchText, $options: 'i' } }]
+
+                }).skip(scroll - 10).limit(init).populate('candidate').populate('banHistory').exec();
+
+                count = await this.userModel.find({
+                    role,
+                    $or: [{ email: { $regex: searchText, $options: 'i' } },
+                    { firstname: { $regex: searchText, $options: 'i' } }, { lastname: { $regex: searchText, $options: 'i' } }]
+
+                }).countDocuments()
+            }
+            skipped = scroll - 10
+        }
+        return { users, count, skipped }
+
+    }
+
+    // async filterUsers(search) {
+    //     const { searchText, role } = search
+    //     let allUsers = await this.userModel.find({ role })
+
+
+    //     return allUsers;
+    // }
+
     async findOneById(id: string): Promise<any> {
-        const user = await this.userModel.findById(id).exec();
+        const user = await this.userModel.findById(id).populate('banHistory').exec();
 
         return user;
     }
@@ -29,7 +87,7 @@ export class UsersService {
         const result = await this.userModel.findOne({ _id }).exec();
         this.cemeteryModel.create({ object: result, type: 'Chapter' }).catch(err => err);
         await this.userModel.findByIdAndDelete(_id).exec();
-        return result.id ? { message: 'OK' } : { message: 'NOT OK' }
+        return result.id ? { message: 'OK', id: result.id } : { message: 'NOT OK' }
     }
     async findUserByEmail(email: string): Promise<any> {
         return await this.userModel.findOne({ email }).exec();
@@ -44,13 +102,29 @@ export class UsersService {
             randomPass = Math.random().toString(36).slice(-8);
             user['password'] = crypto.SHA256(randomPass).toString();
         } else {
+            randomPass = user.password;
             user.password = crypto.SHA256(user.password).toString();
-            randomPass = '[YOUR OWN PASSWORD]';
         }
+        const newUser = await this.userModel.create(user).catch(err => err)
+
         if (user.sendEmail) {
-            await sendEmailAccess(user.email, randomPass)
+            // await sendEmailAccess(user.email, randomPass)
+            let code = "";
+            const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            for (let i = 0; i < 16; i++) {
+                code += possible.charAt(Math.floor(Math.random() * possible.length));
+            }
+            const settings = await this.settingsModel.create({ code })
+            await this.userModel.findByIdAndUpdate(newUser._id, { status: 'blocked' })
+            // user.status = 'blocked'
+            await this.settingsModel.findByIdAndUpdate(settings._id, { user: newUser._id })
+
+            const link = `https://app.academy.fivepoints.fr/auth/login/${code}`
+            // const link = `http://localhost:4200/auth/login/${code}`
+            await sendOneTimeAccess(user.email, randomPass, link)
         }
-        return await this.userModel.create(user).catch(err => err)
+
+        return newUser;
     }
 
     async register(user) {
@@ -60,7 +134,7 @@ export class UsersService {
         let code = "";
         const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-        for (let i = 0; i <= 16; i++) {
+        for (let i = 0; i < 16; i++) {
             code += possible.charAt(Math.floor(Math.random() * possible.length));
         }
 
@@ -74,7 +148,7 @@ export class UsersService {
         await this.settingsModel.findByIdAndUpdate(settings._id, { user: newUser._id })
 
         const link = `https://app.academy.fivepoints.fr/auth/login/${code}`
-        // const link = `http://localhost:4400/auth/login/${code}`
+        // const link = `http://localhost:4200/auth/login/${code}`
         await sendOneTimeAccess(user.email, pass, link)
 
         return { message: 'user created successfully' }
@@ -109,6 +183,9 @@ export class UsersService {
         if (res.status === 'blocked') {
             return { message: 'Your account needs to be activated' };
         }
+        if (res.status === 'banned') {
+            return { message: 'Your account is banned' };
+        }
 
         await this.userModel.updateOne({ email: user.email }, { $set: { lastLogin: Date.now() } }).exec()
 
@@ -119,7 +196,7 @@ export class UsersService {
     async validateUser(payload: any): Promise<any> {
         // 
 
-        return await this.userModel.findOne({ email: payload.data.email }).exec();
+        return await this.userModel.findOne({ _id: payload.data.id }).exec();
     }
     async createToken(user: any) {
         const expiresIn = 3600;
@@ -130,6 +207,7 @@ export class UsersService {
         // user.note = null;
         // user.createDate = null;
         const object = {
+            id: user._id,
             firstname: user.firstname, lastname: user.lastname, email: user.email,
             image: user.image, tel: user.tel, status: user.status, role: user.role,
             coach: user.coach, candidate: user.candidate
@@ -139,34 +217,31 @@ export class UsersService {
             token: jwt.sign({ data: object, exp: Math.floor(Date.now() / 1000) + (3600 * 24 * 365) }, '9e14a20fd9e14a20fdcd049bba10340aa0de93ddc118c89e14a20'),
         };
     }
+
     async updateUser(user, _id) {
         const oldUser = await this.userModel.findOne({ _id }).exec();
         let pass = '';
         if (user.password === '') {
             user.password = oldUser.password;
         } else {
+            pass = user.password
             user.password = crypto.SHA256(user.password).toString();
         }
-        if (user.generate) {
-            const randomPass = Math.random().toString(36).slice(-8);
-            user.password = crypto.SHA256(randomPass).toString();
-            // console.log(randomPass);
-            pass = randomPass
-        }
 
-        console.log('Image', user.image);
         if (!user.image) {
             user.image = oldUser.image
-            console.log('oldImage', oldUser.image);
         }
         const userResult = await this.userModel.findByIdAndUpdate({ _id }, user).catch(err => err);
-        const coachResult = await this.coachModel.findByIdAndUpdate({ _id: userResult.coach }, user).catch(err => err);
-        const result = await this.userModel.findOne({ _id }).exec();
+        await this.coachModel.findByIdAndUpdate({ _id: userResult.coach }, user).catch(err => err);
+
+        const updatedUser = await this.userModel.findOne({ _id }).exec();
+        const newToken = this.createToken(updatedUser);
         if (user.sendEmail) {
-            await sendEmailAccess(user.email, pass)
+            await updateProfileMail(user.email, pass)
         }
-        return result;
+        return { updatedUser, newToken };
     }
+
     async validate({ _id }): Promise<any> {
         const user = await this.userModel.findOne({ _id });
         if (!user) {
@@ -201,4 +276,53 @@ export class UsersService {
         await this.userModel.updateOne({ email }, { $set: { password, recoveryToken: null } }).exec();
         return { message: 'OK' };
     }
+
+    async userStatus(id, reason?) {
+        const user = await this.userModel.findOne({ _id: id })
+
+        if (user.status === 'active') {
+            const ban = await this.banModel.create({ user: id, banReason: reason })
+            await this.userModel.findByIdAndUpdate(id, { status: 'banned', $push: { banHistory: ban._id } }, { new: true })
+            await banProfileMailer(reason, user.email)
+            return { message: `user Banned` }
+        } else if (user.status === 'banned') {
+            const ban = await this.banModel.find({ user: id }).sort({ _id: -1 }).limit(1)
+            await this.banModel.findByIdAndUpdate(ban[0]._id, { unBanned: { status: true, unbanDate: new Date() } })
+            await this.userModel.findByIdAndUpdate(id, { status: 'active' }, { new: true })
+            await unbanProfileMailer(user.email)
+            return { message: `user Unbanned` }
+        }
+    }
+
+    async multiUsersStatus(args) {
+        console.log(args);
+        let message;
+        const ids = args[0].id.split(',').map(e => e.replace('\'', ''));
+        const reason = args[0].reason
+        for (const id of ids) {
+            message = await this.userStatus(id, reason)
+        }
+        return {message: message.message, ids: ids };
+    }
+
+    async createBanToken(user: any) {
+        const object = {
+            id: user._id,
+            status: user.status,
+        }
+        return {
+            message: 'OK',
+            token: jwt.sign({ data: object, exp: Math.floor(Date.now() / 1000) + 300 }, '9e14a20fd9e14a20fdcd049bba10340aa0de93ddc118c89e14a20'),
+        };
+    }
+    async getAllEmails() {
+        return await this.userModel.find().select({ "email": 1, "_id": 0}).exec();
+    }
+    // async getBan(_id) {
+    //     return await this.banModel.findById(_id);
+    // }
+
+    // async getAllBans() {
+    //     return await this.banModel.find();
+    // }
 }

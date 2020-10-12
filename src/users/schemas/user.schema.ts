@@ -14,11 +14,12 @@ export const schema: Schema = new Schema({
     country: { type: String },
     zip: { type: String },
     note: { type: String },
-    checkpoints: [{idChapters: [String], status: String, idCourse: String, lastChapter: String, progress: Number}],
+    checkpoints: [{ idChapters: [String], status: String, idCourse: String, lastChapter: String, progress: Number }],
     role: { type: String, default: 'candidate', enum: ['admin', 'coach', 'candidate'] },
     coach: { type: Types.ObjectId, ref: 'Coach' },
     candidate: { type: Types.ObjectId, ref: 'Candidate' },
-    status: { type: String, default: 'active', enum: ['blocked', 'active', 'deleted'] },
+    status: { type: String, default: 'active', enum: ['blocked', 'active', 'banned', 'deleted'] },
+    banHistory: [{ type: Types.ObjectId, ref: 'Ban' }]
 });
 schema.virtual('id').get(function () {
     return this._id.toHexString();

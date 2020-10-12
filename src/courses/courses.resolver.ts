@@ -104,6 +104,24 @@ export class CoursesResolver {
     async deleteOneChapter(@Args('id') id: string): Promise<any> {
         return await this.coursesService.deleteChapter(id);
     }
+    @Roles('admin')
+    @UseGuards(GraphqlAuthGuard, RolesGuard)
+    @Query('removeBootcamp')
+    async removeBootcamp(@Args('id') id: string): Promise<any> {
+        return await this.coursesService.removeBootcamp(id);
+    }
+    @Roles('admin')
+    @UseGuards(GraphqlAuthGuard, RolesGuard)
+    @Query('removePath')
+    async removePath(@Args('id') id: string): Promise<any> {
+        return await this.coursesService.removePath(id);
+    }
+    @Roles('admin')
+    @UseGuards(GraphqlAuthGuard, RolesGuard)
+    @Query('removeCourse')
+    async removeCourse(@Args('id') id: string): Promise<any> {
+        return await this.coursesService.removeCourse(id);
+    }
     @UseGuards(GraphqlAuthGuard)
     @Query('checkQuiz')
     async checkQuiz(@Args('id') id: string, @User() user): Promise<any> {
@@ -125,6 +143,21 @@ export class CoursesResolver {
     @Mutation('submitQuiz')
     async submitQuiz(@Args('quizAnswerInput') args: any, @User() user): Promise<any> {
         return await this.coursesService.submitQuiz(args, user.id);
+    }
+    @UseGuards(GraphqlAuthGuard)
+    @Mutation('removeQuizChapter')
+    async removeQuizChapter(@Args('removeQuizInput') args: any, @User() user): Promise<any> {
+        return await this.coursesService.removeQuizChapter(args, user);
+    }
+    @UseGuards(GraphqlAuthGuard)
+    @Mutation('updateFinishedCourse')
+    async updateFinishedCourse(@Args('id') id: String): Promise<any> {
+        return await this.coursesService.updateFinishedCourse(id);
+    }
+    @UseGuards(GraphqlAuthGuard)
+    @Mutation('updateFinishedPath')
+    async updateFinishedPath(@Args('id') id: String): Promise<any> {
+        return await this.coursesService.updateFinishedPath(id);
     }
     // COMMENTS CRUDs
     @Roles('admin')
@@ -261,6 +294,12 @@ export class CoursesResolver {
     @Mutation('updateProgress')
     async updateProgress(@Args('updateProgressInput') args: any, @User() user): Promise<any> {
         return await this.coursesService.updateProgress(args, user);
+    }
+    
+    @UseGuards(GraphqlAuthGuard)
+    @Query('getPathProgress')
+    async getPathProgress(@Args('pathId') id, @User() user) {
+        return await this.coursesService.getPathProgress(user, id);
     }
     @UseGuards(GraphqlAuthGuard)
     @Query('getAllProgress')

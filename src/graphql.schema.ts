@@ -6,6 +6,11 @@
 
 /* tslint:disable */
 /* eslint-disable */
+export class BanStatus {
+    reason?: string;
+    id?: string;
+}
+
 export class CreateAccessInput {
     candidate?: string;
     course?: string;
@@ -93,6 +98,7 @@ export class CreateLevelInput {
     status?: string;
     duration?: number;
     price?: number;
+    assistancePrice?: number;
 }
 
 export class CreateModuleInput {
@@ -106,6 +112,7 @@ export class CreateModuleInput {
     status?: string;
     duration?: number;
     price?: number;
+    assistancePrice?: number;
 }
 
 export class CreateOrderInput {
@@ -151,9 +158,9 @@ export class CreateUserInput {
     note?: string;
     role?: string;
     tel?: string;
-    address?: string;
+    city?: string;
     country?: string;
-    postcode?: string;
+    zip?: string;
     sendEmail?: boolean;
 }
 
@@ -175,6 +182,22 @@ export class QuizInput {
     question?: string;
     correctAnswer?: number;
     options?: OptionInput[];
+}
+
+export class RemoveQuizInput {
+    idCourse?: string;
+    idChapter?: string;
+}
+
+export class Scroll {
+    scroll?: number;
+    role?: string;
+    searchText?: string;
+}
+
+export class Search {
+    searchText?: string;
+    role?: string;
 }
 
 export class SendMessageInput {
@@ -275,6 +298,7 @@ export class UpdateLevelInput {
     status?: string;
     duration?: number;
     price?: number;
+    assistancePrice?: number;
 }
 
 export class UpdateModuleInput {
@@ -289,6 +313,7 @@ export class UpdateModuleInput {
     status?: string;
     duration?: number;
     price?: number;
+    assistancePrice?: number;
 }
 
 export class UpdateOrderInput {
@@ -335,6 +360,9 @@ export class UserInput {
     coach?: string;
     sendEmail?: boolean;
     generate?: boolean;
+    city?: string;
+    country?: string;
+    zip?: string;
 }
 
 export class VerifCode {
@@ -353,6 +381,17 @@ export class Access {
     createDate?: number;
     duration?: number;
     timeLeft?: number;
+}
+
+export class Ban {
+    banDate?: number;
+    banReason?: string;
+    user?: string;
+    unBanned?: Unbanned;
+}
+
+export class BanMessage {
+    message?: string;
 }
 
 export class Candidate {
@@ -409,6 +448,14 @@ export class ChatMessage {
     createDate?: number;
 }
 
+export class Checkpoint {
+    idChapters?: string[];
+    status?: string;
+    idCourse?: string;
+    lastChapter?: string;
+    progress?: number;
+}
+
 export class Coach {
     tel?: string;
     image?: string;
@@ -437,6 +484,12 @@ export class Contact {
     image?: string;
 }
 
+export class CountUser {
+    users?: User[];
+    count?: number;
+    skipped?: number;
+}
+
 export class Course {
     id?: string;
     title?: string;
@@ -463,6 +516,10 @@ export class CourseProgress {
     checkedChapters?: string[];
 }
 
+export class Email {
+    email?: string;
+}
+
 export class Level {
     id?: string;
     title?: string;
@@ -476,11 +533,23 @@ export class Level {
     status?: string;
     duration?: number;
     price?: number;
+    assistancePrice?: number;
 }
 
 export class Message {
     message?: string;
     accessToken?: string;
+    id?: string;
+}
+
+export class MessageMulti {
+    message?: string;
+    ids?: string[];
+}
+
+export class ModifiedUser {
+    updatedUser?: User;
+    newToken?: UserLogin;
 }
 
 export class Module {
@@ -496,6 +565,7 @@ export class Module {
     status?: string;
     duration?: number;
     price?: number;
+    assistancePrice?: number;
 }
 
 export abstract class IMutation {
@@ -510,6 +580,10 @@ export abstract class IMutation {
     abstract updateCertificate(urlImg?: string, id?: string): Certificate | Promise<Certificate>;
 
     abstract updateCertificateAdmin(urlImg?: string, idPath?: string, idUser?: string): Certificate | Promise<Certificate>;
+
+    abstract sendMailContact(email?: string): UserContact | Promise<UserContact>;
+
+    abstract receiveMailContact(email?: string, name?: string, msg?: string): UserContact | Promise<UserContact>;
 
     abstract sendMessage(sendMessageInput?: SendMessageInput): Message | Promise<Message>;
 
@@ -553,6 +627,12 @@ export abstract class IMutation {
 
     abstract updateAdvancementModule(updateAdvanceInput?: UpdateAdvanceInput): Progress | Promise<Progress>;
 
+    abstract removeQuizChapter(removeQuizInput?: RemoveQuizInput): Progress | Promise<Progress>;
+
+    abstract updateFinishedCourse(id: string): Progress | Promise<Progress>;
+
+    abstract updateFinishedPath(id: string): Progress | Promise<Progress>;
+
     abstract updateProgress(updateProgressInput?: UpdateProgressInput): Progress | Promise<Progress>;
 
     abstract createOrder(createOrderInput?: CreateOrderInput): Message | Promise<Message>;
@@ -567,11 +647,15 @@ export abstract class IMutation {
 
     abstract createUser(createUserInput?: CreateUserInput): User | Promise<User>;
 
-    abstract updateUser(userInput?: UserInput): User | Promise<User>;
+    abstract updateUser(userInput?: UserInput): ModifiedUser | Promise<ModifiedUser>;
 
     abstract login(loginInput?: LoginInput): UserLogin | Promise<UserLogin>;
 
     abstract firstLogin(verifCode?: VerifCode): UserLogin | Promise<UserLogin>;
+
+    abstract userStatus(banStatus?: BanStatus): BanMessage | Promise<BanMessage>;
+
+    abstract usersStatus(banStatus?: BanStatus[]): BanMessage | Promise<BanMessage>;
 }
 
 export class MyCandidate {
@@ -637,9 +721,10 @@ export class Progress {
     desc?: string;
     createDate?: number;
     course?: CourseProgress;
-    path?: string;
-    bootcamp?: string;
+    path?: Level;
+    bootcamp?: Module;
     progress?: number;
+    finished?: boolean;
 }
 
 export class ProgressUpdate {
@@ -683,6 +768,7 @@ export class PublicLevel {
     shortDesc?: string;
     pic?: string;
     price?: number;
+    assistancePrice?: number;
 }
 
 export class PublicModule {
@@ -696,6 +782,7 @@ export class PublicModule {
     shortDesc?: string;
     pic?: string;
     price?: number;
+    assistancePrice?: number;
 }
 
 export abstract class IQuery {
@@ -716,6 +803,8 @@ export abstract class IQuery {
     abstract getCertificate(code: string): Certificate | Promise<Certificate>;
 
     abstract getCertificateAdmin(idUser: string, idPath: string): Certificate | Promise<Certificate>;
+
+    abstract getProfileCertifications(id: string): Certificate[] | Promise<Certificate[]>;
 
     abstract getChats(): Chat[] | Promise<Chat[]>;
 
@@ -749,6 +838,8 @@ export abstract class IQuery {
 
     abstract removeAccess(id: string): Message | Promise<Message>;
 
+    abstract migrateData(): Access | Promise<Access>;
+
     abstract getChapters(): Chapter[] | Promise<Chapter[]>;
 
     abstract Chapter(id: string): Chapter | Promise<Chapter>;
@@ -781,6 +872,8 @@ export abstract class IQuery {
 
     abstract removeLevel(id: string): Message | Promise<Message>;
 
+    abstract removePath(id: string): Message | Promise<Message>;
+
     abstract getModules(): Module[] | Promise<Module[]>;
 
     abstract Module(id: string): Module | Promise<Module>;
@@ -788,6 +881,8 @@ export abstract class IQuery {
     abstract getHomeModules(): PublicModule[] | Promise<PublicModule[]>;
 
     abstract removeModule(id: string): Message | Promise<Message>;
+
+    abstract removeBootcamp(id: string): Message | Promise<Message>;
 
     abstract getAllProgress(): Progress[] | Promise<Progress[]>;
 
@@ -827,7 +922,13 @@ export abstract class IQuery {
 
     abstract getUsers(): User[] | Promise<User[]>;
 
+    abstract getAllEmails(): Email[] | Promise<Email[]>;
+
+    abstract scrollUsers(scroll?: Scroll): CountUser | Promise<CountUser>;
+
     abstract getCurrentUser(): User | Promise<User>;
+
+    abstract filteredUsers(search?: Search): User[] | Promise<User[]>;
 
     abstract User(id: string): User | Promise<User>;
 
@@ -885,6 +986,15 @@ export abstract class ISubscription {
     abstract SessionCreated(): Session | Promise<Session>;
 
     abstract UserCreated(): User | Promise<User>;
+
+    abstract bannedUser(id: string): Message | Promise<Message>;
+
+    abstract bannedMultipleUser(id: string): MessageMulti | Promise<MessageMulti>;
+}
+
+export class Unbanned {
+    status?: boolean;
+    unbanDate?: number;
 }
 
 export class User {
@@ -896,14 +1006,21 @@ export class User {
     email?: string;
     image?: string;
     tel?: string;
-    address?: string;
+    city?: string;
     country?: string;
-    postcode?: string;
+    zip?: string;
     note?: string;
     candidate?: Candidate;
     coach?: Coach;
     role?: string;
     status?: string;
+    checkpoints?: Checkpoint[];
+    banHistory?: Ban[];
+    message?: string;
+}
+
+export class UserContact {
+    email?: string;
 }
 
 export class UserLogin {

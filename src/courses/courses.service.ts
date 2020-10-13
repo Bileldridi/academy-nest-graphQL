@@ -161,6 +161,23 @@ export class CoursesService {
     const result = await this.levelModel.findByIdAndUpdate(_id , {$set: {status: 'deleted'}}).exec();
     return result.id ? { message: "OK" } : { message: "NOT OK" };
   }
+
+  async restoreChapter(_id) {
+    const result = await this.chapterModel.findByIdAndUpdate(_id , {$set: {status: 'published'}}).exec();
+    return result.id ? { message: "OK" } : { message: "NOT OK" };
+  }
+  async restoreBootcamp(_id) {
+    const result = await this.moduleModel.findByIdAndUpdate(_id , {$set: {status: 'published'}}).exec();
+    return result.id ? { message: "OK" } : { message: "NOT OK" };
+  }
+  async restoreCourse(_id) {
+    const result = await this.courseModel.findByIdAndUpdate(_id , {$set: {status: 'published'}}).exec();
+    return result.id ? { message: "OK" } : { message: "NOT OK" };
+  }
+  async restorePath(_id) {
+    const result = await this.levelModel.findByIdAndUpdate(_id , {$set: {status: 'published'}}).exec();
+    return result.id ? { message: "OK" } : { message: "NOT OK" };
+  }
   // CRUD Progress
   async getPathProgress(user, pathId) {
     return await this.progressModel

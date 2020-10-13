@@ -4,6 +4,8 @@ type Query {
   getHomeModules: [PublicModule]
   removeModule(id: String!): Message
   removeBootcamp(id: String!): Message
+  restoreModule(id: String!): Message
+  restoreBootcamp(id: String!): Message
 }
 
 type Mutation {

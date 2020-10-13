@@ -4,6 +4,8 @@ type Query {
   getHomeLevels: [PublicLevel]
   removeLevel(id: String!): Message
   removePath(id: String!): Message
+  restoreLevel(id: String!): Message
+  restorePath(id: String!): Message
 }
 
 type Mutation {

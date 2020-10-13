@@ -122,6 +122,30 @@ export class CoursesResolver {
     async removeCourse(@Args('id') id: string): Promise<any> {
         return await this.coursesService.removeCourse(id);
     }
+    @Roles('admin')
+    @UseGuards(GraphqlAuthGuard, RolesGuard)
+    @Query('restoreChapter')
+    async restoreChapter(@Args('id') id: string): Promise<any> {
+        return await this.coursesService.restoreChapter(id);
+    }
+    @Roles('admin')
+    @UseGuards(GraphqlAuthGuard, RolesGuard)
+    @Query('restoreBootcamp')
+    async restoreBootcamp(@Args('id') id: string): Promise<any> {
+        return await this.coursesService.restoreBootcamp(id);
+    }
+    @Roles('admin')
+    @UseGuards(GraphqlAuthGuard, RolesGuard)
+    @Query('restorePath')
+    async restorePath(@Args('id') id: string): Promise<any> {
+        return await this.coursesService.restorePath(id);
+    }
+    @Roles('admin')
+    @UseGuards(GraphqlAuthGuard, RolesGuard)
+    @Query('restoreCourse')
+    async restoreCourse(@Args('id') id: string): Promise<any> {
+        return await this.coursesService.restoreCourse(id);
+    }
     @UseGuards(GraphqlAuthGuard)
     @Query('checkQuiz')
     async checkQuiz(@Args('id') id: string, @User() user): Promise<any> {

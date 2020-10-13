@@ -4,6 +4,7 @@ type Query {
   getHomeCourses: [PublicCourse]
   Course(id: String!): Course
   removeCourse(id: String!): Message
+  restoreCourse(id: String!): Message
   getComments: [Course]
   Comment(id: String!): Comment
   removeComment(id: String!): Comment

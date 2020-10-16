@@ -21,7 +21,7 @@ const dbhost = process.env.dbhost || 'localhost';
     CatsModule,
     ScheduleModule.forRoot(),
     CommonModule,
-    MongooseModule.forRoot('mongodb://' + dbhost + ':30898/ibmclouddb?authSource=admin&replicaSet=replset&tlsCAFile=../mongo-tls', { useNewUrlParser: true, useUnifiedTopology: true }),
+    MongooseModule.forRoot('mongodb://' + dbhost + ':30898/academyDb?authSource=admin&replicaSet=replset&tlsCAFile=/app/ssl/mongo.key', { useNewUrlParser: true, useUnifiedTopology: true }),
     GraphQLModule.forRoot({
       typePaths: ['./**/*.graphql'],
       installSubscriptionHandlers: true,

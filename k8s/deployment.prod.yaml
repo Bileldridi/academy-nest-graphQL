@@ -30,6 +30,10 @@ spec:
       containers:
         - name: app
           image: __CI_REGISTRY_IMAGE__:__VERSION__
+          volumeMounts:
+          - mountPath: "/app/ssl"
+            name: mongo-ssl
+            readOnly: true
           env:
           - name: dbhost
             value: "admin:FivePoints2020@5955fc2a-3bf5-4e0e-b684-ddb6ebe7bfd4-0.br38q28f0334iom5lv4g.databases.appdomain.cloud:30898,5955fc2a-3bf5-4e0e-b684-ddb6ebe7bfd4-1.br38q28f0334iom5lv4g.databases.appdomain.cloud"
@@ -40,6 +44,11 @@ spec:
           - name: http-metrics
             protocol: TCP
             containerPort: 80
+          volumes:
+            - name: mongo-ssl
+              secret:
+                secretName: mongo-ssl
+          restartPolicy: Always
           resources:
             limits:
               cpu: 500m

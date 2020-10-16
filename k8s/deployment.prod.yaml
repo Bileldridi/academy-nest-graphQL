@@ -44,10 +44,7 @@ spec:
           - name: http-metrics
             protocol: TCP
             containerPort: 80
-      volumes:
-        - name: mongo-ssl
-          secret:
-            secretName: mongo-ssl
+      
           resources:
             limits:
               cpu: 500m
@@ -55,6 +52,10 @@ spec:
             requests:
               cpu: 250m
               memory: 128Mi
+      volumes:
+        - name: mongo-ssl
+          secret:
+            secretName: mongo-ssl
 
           # livenessProbe:
           #   httpGet:

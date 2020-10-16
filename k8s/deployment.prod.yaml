@@ -48,7 +48,6 @@ spec:
         - name: mongo-ssl
           secret:
             secretName: mongo-ssl
-          restartPolicy: Always
           resources:
             limits:
               cpu: 500m

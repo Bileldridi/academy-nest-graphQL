@@ -13,7 +13,6 @@ import { AppResolver } from './app.resolver';
 import { PurchaseModule } from './purchase/purchase.module';
 import { ChatModule } from './chat/chat.module';
 import { CertificateModule } from './certificate/certificate.module';
-var buffer = require('fs').readFileSync("/Users/missaouiwissem/academy-platform-backend/mongo-tls");
 
 const dbhost = process.env.dbhost || 'localhost';
 

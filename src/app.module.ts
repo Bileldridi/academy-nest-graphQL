@@ -13,6 +13,7 @@ import { AppResolver } from './app.resolver';
 import { PurchaseModule } from './purchase/purchase.module';
 import { ChatModule } from './chat/chat.module';
 import { CertificateModule } from './certificate/certificate.module';
+var buffer = require('fs').readFileSync("/Users/missaouiwissem/academy-platform-backend/mongo-tls");
 
 const dbhost = process.env.dbhost || 'localhost';
 
@@ -21,7 +22,7 @@ const dbhost = process.env.dbhost || 'localhost';
     CatsModule,
     ScheduleModule.forRoot(),
     CommonModule,
-    MongooseModule.forRoot('mongodb://admin:FivePoints2020@5955fc2a-3bf5-4e0e-b684-ddb6ebe7bfd4-0.br38q28f0334iom5lv4g.databases.appdomain.cloud:30898,5955fc2a-3bf5-4e0e-b684-ddb6ebe7bfd4-1.br38q28f0334iom5lv4g.databases.appdomain.cloud:30898/academyDb?authSource=admin&replicaSet=replset&tlsCAFile=/app/ssl/mongo.key', { useNewUrlParser: true, useUnifiedTopology: true }),
+    MongooseModule.forRoot('mongodb://admin:FivePoints2020@5955fc2a-3bf5-4e0e-b684-ddb6ebe7bfd4-0.br38q28f0334iom5lv4g.databases.appdomain.cloud:30898,5955fc2a-3bf5-4e0e-b684-ddb6ebe7bfd4-1.br38q28f0334iom5lv4g.databases.appdomain.cloud:30898/academyDb?authSource=admin&replicaSet=replset&tlsCAFile=./mongo-tls&tls=true', { useNewUrlParser: true, useUnifiedTopology: true, retryAttempts: 2 }),
     GraphQLModule.forRoot({
       typePaths: ['./**/*.graphql'],
       installSubscriptionHandlers: true,

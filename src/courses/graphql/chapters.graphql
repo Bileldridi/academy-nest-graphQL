@@ -4,6 +4,7 @@ type Query {
   checkQuiz(id: String!): Message
   removeChapter(id: String!): Message
   restoreChapter(id: String!): Message
+  scrollChapters(scroll: Scroll): CountChapter
 }
 
 type Mutation {
@@ -32,6 +33,26 @@ type Chapter {
   files: [String]
   comments: [Comment]
   quiz: [Quiz]
+}
+
+type CountChapter{
+  chapters: [Chapter]
+  count: Int
+  skipped: Int
+}
+
+input Scroll{
+  scroll: Int
+  searchValue: [Value]
+}
+
+input Value {
+deleted: Boolean
+media: Boolean
+published: Boolean
+quiz: Boolean
+video: Boolean
+searchTermChapters: String
 }
 
 type Quiz {

@@ -92,6 +92,15 @@ export class CoursesResolver {
     async getChapters() {
         return await this.coursesService.findAllChapters();
     }
+
+    @SetMetadata('roles', ['admin'])
+    @UseGuards(GraphqlAuthGuard, RolesGuard)
+    @Roles('admin')
+    @Query('scrollChapters')
+    async scrollChapters(@Args('scroll') scroll): Promise<any> {
+        return await this.coursesService.findChapters(scroll);
+    }
+
     @Roles('admin')
     @UseGuards(GraphqlAuthGuard, RolesGuard)
     @Query('Chapter')

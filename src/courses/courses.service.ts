@@ -190,6 +190,252 @@ export class CoursesService {
     async findAllChapters(): Promise<any[]> {
         return await this.chapterModel.find().populate('course').exec();
     }
+
+    async findChapters(obj) {
+      const { scroll, searchValue } = obj
+      let text = '';
+      let quiz = '';
+      let video = '';
+      let deleted = '';
+      let published = '';
+      let searchText;
+      let init = 9;
+      let skipped = 0
+      let count = await this.chapterModel.countDocuments()
+      let chapters = await this.chapterModel.find().limit(init).populate('course').exec();
+      searchValue[0].media ? text = 'text' : text = 'not' ;
+      searchValue[0].quiz ? quiz = 'quiz' : quiz = 'not';
+      searchValue[0].video ? video = 'video' : video = 'not';
+      searchValue[0].deleted ? deleted = 'deleted' : deleted = 'not';
+      searchValue[0].published ? published = 'published' : published = 'not';
+      searchText = searchValue[0].searchTermChapters;
+
+      if (searchText !== '' && text === 'not' && quiz === 'not' && video === 'not' && deleted === 'not' && published === 'not') {
+        chapters = await this.chapterModel.find({ title: { $regex: searchValue[0].searchTermChapters, $options: 'i' } }).limit(init).populate('course').exec();
+        count = await this.chapterModel.find({ title: { $regex: searchValue[0].searchTermChapters, $options: 'i' } }).countDocuments()
+          skipped = 0
+      }
+
+      if (searchText === '' && (text !== 'not' || quiz !== 'not' || video !== 'not') && (deleted !== 'not' || published !== 'not')) {
+        chapters = await this.chapterModel.find({
+          $and: [
+            { $or: [{ status: { $regex: deleted, $options: 'i' } }, { status: { $regex: published, $options: 'i' } }] },
+            { $or: [{ type: { $regex: text, $options: 'i' } }, { type: { $regex: quiz, $options: 'i' } }, { type: { $regex: video, $options: 'i' } }] }
+          ]
+        }).limit(init).populate('course').exec();
+        count = await this.chapterModel.find({
+          $and: [
+            { $or: [{ status: { $regex: deleted, $options: 'i' } }, { status: { $regex: published, $options: 'i' } }] },
+            { $or: [{ type: { $regex: text, $options: 'i' } }, { type: { $regex: quiz, $options: 'i' } }, { type: { $regex: video, $options: 'i' } }] }
+          ]
+        }).countDocuments()
+          skipped = 0
+      }
+
+      if (searchText === '' && (text !== 'not' || quiz !== 'not' || video !== 'not') && (deleted === 'not' && published === 'not')) {
+        chapters = await this.chapterModel.find({
+          $or: [
+            { type: { $regex: text, $options: 'i' } }, { type: { $regex: quiz, $options: 'i' } }, { type: { $regex: video, $options: 'i' } }
+          ]
+        }).limit(init).populate('course').exec();
+        count = await this.chapterModel.find({
+          $or: [
+            { type: { $regex: text, $options: 'i' } }, { type: { $regex: quiz, $options: 'i' } }, { type: { $regex: video, $options: 'i' } }
+          ]
+        }).countDocuments()
+          skipped = 0
+      }
+
+      if (searchText === '' && (text === 'not' && quiz === 'not' && video === 'not') && (deleted !== 'not' || published !== 'not')) {
+        chapters = await this.chapterModel.find({
+          $or: [
+            { status: { $regex: deleted, $options: 'i' } }, { status: { $regex: published, $options: 'i' } }
+          ]
+        }).limit(init).populate('course').exec();
+        count = await this.chapterModel.find({
+          $or: [
+            { status: { $regex: deleted, $options: 'i' } }, { status: { $regex: published, $options: 'i' } }
+          ]
+        }).countDocuments()
+          skipped = 0
+
+      }
+
+      if (searchText !== '' && (text === 'not' && quiz === 'not' && video === 'not') && (deleted !== 'not' || published !== 'not')) {
+        chapters = await this.chapterModel.find({
+          $and: [{ title: { $regex: searchValue[0].searchTermChapters, $options: 'i' } },
+          { $or: [{ status: { $regex: deleted, $options: 'i' } }, { status: { $regex: published, $options: 'i' } }] }
+          ]
+        }).limit(init).populate('course').exec();
+        count = await this.chapterModel.find({
+          $and: [{ title: { $regex: searchValue[0].searchTermChapters, $options: 'i' } },
+          { $or: [{ status: { $regex: deleted, $options: 'i' } }, { status: { $regex: published, $options: 'i' } }] }
+          ]
+        }).countDocuments()
+          skipped = 0
+
+
+      }
+
+      if (searchText !== '' && (text !== 'not' || quiz !== 'not' || video !== 'not') && (deleted === 'not' && published === 'not')) {
+        chapters = await this.chapterModel.find({
+          $and: [
+            { title: { $regex: searchValue[0].searchTermChapters, $options: 'i' } },
+            { $or: [{ type: { $regex: text, $options: 'i' } }, { type: { $regex: quiz, $options: 'i' } }, { type: { $regex: video, $options: 'i' } }] }
+          ]
+        }
+        ).limit(init).populate('course').exec();
+        count = await this.chapterModel.find({
+          $and: [
+            { title: { $regex: searchValue[0].searchTermChapters, $options: 'i' } },
+            { $or: [{ type: { $regex: text, $options: 'i' } }, { type: { $regex: quiz, $options: 'i' } }, { type: { $regex: video, $options: 'i' } }] }
+          ]
+        }).countDocuments()
+          skipped = 0
+      }
+
+      if (searchText !== '' && (text !== 'not' || quiz !== 'not' || video !== 'not') && (deleted !== 'not' || published !== 'not')) {
+        chapters = await this.chapterModel.find({
+          $and: [
+            { title: { $regex: searchValue[0].searchTermChapters, $options: 'i' } },
+            {
+              $and: [
+                { $or: [{ status: { $regex: deleted, $options: 'i' } }, { status: { $regex: published, $options: 'i' } }] },
+                { $or: [{ type: { $regex: text, $options: 'i' } }, { type: { $regex: quiz, $options: 'i' } }, { type: { $regex: video, $options: 'i' } }] }
+              ]
+            }
+          ]
+        }).limit(init).populate('course').exec();
+          count = await this.chapterModel.find({
+            $and: [
+              { title: { $regex: searchValue[0].searchTermChapters, $options: 'i' } },
+              {
+                $and: [
+                  { $or: [{ status: { $regex: deleted, $options: 'i' } }, { status: { $regex: published, $options: 'i' } }] },
+                  { $or: [{ type: { $regex: text, $options: 'i' } }, { type: { $regex: quiz, $options: 'i' } }, { type: { $regex: video, $options: 'i' } }] }
+                ]
+              }
+            ]
+          }).countDocuments()
+          skipped = 0
+      }
+      if (scroll > init) {
+          chapters = await this.chapterModel.find().skip(scroll - 9).limit(init).populate('course').exec();
+
+          if (searchText !== '' && text === 'not' && quiz === 'not' && video === 'not' && deleted === 'not' && published === 'not') {
+            chapters = await this.chapterModel.find({ title: { $regex: searchValue[0].searchTermChapters, $options: 'i' } }).skip(scroll - 9).limit(init).populate('course').exec();
+            count = await this.chapterModel.find({ title: { $regex: searchValue[0].searchTermChapters, $options: 'i' } }).countDocuments()
+              
+          }
+    
+          if (searchText === '' && (text !== 'not' || quiz !== 'not' || video !== 'not') && (deleted !== 'not' || published !== 'not')) {
+            chapters = await this.chapterModel.find({
+              $and: [
+                { $or: [{ status: { $regex: deleted, $options: 'i' } }, { status: { $regex: published, $options: 'i' } }] },
+                { $or: [{ type: { $regex: text, $options: 'i' } }, { type: { $regex: quiz, $options: 'i' } }, { type: { $regex: video, $options: 'i' } }] }
+              ]
+            }).skip(scroll - 9).limit(init).populate('course').exec();
+            count = await this.chapterModel.find({
+              $and: [
+                { $or: [{ status: { $regex: deleted, $options: 'i' } }, { status: { $regex: published, $options: 'i' } }] },
+                { $or: [{ type: { $regex: text, $options: 'i' } }, { type: { $regex: quiz, $options: 'i' } }, { type: { $regex: video, $options: 'i' } }] }
+              ]
+            }).countDocuments()
+              
+          }
+    
+          if (searchText === '' && (text !== 'not' || quiz !== 'not' || video !== 'not') && (deleted === 'not' && published === 'not')) {
+            chapters = await this.chapterModel.find({
+              $or: [
+                { type: { $regex: text, $options: 'i' } }, { type: { $regex: quiz, $options: 'i' } }, { type: { $regex: video, $options: 'i' } }
+              ]
+            }).skip(scroll - 9).limit(init).populate('course').exec();
+            count = await this.chapterModel.find({
+              $or: [
+                { type: { $regex: text, $options: 'i' } }, { type: { $regex: quiz, $options: 'i' } }, { type: { $regex: video, $options: 'i' } }
+              ]
+            }).countDocuments()
+              
+          }
+    
+          if (searchText === '' && (text === 'not' && quiz === 'not' && video === 'not') && (deleted !== 'not' || published !== 'not')) {
+            chapters = await this.chapterModel.find({
+              $or: [
+                { status: { $regex: deleted, $options: 'i' } }, { status: { $regex: published, $options: 'i' } }
+              ]
+            }).skip(scroll - 9).limit(init).populate('course').exec();
+            count = await this.chapterModel.find({
+              $or: [
+                { status: { $regex: deleted, $options: 'i' } }, { status: { $regex: published, $options: 'i' } }
+              ]
+            }).countDocuments()
+              
+    
+          }
+    
+          if (searchText !== '' && (text === 'not' && quiz === 'not' && video === 'not') && (deleted !== 'not' || published !== 'not')) {
+            chapters = await this.chapterModel.find({
+              $and: [{ title: { $regex: searchValue[0].searchTermChapters, $options: 'i' } },
+              { $or: [{ status: { $regex: deleted, $options: 'i' } }, { status: { $regex: published, $options: 'i' } }] }
+              ]
+            }).skip(scroll - 9).limit(init).populate('course').exec();
+            count = await this.chapterModel.find({
+              $and: [{ title: { $regex: searchValue[0].searchTermChapters, $options: 'i' } },
+              { $or: [{ status: { $regex: deleted, $options: 'i' } }, { status: { $regex: published, $options: 'i' } }] }
+              ]
+            }).countDocuments()
+              
+    
+    
+          }
+    
+          if (searchText !== '' && (text !== 'not' || quiz !== 'not' || video !== 'not') && (deleted === 'not' && published === 'not')) {
+            chapters = await this.chapterModel.find({
+              $and: [
+                { title: { $regex: searchValue[0].searchTermChapters, $options: 'i' } },
+                { $or: [{ type: { $regex: text, $options: 'i' } }, { type: { $regex: quiz, $options: 'i' } }, { type: { $regex: video, $options: 'i' } }] }
+              ]
+            }
+            ).skip(scroll - 9).limit(init).populate('course').exec();
+            count = await this.chapterModel.find({
+              $and: [
+                { title: { $regex: searchValue[0].searchTermChapters, $options: 'i' } },
+                { $or: [{ type: { $regex: text, $options: 'i' } }, { type: { $regex: quiz, $options: 'i' } }, { type: { $regex: video, $options: 'i' } }] }
+              ]
+            }).countDocuments()
+              
+          }
+    
+          if (searchText !== '' && (text !== 'not' || quiz !== 'not' || video !== 'not') && (deleted !== 'not' || published !== 'not')) {
+            chapters = await this.chapterModel.find({
+              $and: [
+                { title: { $regex: searchValue[0].searchTermChapters, $options: 'i' } },
+                {
+                  $and: [
+                    { $or: [{ status: { $regex: deleted, $options: 'i' } }, { status: { $regex: published, $options: 'i' } }] },
+                    { $or: [{ type: { $regex: text, $options: 'i' } }, { type: { $regex: quiz, $options: 'i' } }, { type: { $regex: video, $options: 'i' } }] }
+                  ]
+                }
+              ]
+            }).skip(scroll - 9).limit(init).populate('course').exec();
+              count = await this.chapterModel.find({
+                $and: [
+                  { title: { $regex: searchValue[0].searchTermChapters, $options: 'i' } },
+                  {
+                    $and: [
+                      { $or: [{ status: { $regex: deleted, $options: 'i' } }, { status: { $regex: published, $options: 'i' } }] },
+                      { $or: [{ type: { $regex: text, $options: 'i' } }, { type: { $regex: quiz, $options: 'i' } }, { type: { $regex: video, $options: 'i' } }] }
+                    ]
+                  }
+                ]
+              }).countDocuments()
+              
+          }
+          skipped = scroll - 9
+      }
+      return { chapters, count, skipped }
+
+  }
     async updateChapter(chapter, _id) {
         if (chapter.course) {
             // const oldCourse = await this.courseModel.updateOne({ chapters: _id }, { $pull: { chapters: _id } }).exec();

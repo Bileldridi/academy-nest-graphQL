@@ -92,6 +92,15 @@ export class CoursesResolver {
     async getChapters() {
         return await this.coursesService.findAllChapters();
     }
+
+    @SetMetadata('roles', ['admin'])
+    @UseGuards(GraphqlAuthGuard, RolesGuard)
+    @Roles('admin')
+    @Query('scrollChapters')
+    async scrollChapters(@Args('scroll') scroll): Promise<any> {
+        return await this.coursesService.findChapters(scroll);
+    }
+
     @Roles('admin')
     @UseGuards(GraphqlAuthGuard, RolesGuard)
     @Query('Chapter')
@@ -121,6 +130,30 @@ export class CoursesResolver {
     @Query('removeCourse')
     async removeCourse(@Args('id') id: string): Promise<any> {
         return await this.coursesService.removeCourse(id);
+    }
+    @Roles('admin')
+    @UseGuards(GraphqlAuthGuard, RolesGuard)
+    @Query('restoreChapter')
+    async restoreChapter(@Args('id') id: string): Promise<any> {
+        return await this.coursesService.restoreChapter(id);
+    }
+    @Roles('admin')
+    @UseGuards(GraphqlAuthGuard, RolesGuard)
+    @Query('restoreBootcamp')
+    async restoreBootcamp(@Args('id') id: string): Promise<any> {
+        return await this.coursesService.restoreBootcamp(id);
+    }
+    @Roles('admin')
+    @UseGuards(GraphqlAuthGuard, RolesGuard)
+    @Query('restorePath')
+    async restorePath(@Args('id') id: string): Promise<any> {
+        return await this.coursesService.restorePath(id);
+    }
+    @Roles('admin')
+    @UseGuards(GraphqlAuthGuard, RolesGuard)
+    @Query('restoreCourse')
+    async restoreCourse(@Args('id') id: string): Promise<any> {
+        return await this.coursesService.restoreCourse(id);
     }
     @UseGuards(GraphqlAuthGuard)
     @Query('checkQuiz')

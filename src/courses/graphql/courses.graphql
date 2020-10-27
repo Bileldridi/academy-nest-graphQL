@@ -56,14 +56,14 @@ type Countcourse {
 
 input Scroll{
   scroll: Int
-  searchValue: [Value]
+  searchValueCourses: [Value]
 }
 
 input Value {
 deleted: Boolean
 published: Boolean
 comingSoon: Boolean
-expeert: Boolean
+expert: Boolean
 intermediate: Boolean
 beginner: Boolean
 searchTermCourses: String

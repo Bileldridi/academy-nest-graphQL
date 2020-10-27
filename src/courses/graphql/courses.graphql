@@ -8,6 +8,7 @@ type Query {
   getComments: [Course]
   Comment(id: String!): Comment
   removeComment(id: String!): Comment
+  scrollCourses(scroll: Scroll): Countcourse
 }
 
 type Mutation {
@@ -45,6 +46,27 @@ type Course {
   duration: Int
   price: Int
   files: [String]
+}
+
+type Countcourse {
+  courses: [Course]
+  count: Int
+  skipped: Int
+}
+
+input Scroll{
+  scroll: Int
+  searchValue: [Value]
+}
+
+input Value {
+deleted: Boolean
+published: Boolean
+comingSoon: Boolean
+expeert: Boolean
+intermediate: Boolean
+beginner: Boolean
+searchTermCourses: String
 }
 
 type PublicCourse {

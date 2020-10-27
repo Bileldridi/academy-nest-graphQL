@@ -191,6 +191,255 @@ export class CoursesService {
         return await this.chapterModel.find().populate('course').exec();
     }
 
+
+    async findCourses(obj) {
+      const { scroll, searchValue } = obj
+      let beginner = '';
+      let intermediate = '';
+      let expert = '';
+      let deleted = '';
+      let published = '';
+      let comingSoon = '';
+      let searchText;
+      let init = 9;
+      let skipped = 0
+      let count = await this.courseModel.countDocuments()
+      let courses = await this.courseModel.find().limit(init).populate('course').exec();
+      searchValue[0].beginner ? beginner = 'beginner' : beginner = 'not' ;
+      searchValue[0].intermediate ? intermediate = 'intermediate' : intermediate = 'not';
+      searchValue[0].expert ? expert = 'expert' : expert = 'not';
+      searchValue[0].deleted ? deleted = 'deleted' : deleted = 'not';
+      searchValue[0].published ? published = 'published' : published = 'not';
+      searchValue[0].comingSoon ? comingSoon = 'coming soon' : comingSoon = 'not';
+      searchText = searchValue[0].searchTermCourses;
+
+      if (searchText !== '' && beginner === 'not' && intermediate === 'not' && expert === 'not' && comingSoon === 'not' && deleted === 'not' && published === 'not') {
+        courses = await this.courseModel.find({ title: { $regex: searchText, $options: 'i' } }).limit(init).populate('levels').populate("chapters").exec();
+        count = await this.courseModel.find({ title: { $regex: searchText, $options: 'i' } }).countDocuments()
+          skipped = 0
+      }
+
+      if (searchText === '' && (beginner !== 'not' || intermediate !== 'not' || expert !== 'not') && (deleted !== 'not' || published !== 'not' || comingSoon !== 'not')) {
+        courses = await this.courseModel.find({
+          $and: [
+            { $or: [{ status: { $regex: deleted, $options: 'i' } }, { status: { $regex: published, $options: 'i' } }, { status: { $regex: comingSoon, $options: 'i' } }] },
+            { $or: [{ type: { $regex: beginner, $options: 'i' } }, { type: { $regex: intermediate, $options: 'i' } }, { type: { $regex: expert, $options: 'i' } }] }
+          ]
+        }).limit(init).populate('levels').populate("chapters").exec();
+        count = await this.courseModel.find({
+          $and: [
+            { $or: [{ status: { $regex: deleted, $options: 'i' } }, { status: { $regex: published, $options: 'i' } }, { status: { $regex: comingSoon, $options: 'i' } }] },
+            { $or: [{ type: { $regex: beginner, $options: 'i' } }, { type: { $regex: intermediate, $options: 'i' } }, { type: { $regex: expert, $options: 'i' } }] }
+          ]
+        }).countDocuments()
+          skipped = 0
+      }
+
+      if (searchText === '' && (beginner !== 'not' || intermediate !== 'not' || expert !== 'not') && (deleted === 'not' && published === 'not' && comingSoon === 'not')) {
+        courses = await this.courseModel.find({
+          $or: [
+            { type: { $regex: beginner, $options: 'i' } }, { type: { $regex: intermediate, $options: 'i' } }, { type: { $regex: expert, $options: 'i' } }
+          ]
+        }).limit(init).populate('levels').populate("chapters").exec();
+        count = await this.courseModel.find({
+          $or: [
+            { type: { $regex: beginner, $options: 'i' } }, { type: { $regex: intermediate, $options: 'i' } }, { type: { $regex: expert, $options: 'i' } }
+          ]
+        }).countDocuments()
+          skipped = 0
+      }
+
+      if (searchText === '' && (beginner === 'not' && intermediate === 'not' && expert === 'not') && (deleted !== 'not' || published !== 'not' || comingSoon !== 'not')) {
+        courses = await this.courseModel.find({
+          $or: [
+            { status: { $regex: deleted, $options: 'i' } }, { status: { $regex: published, $options: 'i' } }, { status: { $regex: comingSoon, $options: 'i' } }
+          ]
+        }).limit(init).populate('levels').populate("chapters").exec();
+        count = await this.courseModel.find({
+          $or: [
+            { status: { $regex: deleted, $options: 'i' } }, { status: { $regex: published, $options: 'i' } }, { status: { $regex: comingSoon, $options: 'i' } }
+          ]
+        }).countDocuments()
+          skipped = 0
+
+      }
+
+      if (searchText !== '' && (beginner === 'not' && intermediate === 'not' && expert === 'not') && (deleted !== 'not' || published !== 'not' || comingSoon !== 'not')) {
+        courses = await this.courseModel.find({
+          $and: [{ title: { $regex: searchText, $options: 'i' } },
+          { $or: [{ status: { $regex: deleted, $options: 'i' } }, { status: { $regex: published, $options: 'i' } }] }, { status: { $regex: comingSoon, $options: 'i' } }
+          ]
+        }).limit(init).populate('levels').populate("chapters").exec();
+        count = await this.courseModel.find({
+          $and: [{ title: { $regex: searchText, $options: 'i' } },
+          { $or: [{ status: { $regex: deleted, $options: 'i' } }, { status: { $regex: published, $options: 'i' } }] }, { status: { $regex: comingSoon, $options: 'i' } }
+          ]
+        }).countDocuments()
+          skipped = 0
+
+
+      }
+
+      if (searchText !== '' && (beginner !== 'not' || intermediate !== 'not' || expert !== 'not') && (deleted === 'not' && published === 'not' && comingSoon === 'not')) {
+        courses = await this.courseModel.find({
+          $and: [
+            { title: { $regex: searchText, $options: 'i' } },
+            { $or: [{ type: { $regex: beginner, $options: 'i' } }, { type: { $regex: intermediate, $options: 'i' } }, { type: { $regex: expert, $options: 'i' } }] }
+          ]
+        }
+        ).limit(init).populate('levels').populate("chapters").exec();
+        count = await this.courseModel.find({
+          $and: [
+            { title: { $regex: searchText, $options: 'i' } },
+            { $or: [{ type: { $regex: beginner, $options: 'i' } }, { type: { $regex: intermediate, $options: 'i' } }, { type: { $regex: expert, $options: 'i' } }] }
+          ]
+        }).countDocuments()
+          skipped = 0
+      }
+
+      if (searchText !== '' && (beginner !== 'not' || intermediate !== 'not' || expert !== 'not') && (deleted !== 'not' || published !== 'not' || comingSoon !== 'not')) {
+        courses = await this.courseModel.find({
+          $and: [
+            { title: { $regex: searchText, $options: 'i' } },
+            {
+              $and: [
+                { $or: [{ status: { $regex: deleted, $options: 'i' } }, { status: { $regex: published, $options: 'i' } }, { status: { $regex: comingSoon, $options: 'i' } }] },
+                { $or: [{ type: { $regex: beginner, $options: 'i' } }, { type: { $regex: intermediate, $options: 'i' } }, { type: { $regex: expert, $options: 'i' } }] }
+              ]
+            }
+          ]
+        }).limit(init).populate('levels').populate("chapters").exec();
+          count = await this.courseModel.find({
+            $and: [
+              { title: { $regex: searchText, $options: 'i' } },
+              {
+                $and: [
+                  { $or: [{ status: { $regex: deleted, $options: 'i' } }, { status: { $regex: published, $options: 'i' } }, { status: { $regex: comingSoon, $options: 'i' } }] },
+                  { $or: [{ type: { $regex: beginner, $options: 'i' } }, { type: { $regex: intermediate, $options: 'i' } }, { type: { $regex: expert, $options: 'i' } }] }
+                ]
+              }
+            ]
+          }).countDocuments()
+          skipped = 0
+      }
+      if (scroll > init) {
+          courses = await this.courseModel.find().skip(scroll - 9).limit(init).populate('levels').populate("chapters").exec();
+
+          if (searchText !== '' && beginner === 'not' && intermediate === 'not' && expert === 'not' && deleted === 'not' && published === 'not' && comingSoon === 'not') {
+            courses = await this.courseModel.find({ title: { $regex: searchText, $options: 'i' } }).skip(scroll - 9).limit(init).populate('levels').populate("chapters").exec();
+            count = await this.courseModel.find({ title: { $regex: searchText, $options: 'i' } }).countDocuments()
+              
+          }
+    
+          if (searchText === '' && (beginner !== 'not' || intermediate !== 'not' || expert !== 'not') && (deleted !== 'not' || published !== 'not' || comingSoon !== 'not')) {
+            courses = await this.courseModel.find({
+              $and: [
+                { $or: [{ status: { $regex: deleted, $options: 'i' } }, { status: { $regex: published, $options: 'i' } }, { status: { $regex: comingSoon, $options: 'i' } }] },
+                { $or: [{ type: { $regex: beginner, $options: 'i' } }, { type: { $regex: intermediate, $options: 'i' } }, { type: { $regex: expert, $options: 'i' } }] }
+              ]
+            }).skip(scroll - 9).limit(init).populate('levels').populate("chapters").exec();
+            count = await this.courseModel.find({
+              $and: [
+                { $or: [{ status: { $regex: deleted, $options: 'i' } }, { status: { $regex: published, $options: 'i' } }, { status: { $regex: comingSoon, $options: 'i' } }] },
+                { $or: [{ type: { $regex: beginner, $options: 'i' } }, { type: { $regex: intermediate, $options: 'i' } }, { type: { $regex: expert, $options: 'i' } }] }
+              ]
+            }).countDocuments()
+              
+          }
+    
+          if (searchText === '' && (beginner !== 'not' || intermediate !== 'not' || expert !== 'not') && (deleted === 'not' && published === 'not' && comingSoon === 'not')) {
+            courses = await this.courseModel.find({
+              $or: [
+                { type: { $regex: beginner, $options: 'i' } }, { type: { $regex: intermediate, $options: 'i' } }, { type: { $regex: expert, $options: 'i' } }
+              ]
+            }).skip(scroll - 9).limit(init).populate('levels').populate("chapters").exec();
+            count = await this.courseModel.find({
+              $or: [
+                { type: { $regex: beginner, $options: 'i' } }, { type: { $regex: intermediate, $options: 'i' } }, { type: { $regex: expert, $options: 'i' } }
+              ]
+            }).countDocuments()
+              
+          }
+    
+          if (searchText === '' && (beginner === 'not' && intermediate === 'not' && expert === 'not') && (deleted !== 'not' || published !== 'not' || comingSoon !== 'not')) {
+            courses = await this.courseModel.find({
+              $or: [
+                { status: { $regex: deleted, $options: 'i' } }, { status: { $regex: published, $options: 'i' } }, { status: { $regex: comingSoon, $options: 'i' } }
+              ]
+            }).skip(scroll - 9).limit(init).populate('levels').populate("chapters").exec();
+            count = await this.courseModel.find({
+              $or: [
+                { status: { $regex: deleted, $options: 'i' } }, { status: { $regex: published, $options: 'i' } }, { status: { $regex: comingSoon, $options: 'i' } }
+              ]
+            }).countDocuments()
+              
+    
+          }
+    
+          if (searchText !== '' && (beginner === 'not' && intermediate === 'not' && expert === 'not') && (deleted !== 'not' || published !== 'not' || comingSoon !== 'not')) {
+            courses = await this.courseModel.find({
+              $and: [{ title: { $regex: searchText, $options: 'i' } },
+              { $or: [{ status: { $regex: deleted, $options: 'i' } }, { status: { $regex: published, $options: 'i' } }, { status: { $regex: comingSoon, $options: 'i' } }] }
+              ]
+            }).skip(scroll - 9).limit(init).populate('levels').populate("chapters").exec();
+            count = await this.courseModel.find({
+              $and: [{ title: { $regex: searchText, $options: 'i' } },
+              { $or: [{ status: { $regex: deleted, $options: 'i' } }, { status: { $regex: published, $options: 'i' } }, { status: { $regex: comingSoon, $options: 'i' } }] }
+              ]
+            }).countDocuments()
+              
+    
+    
+          }
+    
+          if (searchText !== '' && (beginner !== 'not' || intermediate !== 'not' || expert !== 'not') && (deleted === 'not' && published === 'not' && comingSoon === 'not')) {
+            courses = await this.courseModel.find({
+              $and: [
+                { title: { $regex: searchText, $options: 'i' } },
+                { $or: [{ type: { $regex: beginner, $options: 'i' } }, { type: { $regex: intermediate, $options: 'i' } }, { type: { $regex: expert, $options: 'i' } }] }
+              ]
+            }
+            ).skip(scroll - 9).limit(init).populate('levels').populate("chapters").exec();
+            count = await this.courseModel.find({
+              $and: [
+                { title: { $regex: searchText, $options: 'i' } },
+                { $or: [{ type: { $regex: beginner, $options: 'i' } }, { type: { $regex: intermediate, $options: 'i' } }, { type: { $regex: expert, $options: 'i' } }] }
+              ]
+            }).countDocuments()
+              
+          }
+    
+          if (searchText !== '' && (beginner !== 'not' || intermediate !== 'not' || expert !== 'not') && (deleted !== 'not' || published !== 'not' || comingSoon !== 'not')) {
+            courses = await this.courseModel.find({
+              $and: [
+                { title: { $regex: searchText, $options: 'i' } },
+                {
+                  $and: [
+                    { $or: [{ status: { $regex: deleted, $options: 'i' } }, { status: { $regex: published, $options: 'i' } }, { status: { $regex: comingSoon, $options: 'i' } }] },
+                    { $or: [{ type: { $regex: beginner, $options: 'i' } }, { type: { $regex: intermediate, $options: 'i' } }, { type: { $regex: expert, $options: 'i' } }] }
+                  ]
+                }
+              ]
+            }).skip(scroll - 9).limit(init).populate('levels').populate("chapters").exec();
+              count = await this.courseModel.find({
+                $and: [
+                  { title: { $regex: searchText, $options: 'i' } },
+                  {
+                    $and: [
+                      { $or: [{ status: { $regex: deleted, $options: 'i' } }, { status: { $regex: published, $options: 'i' } }, { status: { $regex: comingSoon, $options: 'i' } }] },
+                      { $or: [{ type: { $regex: beginner, $options: 'i' } }, { type: { $regex: intermediate, $options: 'i' } }, { type: { $regex: expert, $options: 'i' } }] }
+                    ]
+                  }
+                ]
+              }).countDocuments()
+              
+          }
+          skipped = scroll - 9
+      }
+      return { courses, count, skipped }
+
+  }  
+
     async findChapters(obj) {
       const { scroll, searchValue } = obj
       let text = '';

@@ -37,6 +37,8 @@ spec:
           env:
           - name: dbhost
             value: "admin:FivePoints2020@5955fc2a-3bf5-4e0e-b684-ddb6ebe7bfd4-0.br38q28f0334iom5lv4g.databases.appdomain.cloud:30898,5955fc2a-3bf5-4e0e-b684-ddb6ebe7bfd4-1.br38q28f0334iom5lv4g.databases.appdomain.cloud"
+          - name: dbsettings
+            value: "?authSource=admin&replicaSet=replset&tlsCAFile=./mongo-tls&tls=true"
           - name: redishost
             value: "redis"
           - name: BINDING

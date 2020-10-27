@@ -15,13 +15,13 @@ import { ChatModule } from './chat/chat.module';
 import { CertificateModule } from './certificate/certificate.module';
 
 const dbhost = process.env.dbhost || 'localhost';
-
+const dbsettings = process.env.dbsettings || '';
 @Module({
   imports: [
     CatsModule,
     ScheduleModule.forRoot(),
     CommonModule,
-    MongooseModule.forRoot('mongodb://'+dbhost+'/academyDb?authSource=admin&replicaSet=replset&tlsCAFile=./mongo-tls&tls=true', { useNewUrlParser: true, useUnifiedTopology: true, retryAttempts: 2 }),
+    MongooseModule.forRoot('mongodb://'+dbhost+'/academyDb'+dbsettings, { useNewUrlParser: true, useUnifiedTopology: true, retryAttempts: 2 }),
     GraphQLModule.forRoot({
       typePaths: ['./**/*.graphql'],
       installSubscriptionHandlers: true,

@@ -14,7 +14,7 @@ import { PurchaseModule } from './purchase/purchase.module';
 import { ChatModule } from './chat/chat.module';
 import { CertificateModule } from './certificate/certificate.module';
 
-const dbhost = process.env.dbhost || 'localhost';
+const dbhost = process.env.dbhost || 'localhost:27017';
 const dbsettings = process.env.dbsettings || '';
 @Module({
   imports: [

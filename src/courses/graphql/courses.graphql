@@ -63,7 +63,7 @@ input Value {
 deleted: Boolean
 published: Boolean
 comingSoon: Boolean
-expeert: Boolean
+expert: Boolean
 intermediate: Boolean
 beginner: Boolean
 searchTermCourses: String

@@ -56,7 +56,7 @@ type Countcourse {
 
 input Scroll{
   scroll: Int
-  searchValue: [Value]
+  searchValueCourses: [Value]
 }
 
 input Value {

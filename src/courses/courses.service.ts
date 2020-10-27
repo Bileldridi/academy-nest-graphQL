@@ -204,7 +204,7 @@ export class CoursesService {
       let init = 9;
       let skipped = 0
       let count = await this.courseModel.countDocuments()
-      let courses = await this.courseModel.find().limit(init).populate('course').exec();
+      let courses = await this.courseModel.find().limit(init).populate('levels').populate("chapters").exec();
       searchValue[0].beginner ? beginner = 'beginner' : beginner = 'not' ;
       searchValue[0].intermediate ? intermediate = 'intermediate' : intermediate = 'not';
       searchValue[0].expert ? expert = 'expert' : expert = 'not';

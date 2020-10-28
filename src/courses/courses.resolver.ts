@@ -109,6 +109,22 @@ export class CoursesResolver {
         return await this.coursesService.findCourses(scroll);
     }
 
+    @SetMetadata('roles', ['admin'])
+    @UseGuards(GraphqlAuthGuard, RolesGuard)
+    @Roles('admin')
+    @Query('scrollLevels')
+    async scrollLevels(@Args('scroll') scroll): Promise<any> {
+        return await this.coursesService.findLevels(scroll);
+    }
+
+    @SetMetadata('roles', ['admin'])
+    @UseGuards(GraphqlAuthGuard, RolesGuard)
+    @Roles('admin')
+    @Query('scrollModules')
+    async scrollModules(@Args('scroll') scroll): Promise<any> {
+        return await this.coursesService.findModules(scroll);
+    }
+
     @Roles('admin')
     @UseGuards(GraphqlAuthGuard, RolesGuard)
     @Query('Chapter')

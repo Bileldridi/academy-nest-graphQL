@@ -6,6 +6,7 @@ type Query {
   removeBootcamp(id: String!): Message
   restoreModule(id: String!): Message
   restoreBootcamp(id: String!): Message
+  scrollModules(scroll: Scroll): CountModule
 }
 
 type Mutation {
@@ -33,6 +34,26 @@ type Module {
   duration: Int
   price: Int
   assistancePrice: Int
+}
+
+type CountModule {
+  modules: [Module]
+  count: Int
+  skipped: Int
+}
+
+input Scroll{
+  scroll: Int
+  searchValueModules: [Value]
+}
+
+input Value {
+deleted: Boolean
+published: Boolean
+comingSoon: Boolean
+draft: Boolean
+private: Boolean
+searchTermModules: String
 }
 
 type PublicModule {

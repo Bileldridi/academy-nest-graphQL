@@ -8,7 +8,7 @@ type Query {
   getComments: [Course]
   Comment(id: String!): Comment
   removeComment(id: String!): Comment
-  scrollCourses(scroll: Scroll): Countcourse
+  scrollCourses(scroll: Scroll): CountCourse
 }
 
 type Mutation {
@@ -48,7 +48,7 @@ type Course {
   files: [String]
 }
 
-type Countcourse {
+type CountCourse {
   courses: [Course]
   count: Int
   skipped: Int

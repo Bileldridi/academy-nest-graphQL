@@ -6,6 +6,7 @@ type Query {
   removePath(id: String!): Message
   restoreLevel(id: String!): Message
   restorePath(id: String!): Message
+  scrollLevels(scroll: Scroll): CountLevel
 }
 
 type Mutation {
@@ -47,6 +48,26 @@ type PublicLevel {
   pic: String
   price: Int
   assistancePrice: Int
+}
+
+type CountLevel {
+  levels: [Level]
+  count: Int
+  skipped: Int
+}
+
+input Scroll{
+  scroll: Int
+  searchValueLevels: [Value]
+}
+
+input Value {
+deleted: Boolean
+published: Boolean
+comingSoon: Boolean
+draft: Boolean
+private: Boolean
+searchTermLevels: String
 }
 
 input CreateLevelInput {

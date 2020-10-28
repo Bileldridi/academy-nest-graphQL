@@ -223,13 +223,13 @@ export class CoursesService {
         courses = await this.courseModel.find({
           $and: [
             { $or: [{ status: { $regex: deleted, $options: 'i' } }, { status: { $regex: published, $options: 'i' } }, { status: { $regex: comingSoon, $options: 'i' } }] },
-            { $or: [{ type: { $regex: beginner, $options: 'i' } }, { type: { $regex: intermediate, $options: 'i' } }, { type: { $regex: expert, $options: 'i' } }] }
+            { $or: [{ difficulty: { $regex: beginner, $options: 'i' } }, { difficulty: { $regex: intermediate, $options: 'i' } }, { difficulty: { $regex: expert, $options: 'i' } }] }
           ]
         }).limit(init).populate('levels').populate("chapters").exec();
         count = await this.courseModel.find({
           $and: [
             { $or: [{ status: { $regex: deleted, $options: 'i' } }, { status: { $regex: published, $options: 'i' } }, { status: { $regex: comingSoon, $options: 'i' } }] },
-            { $or: [{ type: { $regex: beginner, $options: 'i' } }, { type: { $regex: intermediate, $options: 'i' } }, { type: { $regex: expert, $options: 'i' } }] }
+            { $or: [{ difficulty: { $regex: beginner, $options: 'i' } }, { difficulty: { $regex: intermediate, $options: 'i' } }, { difficulty: { $regex: expert, $options: 'i' } }] }
           ]
         }).countDocuments()
           skipped = 0
@@ -238,12 +238,12 @@ export class CoursesService {
       if (searchText === '' && (beginner !== 'not' || intermediate !== 'not' || expert !== 'not') && (deleted === 'not' && published === 'not' && comingSoon === 'not')) {
         courses = await this.courseModel.find({
           $or: [
-            { type: { $regex: beginner, $options: 'i' } }, { type: { $regex: intermediate, $options: 'i' } }, { type: { $regex: expert, $options: 'i' } }
+            { difficulty: { $regex: beginner, $options: 'i' } }, { difficulty: { $regex: intermediate, $options: 'i' } }, { difficulty: { $regex: expert, $options: 'i' } }
           ]
         }).limit(init).populate('levels').populate("chapters").exec();
         count = await this.courseModel.find({
           $or: [
-            { type: { $regex: beginner, $options: 'i' } }, { type: { $regex: intermediate, $options: 'i' } }, { type: { $regex: expert, $options: 'i' } }
+            { difficulty: { $regex: beginner, $options: 'i' } }, { difficulty: { $regex: intermediate, $options: 'i' } }, { difficulty: { $regex: expert, $options: 'i' } }
           ]
         }).countDocuments()
           skipped = 0
@@ -284,14 +284,14 @@ export class CoursesService {
         courses = await this.courseModel.find({
           $and: [
             { title: { $regex: searchText, $options: 'i' } },
-            { $or: [{ type: { $regex: beginner, $options: 'i' } }, { type: { $regex: intermediate, $options: 'i' } }, { type: { $regex: expert, $options: 'i' } }] }
+            { $or: [{ difficulty: { $regex: beginner, $options: 'i' } }, { difficulty: { $regex: intermediate, $options: 'i' } }, { difficulty: { $regex: expert, $options: 'i' } }] }
           ]
         }
         ).limit(init).populate('levels').populate("chapters").exec();
         count = await this.courseModel.find({
           $and: [
             { title: { $regex: searchText, $options: 'i' } },
-            { $or: [{ type: { $regex: beginner, $options: 'i' } }, { type: { $regex: intermediate, $options: 'i' } }, { type: { $regex: expert, $options: 'i' } }] }
+            { $or: [{ difficulty: { $regex: beginner, $options: 'i' } }, { difficulty: { $regex: intermediate, $options: 'i' } }, { difficulty: { $regex: expert, $options: 'i' } }] }
           ]
         }).countDocuments()
           skipped = 0
@@ -304,7 +304,7 @@ export class CoursesService {
             {
               $and: [
                 { $or: [{ status: { $regex: deleted, $options: 'i' } }, { status: { $regex: published, $options: 'i' } }, { status: { $regex: comingSoon, $options: 'i' } }] },
-                { $or: [{ type: { $regex: beginner, $options: 'i' } }, { type: { $regex: intermediate, $options: 'i' } }, { type: { $regex: expert, $options: 'i' } }] }
+                { $or: [{ difficulty: { $regex: beginner, $options: 'i' } }, { difficulty: { $regex: intermediate, $options: 'i' } }, { difficulty: { $regex: expert, $options: 'i' } }] }
               ]
             }
           ]
@@ -315,7 +315,7 @@ export class CoursesService {
               {
                 $and: [
                   { $or: [{ status: { $regex: deleted, $options: 'i' } }, { status: { $regex: published, $options: 'i' } }, { status: { $regex: comingSoon, $options: 'i' } }] },
-                  { $or: [{ type: { $regex: beginner, $options: 'i' } }, { type: { $regex: intermediate, $options: 'i' } }, { type: { $regex: expert, $options: 'i' } }] }
+                  { $or: [{ difficulty: { $regex: beginner, $options: 'i' } }, { difficulty: { $regex: intermediate, $options: 'i' } }, { difficulty: { $regex: expert, $options: 'i' } }] }
                 ]
               }
             ]
@@ -335,13 +335,13 @@ export class CoursesService {
             courses = await this.courseModel.find({
               $and: [
                 { $or: [{ status: { $regex: deleted, $options: 'i' } }, { status: { $regex: published, $options: 'i' } }, { status: { $regex: comingSoon, $options: 'i' } }] },
-                { $or: [{ type: { $regex: beginner, $options: 'i' } }, { type: { $regex: intermediate, $options: 'i' } }, { type: { $regex: expert, $options: 'i' } }] }
+                { $or: [{ difficulty: { $regex: beginner, $options: 'i' } }, { difficulty: { $regex: intermediate, $options: 'i' } }, { difficulty: { $regex: expert, $options: 'i' } }] }
               ]
             }).skip(scroll - 9).limit(init).populate('levels').populate("chapters").exec();
             count = await this.courseModel.find({
               $and: [
                 { $or: [{ status: { $regex: deleted, $options: 'i' } }, { status: { $regex: published, $options: 'i' } }, { status: { $regex: comingSoon, $options: 'i' } }] },
-                { $or: [{ type: { $regex: beginner, $options: 'i' } }, { type: { $regex: intermediate, $options: 'i' } }, { type: { $regex: expert, $options: 'i' } }] }
+                { $or: [{ difficulty: { $regex: beginner, $options: 'i' } }, { difficulty: { $regex: intermediate, $options: 'i' } }, { difficulty: { $regex: expert, $options: 'i' } }] }
               ]
             }).countDocuments()
               
@@ -350,12 +350,12 @@ export class CoursesService {
           if (searchText === '' && (beginner !== 'not' || intermediate !== 'not' || expert !== 'not') && (deleted === 'not' && published === 'not' && comingSoon === 'not')) {
             courses = await this.courseModel.find({
               $or: [
-                { type: { $regex: beginner, $options: 'i' } }, { type: { $regex: intermediate, $options: 'i' } }, { type: { $regex: expert, $options: 'i' } }
+                { difficulty: { $regex: beginner, $options: 'i' } }, { difficulty: { $regex: intermediate, $options: 'i' } }, { difficulty: { $regex: expert, $options: 'i' } }
               ]
             }).skip(scroll - 9).limit(init).populate('levels').populate("chapters").exec();
             count = await this.courseModel.find({
               $or: [
-                { type: { $regex: beginner, $options: 'i' } }, { type: { $regex: intermediate, $options: 'i' } }, { type: { $regex: expert, $options: 'i' } }
+                { difficulty: { $regex: beginner, $options: 'i' } }, { difficulty: { $regex: intermediate, $options: 'i' } }, { difficulty: { $regex: expert, $options: 'i' } }
               ]
             }).countDocuments()
               
@@ -396,14 +396,14 @@ export class CoursesService {
             courses = await this.courseModel.find({
               $and: [
                 { title: { $regex: searchText, $options: 'i' } },
-                { $or: [{ type: { $regex: beginner, $options: 'i' } }, { type: { $regex: intermediate, $options: 'i' } }, { type: { $regex: expert, $options: 'i' } }] }
+                { $or: [{ difficulty: { $regex: beginner, $options: 'i' } }, { difficulty: { $regex: intermediate, $options: 'i' } }, { difficulty: { $regex: expert, $options: 'i' } }] }
               ]
             }
             ).skip(scroll - 9).limit(init).populate('levels').populate("chapters").exec();
             count = await this.courseModel.find({
               $and: [
                 { title: { $regex: searchText, $options: 'i' } },
-                { $or: [{ type: { $regex: beginner, $options: 'i' } }, { type: { $regex: intermediate, $options: 'i' } }, { type: { $regex: expert, $options: 'i' } }] }
+                { $or: [{ difficulty: { $regex: beginner, $options: 'i' } }, { difficulty: { $regex: intermediate, $options: 'i' } }, { difficulty: { $regex: expert, $options: 'i' } }] }
               ]
             }).countDocuments()
               
@@ -416,7 +416,7 @@ export class CoursesService {
                 {
                   $and: [
                     { $or: [{ status: { $regex: deleted, $options: 'i' } }, { status: { $regex: published, $options: 'i' } }, { status: { $regex: comingSoon, $options: 'i' } }] },
-                    { $or: [{ type: { $regex: beginner, $options: 'i' } }, { type: { $regex: intermediate, $options: 'i' } }, { type: { $regex: expert, $options: 'i' } }] }
+                    { $or: [{ difficulty: { $regex: beginner, $options: 'i' } }, { difficulty: { $regex: intermediate, $options: 'i' } }, { difficulty: { $regex: expert, $options: 'i' } }] }
                   ]
                 }
               ]
@@ -427,7 +427,7 @@ export class CoursesService {
                   {
                     $and: [
                       { $or: [{ status: { $regex: deleted, $options: 'i' } }, { status: { $regex: published, $options: 'i' } }, { status: { $regex: comingSoon, $options: 'i' } }] },
-                      { $or: [{ type: { $regex: beginner, $options: 'i' } }, { type: { $regex: intermediate, $options: 'i' } }, { type: { $regex: expert, $options: 'i' } }] }
+                      { $or: [{ difficulty: { $regex: beginner, $options: 'i' } }, { difficulty: { $regex: intermediate, $options: 'i' } }, { difficulty: { $regex: expert, $options: 'i' } }] }
                     ]
                   }
                 ]

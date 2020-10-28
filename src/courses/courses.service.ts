@@ -205,7 +205,7 @@ export class CoursesService {
       let count = await this.moduleModel.countDocuments()
       let modules = await this.moduleModel.find().limit(init).populate("levels").exec();
       searchValue[0].draft ? draft = 'draft' : draft = 'not' ;
-      searchValue[0].privated ? privated = 'private' : privated = 'not';
+      searchValue[0].private ? privated = 'private' : privated = 'not';
       searchValue[0].deleted ? deleted = 'deleted' : deleted = 'not';
       searchValue[0].published ? published = 'published' : published = 'not';
       searchValue[0].comingSoon ? comingSoon = 'coming soon' : comingSoon = 'not';
@@ -322,7 +322,7 @@ export class CoursesService {
       let count = await this.levelModel.countDocuments()
       let levels = await this.levelModel.find().limit(init).populate("courses").exec();
       searchValue[0].draft ? draft = 'draft' : draft = 'not' ;
-      searchValue[0].privated ? privated = 'private' : privated = 'not';
+      searchValue[0].private ? privated = 'private' : privated = 'not';
       searchValue[0].deleted ? deleted = 'deleted' : deleted = 'not';
       searchValue[0].published ? published = 'published' : published = 'not';
       searchValue[0].comingSoon ? comingSoon = 'coming soon' : comingSoon = 'not';

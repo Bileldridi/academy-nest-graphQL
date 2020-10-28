@@ -236,7 +236,7 @@ export class CoursesService {
       }
   
 
-      if (searchText !== '' && (deleted !== 'not' || published !== 'not' || comingSoon !== 'not' || draft !== 'not' && privated !== 'not')) {
+      if (searchText !== '' && (deleted !== 'not' || published !== 'not' || comingSoon !== 'not' || draft !== 'not' || privated !== 'not')) {
         modules = await this.moduleModel.find({
           $and: [{ title: { $regex: searchText, $options: 'i' } },
           { $or: [{ status: { $regex: deleted, $options: 'i' } }, { status: { $regex: published, $options: 'i' } }, { status: { $regex: comingSoon, $options: 'i' } },
@@ -261,7 +261,7 @@ export class CoursesService {
           if (searchText !== '' && draft === 'not' && privated === 'not'  && comingSoon === 'not' && deleted === 'not' && published === 'not') {
             modules = await this.moduleModel.find({ title: { $regex: searchText, $options: 'i' } }).skip(scroll - 9).limit(init).populate("levels").exec();
             count = await this.moduleModel.find({ title: { $regex: searchText, $options: 'i' } }).countDocuments()
-              skipped = 0
+              
           }
     
           if (searchText === '' && (draft !== 'not' || privated !== 'not' || deleted !== 'not' || published !== 'not' || comingSoon !== 'not')) {
@@ -279,11 +279,11 @@ export class CoursesService {
                 
               
             }).countDocuments()
-              skipped = 0
+              
           }
       
     
-          if (searchText !== '' && (deleted !== 'not' || published !== 'not' || comingSoon !== 'not' || draft !== 'not' && privated !== 'not')) {
+          if (searchText !== '' && (deleted !== 'not' || published !== 'not' || comingSoon !== 'not' || draft !== 'not' || privated !== 'not')) {
             modules = await this.moduleModel.find({
               $and: [{ title: { $regex: searchText, $options: 'i' } },
               { $or: [{ status: { $regex: deleted, $options: 'i' } }, { status: { $regex: published, $options: 'i' } }, { status: { $regex: comingSoon, $options: 'i' } },
@@ -298,7 +298,7 @@ export class CoursesService {
             ] }
               ]
             }).countDocuments()
-              skipped = 0
+              
     
     
           }
@@ -353,7 +353,7 @@ export class CoursesService {
       }
   
 
-      if (searchText !== '' && (deleted !== 'not' || published !== 'not' || comingSoon !== 'not' || draft !== 'not' && privated !== 'not')) {
+      if (searchText !== '' && (deleted !== 'not' || published !== 'not' || comingSoon !== 'not' || draft !== 'not' || privated !== 'not')) {
         levels = await this.levelModel.find({
           $and: [{ title: { $regex: searchText, $options: 'i' } },
           { $or: [{ status: { $regex: deleted, $options: 'i' } }, { status: { $regex: published, $options: 'i' } }, { status: { $regex: comingSoon, $options: 'i' } },
@@ -378,7 +378,7 @@ export class CoursesService {
           if (searchText !== '' && draft === 'not' && privated === 'not'  && comingSoon === 'not' && deleted === 'not' && published === 'not') {
             levels = await this.levelModel.find({ title: { $regex: searchText, $options: 'i' } }).skip(scroll - 9).limit(init).populate("courses").exec();
             count = await this.levelModel.find({ title: { $regex: searchText, $options: 'i' } }).countDocuments()
-              skipped = 0
+              
           }
     
           if (searchText === '' && (draft !== 'not' || privated !== 'not' || deleted !== 'not' || published !== 'not' || comingSoon !== 'not')) {
@@ -396,7 +396,7 @@ export class CoursesService {
                 
               
             }).countDocuments()
-              skipped = 0
+              
           }
       
     
@@ -415,7 +415,7 @@ export class CoursesService {
             ] }
               ]
             }).countDocuments()
-              skipped = 0
+              
     
     
           }

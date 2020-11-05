@@ -42,7 +42,7 @@ metadata:
   namespace: academy-backend
 spec:
   rules:
-  - host: __HOST__.next.backdev.academy.fivepoints.fr
+  - host: __HOST__.backdev.academy.fivepoints.fr
     http:
       paths:
       - backend:
@@ -51,5 +51,5 @@ spec:
         path: "/"
   tls:
   - hosts:
-    - __HOST__.next.backdev.academy.fivepoints.fr
+    - __HOST__.backdev.academy.fivepoints.fr
     secretName: __CI_ENVIRONMENT_SLUG__-auto-deploy-tls

@@ -6,4 +6,5 @@ ADD . .
 # WORKDIR /app
 # ADD package.json .
 # RUN npm install 
+ADD ./mongo-tls ./dist
 CMD node dist/main.js

@@ -14,14 +14,14 @@ import { PurchaseModule } from './purchase/purchase.module';
 import { ChatModule } from './chat/chat.module';
 import { CertificateModule } from './certificate/certificate.module';
 
-const dbhost = process.env.dbhost || 'localhost';
-
+const dbhost = process.env.dbhost || 'localhost:27017';
+const dbsettings = process.env.dbsettings || '';
 @Module({
   imports: [
     CatsModule,
     ScheduleModule.forRoot(),
     CommonModule,
-    MongooseModule.forRoot('mongodb://' + dbhost + ':27017/academyDb', { useNewUrlParser: true, useUnifiedTopology: true }),
+    MongooseModule.forRoot('mongodb://'+dbhost+'/academyDb'+dbsettings, { useNewUrlParser: true, useUnifiedTopology: true, retryAttempts: 2 }),
     GraphQLModule.forRoot({
       typePaths: ['./**/*.graphql'],
       installSubscriptionHandlers: true,

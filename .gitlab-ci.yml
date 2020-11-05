@@ -20,6 +20,7 @@ quality-scan:
         - npm install
         - npm run sonar
     when: manual
+
 build-app:
     image: node:lts-alpine
     stage: build-app
@@ -32,23 +33,26 @@ build-app:
         - dist
         - node_modules
 
-
 build-image:
-  stage: build-image
   image: docker:18.09.7-dind
+  stage: build-image
   variables:
     DOCKER_HOST: tcp://localhost:2375
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ""
   services:
     - docker:dind
   script:
     - sleep 10s
     - docker info
+    # - export DOCKER_HOST=tcp://localhost:2375
+    # - sleep 10s
+    # - docker info
     - docker login -u "${CI_REGISTRY_USER}" -p "${CI_REGISTRY_PASSWORD}" "${CI_REGISTRY}"
     - docker build -t "${CI_REGISTRY_IMAGE}:v${CI_PIPELINE_ID}" .
     # - docker tag "${CI_REGISTRY_IMAGE}:latest" "${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_NAME}"
     # - test ! -z "${CI_COMMIT_TAG}" && docker push "${CI_REGISTRY_IMAGE}:latest"
     - docker push "${CI_REGISTRY_IMAGE}:v${CI_PIPELINE_ID}"
-
 
 deploy-review:
   image:
@@ -87,7 +91,7 @@ deploy-review:
   only:
     - master
   environment:
-    name: review/$CI_BUILD_REF_NAME
+    name: production/$CI_BUILD_REF_NAME
     url: http://${CI_ENVIRONMENT_SLUG}.backdev.academy.fivepoints.fr
     #http://a9f2c06cfc8d811e9a31506631145b1f-1171893166.eu-central-1.elb.amazonaws.com
     on_stop: stop-review
@@ -115,11 +119,9 @@ deploy-prod:
     - kubectl apply -f ingress.prod.yaml
     - kubectl rollout status -f deployment.prod.yaml
   environment:
-    name: Production
+    name: production
     url: https://backend.academy.fivepoints.fr
   when: manual
-  only:
-    - master
 
 stop-review:
   image:
@@ -142,9 +144,11 @@ stop-review:
     - kubectl delete -f ingress.yaml
     - kubectl delete -f deployment.yaml
   environment:
-    name: review/$CI_BUILD_REF_NAME
+    name: production/$CI_BUILD_REF_NAME
     action: stop
   when: manual
   only:
   - master
+
+
 

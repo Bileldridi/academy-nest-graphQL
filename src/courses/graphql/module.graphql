@@ -7,6 +7,7 @@ type Query {
   restoreModule(id: String!): Message
   restoreBootcamp(id: String!): Message
   scrollModules(scroll: Scroll): CountModule
+  deleteModules(id:String!): Message
 }
 
 type Mutation {

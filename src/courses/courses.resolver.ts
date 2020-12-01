@@ -35,6 +35,26 @@ export class CoursesResolver {
     @SetMetadata('roles', ['admin'])
     @UseGuards(GraphqlAuthGuard, RolesGuard)
     @Roles('admin')
+    @Query('removeLevel')
+    async deleteOneLevel(@Args('id') id: string): Promise<any> {
+        return await this.coursesService.deleteLevel(id);
+    }
+    @Roles('admin')
+    @UseGuards(GraphqlAuthGuard, RolesGuard)
+    @Query('removeChapter')
+    async deleteOneChapter(@Args('id') id: string): Promise<any> {
+        return await this.coursesService.deleteChapter(id);
+    }
+    @SetMetadata('roles', ['admin'])
+    @UseGuards(GraphqlAuthGuard, RolesGuard)
+    @Roles('admin')
+    @Query('removeModule')
+    async deleteOneModule(@Args('id') id: string): Promise<any> {
+        return await this.coursesService.deleteModule(id);
+    }
+    @SetMetadata('roles', ['admin'])
+    @UseGuards(GraphqlAuthGuard, RolesGuard)
+    @Roles('admin')
     @Mutation('createCourse')
     async createCourse(@Args('createCourseInput') args: any): Promise<any> {
         return await this.coursesService.createCourse(args);
@@ -62,13 +82,7 @@ export class CoursesResolver {
     async findOneLevelById(@Args('id') id: string): Promise<any> {
         return await this.coursesService.findOneLevelById(id);
     }
-    @SetMetadata('roles', ['admin'])
-    @UseGuards(GraphqlAuthGuard, RolesGuard)
-    @Roles('admin')
-    @Query('removeLevel')
-    async deleteOneLevel(@Args('id') id: string): Promise<any> {
-        return await this.coursesService.deleteLevel(id);
-    }
+   
     @SetMetadata('roles', ['admin'])
     @UseGuards(GraphqlAuthGuard, RolesGuard)
     @Roles('admin')
@@ -131,12 +145,7 @@ export class CoursesResolver {
     async findOneChapterById(@Args('id') id: string): Promise<any> {
         return await this.coursesService.findOneChapterById(id);
     }
-    @Roles('admin')
-    @UseGuards(GraphqlAuthGuard, RolesGuard)
-    @Query('removeChapter')
-    async deleteOneChapter(@Args('id') id: string): Promise<any> {
-        return await this.coursesService.deleteChapter(id);
-    }
+   
     @Roles('admin')
     @UseGuards(GraphqlAuthGuard, RolesGuard)
     @Query('removeBootcamp')
@@ -325,13 +334,7 @@ export class CoursesResolver {
     async findOneModuleById(@Args('id') id: string): Promise<any> {
         return await this.coursesService.findOneModuleById(id);
     }
-    @SetMetadata('roles', ['admin'])
-    @UseGuards(GraphqlAuthGuard, RolesGuard)
-    @Roles('admin')
-    @Query('removeModule')
-    async deleteOneModule(@Args('id') id: string): Promise<any> {
-        return await this.coursesService.deleteModule(id);
-    }
+   
     @SetMetadata('roles', ['admin'])
     @UseGuards(GraphqlAuthGuard, RolesGuard)
     @Roles('admin')

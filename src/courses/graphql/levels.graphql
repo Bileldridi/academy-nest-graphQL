@@ -7,6 +7,7 @@ type Query {
   restoreLevel(id: String!): Message
   restorePath(id: String!): Message
   scrollLevels(scroll: Scroll): CountLevel
+  deleteLevel(id:String!): Message
 }
 
 type Mutation {

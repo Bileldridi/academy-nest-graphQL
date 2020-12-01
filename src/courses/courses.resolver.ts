@@ -28,27 +28,27 @@ export class CoursesResolver {
     async findOneCourseById(@Args('id') id: string): Promise<any> {
         return await this.coursesService.findOneCourseById(id);
     }
-    @Query('removeCourse')
+    @Query('deleteCourse')
     async deleteOneCourse(@Args('id') id: string): Promise<any> {
         return await this.coursesService.deleteCourse(id);
     }
     @SetMetadata('roles', ['admin'])
     @UseGuards(GraphqlAuthGuard, RolesGuard)
     @Roles('admin')
-    @Query('removeLevel')
+    @Query('deleteLevel')
     async deleteOneLevel(@Args('id') id: string): Promise<any> {
         return await this.coursesService.deleteLevel(id);
     }
     @Roles('admin')
     @UseGuards(GraphqlAuthGuard, RolesGuard)
-    @Query('removeChapter')
+    @Query('deleteChapter')
     async deleteOneChapter(@Args('id') id: string): Promise<any> {
         return await this.coursesService.deleteChapter(id);
     }
     @SetMetadata('roles', ['admin'])
     @UseGuards(GraphqlAuthGuard, RolesGuard)
     @Roles('admin')
-    @Query('removeModule')
+    @Query('deleteModule')
     async deleteOneModule(@Args('id') id: string): Promise<any> {
         return await this.coursesService.deleteModule(id);
     }

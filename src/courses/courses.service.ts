@@ -89,9 +89,9 @@ export class CoursesService {
   }
   async deleteCourse(_id) {
     const result = await this.courseModel.findOne({ _id }).exec();
-    this.cemeteryModel
-      .create({ object: result, type: "Course" })
-      .catch((err) => err);
+    // this.cemeteryModel
+    //   .create({ object: result, type: "Course" })
+    //   .catch((err) => err);
     await this.courseModel.findByIdAndDelete(_id).exec();
     return result.id ? { message: "OK" } : { message: "NOT OK" };
   }
@@ -146,7 +146,11 @@ export class CoursesService {
     // await this.courseModel.findByIdAndUpdate(result.course, {
     //   $pull: { chapters: result._id },
     // });
-    // await this.chapterModel.findByIdAndDelete(_id).exec();
+    await this.chapterModel.findByIdAndDelete(_id).exec();
+    return result.id ? { message: "OK" } : { message: "NOT OK" };
+  }
+  async removeChapter(_id) {
+    const result = await this.chapterModel.findByIdAndUpdate(_id , {$set: {status: 'deleted'}}).exec();
     return result.id ? { message: "OK" } : { message: "NOT OK" };
   }
   async removeBootcamp(_id) {

@@ -9,7 +9,7 @@ type Query {
   Comment(id: String!): Comment
   removeComment(id: String!): Comment
   scrollCourses(scroll: Scroll): CountCourse
-  deleteCourse(id:String!): Message
+  deleteCourse(id: String!): Message
 }
 
 type Mutation {

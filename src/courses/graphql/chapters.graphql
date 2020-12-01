@@ -5,7 +5,7 @@ type Query {
   removeChapter(id: String!): Message
   restoreChapter(id: String!): Message
   scrollChapters(scroll: Scroll): CountChapter
-  deleteChapters(id:String!): Message
+  deleteChapter(id:String!): Message
 }
 
 type Mutation {
